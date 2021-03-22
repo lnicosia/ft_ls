@@ -1,39 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*   parse_ls_options.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/22 14:46:49 by lnicosia         ###   ########.fr       */
+/*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
+/*   Updated: 2021/03/22 14:50:12 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "options.h"
 #include "libft.h"
-#include "ls.h"
 
-int		ft_ls(int ac, char **av)
+int		check_opt(char av, int *opt)
 {
-	int	i;
-	int	opt;
+	if (av == 'a')
+	{
+		*opt |= OPT_A;
+	}
+	else if (av == 'R')
+	{
+		*opt |= OPT_RCAPS;
+	}
+	else if (av == 'r')
+	{
+		*opt |= OPT_R;
+	}
+	else if (av == 't')
+	{
+		*opt |= OPT_T;
+	}
+	else if (av == 'l')
+	{
+		*opt |= OPT_L;
+	}
+	return (0);
+}
 
-	opt = 0;
-	i = 1;
-	while (i < ac)
+int		parse_ls_options(char *av, int *opt)
+{
+	av++;
+	while (*av)
 	{
-		if (ft_strlen(av[i]) >= 1 && av[i][0] == '-')
-		{
-			parse_ls_options(av[i], &opt);
-		}
-		i++;
+		check_opt(*av, opt);
+		av++;
 	}
-	i = 1;
-	while (i < ac)
-	{
-		ft_printf("File = %s\n", av[i]);
-		i++;
-	}
-	ft_printf("Options = %d\n", opt);
 	return (0);
 }

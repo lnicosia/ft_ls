@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/03/22 10:23:31 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/03/22 14:31:18 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,13 +31,13 @@ LIBMFT = $(LIBMFT_DIR)/libmft.a
 
 LDLIBS = $(LIBFT)
 
-LDFLAGS = -L $(LIBFT_DIR) -L $(LIBMFT_DIR) -L $(BMP_PARSER_DIR)
+LDFLAGS = -L $(LIBFT_DIR)
 
 LIB_RAW = 
 
-SRC_RAW =	main.c ft_ls.c
+SRC_RAW =	main.c ft_ls.c parsedir.c parse_ls_options.c
 
-HEADERS =	ls.h
+HEADERS =	ls.h directory.h options.h
 
 #
 # Creation of files path
@@ -127,8 +127,6 @@ clean:
 
 fclean:
 	@make --no-print-directory fclean -C $(LIBFT_DIR)
-	@make --no-print-directory fclean -C $(LIBMFT_DIR)
-	@make --no-print-directory fclean -C $(BMP_PARSER_DIR)
 	@printf ${CYAN}"[INFO] Removing objs\n"${RESET}
 	rm -rf $(OBJ_DIR)
 	@printf ${CYAN}"[INFO] Removing $(BIN_DIR)/$(NAME)\n"$(RESET)
