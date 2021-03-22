@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_ls_options.c                                 :+:      :+:    :+:   */
+/*   parse_option_line.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/22 14:50:12 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/22 15:01:21 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		check_opt(char av, int *opt)
 	return (0);
 }
 
-int		parse_ls_options(char *av, int *opt)
+int		parse_option_line(char *av, int *opt)
 {
 	av++;
 	while (*av)

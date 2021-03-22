@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/03/22 14:31:18 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/03/22 15:12:32 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ LDFLAGS = -L $(LIBFT_DIR)
 
 LIB_RAW = 
 
-SRC_RAW =	main.c ft_ls.c parsedir.c parse_ls_options.c
+SRC_RAW =	main.c ft_ls.c parsedir.c parse_option_line.c analyze_file.c 
 
 HEADERS =	ls.h directory.h options.h
 
