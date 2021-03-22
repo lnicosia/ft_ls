@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/22 15:45:38 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/22 18:06:41 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,6 @@ int		ft_ls(int ac, char **av)
 	{
 		analyze_file(".", opt);
 	}
+	ft_printf("\n");
 	return (0);
 }
