@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/03/22 10:12:03 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/03/22 10:23:31 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,9 +35,9 @@ LDFLAGS = -L $(LIBFT_DIR) -L $(LIBMFT_DIR) -L $(BMP_PARSER_DIR)
 
 LIB_RAW = 
 
-SRC_RAW =	main.c
+SRC_RAW =	main.c ft_ls.c
 
-HEADERS = 
+HEADERS =	ls.h
 
 #
 # Creation of files path
