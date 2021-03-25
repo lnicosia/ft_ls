@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 18:01:55 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:15:00 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	free_t_file(void *file, size_t size)
 **	Print all the non-directory file names
 */
 
-int		print_files(int ac, char **av, int opt)
+int		print_files(int ac, char **av, int *nb_files, int opt)
 {
 	int		i;
 	t_file	file;
@@ -129,6 +129,7 @@ int		print_files(int ac, char **av, int opt)
 			ft_dlstinsert_reverse(&dlst, new, compare);
 		else
 			ft_dlstinsert(&dlst, new, compare);
+		(*nb_files)++;
 		i++;
 	}
 	print_dlist(dlst, opt);
@@ -139,23 +140,25 @@ int		print_files(int ac, char **av, int opt)
 int		ft_ls(int ac, char **av)
 {
 	int	i;
+	int	nb_files;
 	int	opt;
 	int	real_args;
 
 	opt = 0;
+	nb_files = 0;
 	real_args = ac - 1;
 	parse_ls_options(ac, av, &opt, &real_args);
-	print_files(ac, av, opt);
+	print_files(ac, av, &nb_files, opt);
 	i = 1;
 	while (i < ac)
 	{
 		if (!is_arg_an_option_line(av[i]))
-			analyze_args(av[i], opt);
+			analyze_args(av[i], nb_files, opt);
 		i++;
 	}
 	if (real_args == 0)
 	{
-		analyze_args(".", opt);
+		analyze_args(".", nb_files, opt);
 	}
 	return (0);
 }

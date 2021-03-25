@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 17:45:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:15:42 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ typedef struct			s_file
 
 int						ft_ls(int ac, char **av);
 int						parse_option_line(char *av, int *opt);
-int						analyze_args(char *file, int opt);
-int						analyze_file(char *file, int opt);
+int						analyze_args(char *file, int nb_files, int opt);
+int						analyze_file(char *file, int nb_files, int opt);
 void					print_file(t_stat file_stats, char *file, int opt);
 void					get_ls_time(char *res, char *ctime);
 void					print_size(off_t size);
@@ -39,6 +39,6 @@ int						compare(void *s1, void *s2);
 void					print_dlist(t_dlist *dlst, int opt);
 void					print_dlist_reverse(t_dlist *dlst, int opt);
 void					free_t_file(void *file, size_t size);
-int						analyze_directory(char *file_name, int opt);
+int						analyze_directory(char *file_name, int nb_files, int opt);
 
 #endif
