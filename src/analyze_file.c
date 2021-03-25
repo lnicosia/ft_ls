@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 14:52:15 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 15:16:38 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,21 @@ int		print_directory(char *file, int opt)
 **
 */
 
-void	analyze_list(t_dlist *lst)
+void	analyze_list(t_dlist *lst, int opt)
 {
+	t_file	*file;
+	
 	while (lst && lst->prev)
 		lst = lst->prev;
 	while (lst)
 	{
+		file = (t_file*)lst->content;
+		if (!S_ISDIR(file->stats.st_mode))
+		{
+			lst = lst->next;
+			continue;
+		}
+		analyze_directory(file->name, opt);
 		lst = lst->next;
 	}
 }
@@ -90,7 +99,7 @@ int		analyze_directory(char *file_name, int opt)
 	dlst = NULL;
 	if (!(dir = opendir(file_name)))
 	{
-		return (ft_perror(""));
+		return (ft_perror("opendir error"));
 	}
 	while ((entry = readdir(dir)))
 	{
@@ -114,29 +123,23 @@ int		analyze_directory(char *file_name, int opt)
 			ft_strdel(&path);
 			return (ft_perror(""));
 		}
-		if (!(file.name = ft_strdup(entry->d_name)))
-		{
-			ft_dlstdelfront(&dlst, free_t_file);
-			ft_strdel(&path);
-			return (ft_perror("Error: "));
-		}
+		file.name = path;
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
-			ft_strdel(&file.name);
-			return (ft_perror("Error: "));
+			return (ft_perror(""));
 		}
 		ft_dlstinsert(&dlst, new, compare);
-		ft_strdel(&path);
 	}
 	if (closedir(dir))
 	{
 		ft_dlstdelfront(&dlst, free_t_file);
 		return (ft_perror(""));
 	}
-	print_dlist(dlst);
-	analyze_list(dlst);
+	print_dlist(dlst, opt);
+	if (opt & OPT_RCAPS)
+		analyze_list(dlst, opt);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 14:53:25 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 15:12:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 **	Assumes it's made of char*
 */
 
-void	print_dlist(t_dlist *dlst)
+void	print_dlist(t_dlist *dlst, int opt)
 {
 	int	first;
 
@@ -66,7 +66,8 @@ void	print_dlist(t_dlist *dlst)
 		}
 		else
 			ft_printf("  ");
-		ft_printf("%s", ((t_file*)dlst->content)->name);
+		print_file(((t_file*)dlst->content)->stats,
+		((t_file*)dlst->content)->name, opt);
 		dlst = dlst->next;
 	}
 	ft_printf("\n");
@@ -86,7 +87,7 @@ void	free_t_file(void *file, size_t size)
 **	Print all the non-directory file names
 */
 
-int		print_files(int ac, char **av)
+int		print_files(int ac, char **av, int opt)
 {
 	int		i;
 	t_file	file;
@@ -97,10 +98,16 @@ int		print_files(int ac, char **av)
 	i = 1;
 	while (i < ac)
 	{
+		if (is_arg_an_option_line(av[i]))
+		{
+			i++;
+			continue;
+		}
 		if (lstat(av[i], &file.stats))
 		{
+			ft_printf("ft_ls: cannot access '%s': ", av[i]);
 			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror("Error :"));
+			return (ft_perror("lstat error"));
 		}
 		if (S_ISDIR(file.stats.st_mode))
 		{
@@ -110,17 +117,17 @@ int		print_files(int ac, char **av)
 		if (!(file.name = ft_strdup(av[i])))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror("Error: "));
+			return (ft_perror(""));
 		}
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror("Error: "));
+			return (ft_perror(""));
 		}
 		ft_dlstinsert(&dlst, new, compare);
 		i++;
 	}
-	print_dlist(dlst);
+	print_dlist(dlst, opt);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }
@@ -134,7 +141,7 @@ int		ft_ls(int ac, char **av)
 	opt = 0;
 	real_args = ac - 1;
 	parse_ls_options(ac, av, &opt, &real_args);
-	print_files(ac, av);
+	print_files(ac, av, opt);
 	i = 1;
 	while (i < ac)
 	{
