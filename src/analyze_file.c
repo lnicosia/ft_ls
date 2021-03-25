@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 18:16:43 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:33:53 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 **	Analyze the directories contained in our sorted list
 */
 
-void	analyze_list(t_dlist *lst, int nb_files, int opt)
+void	analyze_list(t_dlist *lst, int new_line, int opt)
 {
 	t_file	*file;
 	
@@ -36,7 +36,7 @@ void	analyze_list(t_dlist *lst, int nb_files, int opt)
 			lst = lst->next;
 			continue;
 		}
-		analyze_directory(file->name, nb_files, opt);
+		analyze_directory(file->name, new_line, opt);
 		lst = lst->next;
 	}
 }
@@ -47,7 +47,7 @@ void	analyze_list(t_dlist *lst, int nb_files, int opt)
 **	then if '-R' was given, explore it
 */
 
-int		analyze_directory(char *file_name, int nb_files, int opt)
+int		analyze_directory(char *file_name, int new_line, int opt)
 {
 	DIR 			*dir;
 	struct dirent	*entry;
@@ -56,8 +56,12 @@ int		analyze_directory(char *file_name, int nb_files, int opt)
 	t_dlist			*dlst;
 	t_dlist			*new;
 
-	if (opt & OPT_RCAPS || nb_files)
+	if (opt & OPT_RCAPS || new_line)
+	{
+		if (!new_line)
+			new_line++;
 		ft_printf("\n%s:\n", file_name);
+	}
 	dlst = NULL;
 	if (!(dir = opendir(file_name)))
 	{
@@ -104,7 +108,7 @@ int		analyze_directory(char *file_name, int nb_files, int opt)
 	}
 	print_dlist(dlst, opt);
 	if (opt & OPT_RCAPS)
-		analyze_list(dlst, nb_files, opt);
+		analyze_list(dlst, new_line, opt);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }
@@ -113,7 +117,7 @@ int		analyze_directory(char *file_name, int nb_files, int opt)
 **	Handles the arg differently than the rest
 */
 
-int		analyze_args(char *file, int nb_files, int opt)
+int		analyze_args(char *file, int new_line, int opt)
 {
 	t_stat		file_stats;
 
@@ -123,6 +127,6 @@ int		analyze_args(char *file, int nb_files, int opt)
 		return (ft_perror(""));
 	}
 	if (S_ISDIR(file_stats.st_mode))
-		analyze_directory(file, nb_files, opt);
+		analyze_directory(file, new_line, opt);
 	return (0);
 }
