@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/23 17:41:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 13:59:31 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int		analyze_file(char *file, int opt);
 void	print_file(t_stat file_stats, char *file, int opt);
 void	get_ls_time(char *res, char *ctime);
 void	print_size(off_t size);
-int		sort_files(t_list **lst);
+int		sort_files(t_list **lst, int start, int end);
+int		compare(void *s1, void *s2);
+void	print_dlist(t_dlist *dlst);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/23 18:58:10 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 14:24:43 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,40 +45,65 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 }
 
 /*
+**	Print the list content
+**	Assumes it's made of char*
+*/
+
+void	print_dlist(t_dlist *dlst)
+{
+	int	first;
+
+	if (!dlst)
+		return ;
+	first = 1;
+	while (dlst && dlst->prev)
+		dlst = dlst->prev;
+	while (dlst)
+	{
+		if (first)
+		{
+			first = 0;
+		}
+		else
+			ft_printf("  ");
+		ft_printf("%s", (char*)dlst->content);
+		dlst = dlst->next;
+	}
+	ft_printf("\n");
+}
+
+/*
 **	Print all the non-directory file names
 */
 
 int		print_files(int ac, char **av)
 {
-	t_list	*lst;
-	t_list	*new;
-	t_stat	stats;
 	int		i;
+	t_stat	stats;
+	t_dlist	*new;
+	t_dlist	*dlst;
 
-	lst = NULL;
+	dlst = NULL;
 	i = 1;
 	while (i < ac)
 	{
 		if (lstat(av[i], &stats))
-		{
-			ft_lstdelfront(&lst);
 			return (ft_perror("Error :"));
-		}
 		if (S_ISDIR(stats.st_mode))
 		{
 			i++;
 			continue;
 		}
-		if (!(new = ft_lstnew(av[i], sizeof(av[i]))))
+		if (!(new = ft_dlstnew(av[i], ft_strlen(av[i]) + 1)))
 		{
-			ft_lstdelfront(&lst);
-			return (ft_perror("Error :"));
+			ft_dlstdelfront(&dlst);
+			return (ft_perror("Error: "));
 		}
-		ft_lstadd(&lst, new);
+		ft_dlstinsert(&dlst, new, compare);
 		i++;
 	}
-	//sort_files(&lst);
-	ft_lstdelfront(&lst);
+	print_dlist(dlst);
+	ft_dlstdelfront(&dlst);
 	return (0);
 }
 
@@ -103,6 +128,5 @@ int		ft_ls(int ac, char **av)
 	{
 		analyze_args(".", opt);
 	}
-	ft_printf("\n");
 	return (0);
 }

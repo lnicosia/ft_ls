@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/03/23 19:02:15 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/03/25 11:07:23 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ LDFLAGS = -L $(LIBFT_DIR)
 LIB_RAW = 
 
 SRC_RAW =	main.c ft_ls.c parsedir.c parse_option_line.c analyze_file.c \
-			print_file.c get_ls_time.c print_size.c sort_files.c
+			print_file.c get_ls_time.c print_size.c sort_files.c compare.c \
 
 HEADERS =	ls.h directory.h options.h
 
@@ -57,7 +57,7 @@ CFLAGS =	-Wall -Wextra -Werror -Wpadded -Wconversion -I $(INCLUDES_DIR) \
 	  	-I $(LIBFT_DIR)/includes -I $(BMP_PARSER_DIR)/includes \
 		-I $(LIBMFT_DIR)/includes -I $(GLAD_DIR)/include \
 		$(OPTI_FLAGS) \
-		#-fsanitize=address -g3 \
+		-fsanitize=address -g3 \
 		
 	
 #
