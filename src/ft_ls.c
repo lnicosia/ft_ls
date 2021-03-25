@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 18:46:32 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 19:03:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	print_dlist(t_dlist *dlst, int opt)
 		{
 			first = 0;
 		}
-		else
+		else if (!(opt & OPT_L))
 			ft_printf("  ");
 		print_file(((t_file*)dlst->content)->stats,
 		((t_file*)dlst->content)->name, opt);
