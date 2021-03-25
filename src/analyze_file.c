@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 18:46:55 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 21:35:55 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 
 	if (opt & OPT_RCAPS || new_line)
 	{
+		if (new_line)
+			ft_printf("\n");
 		if (!new_line)
 			new_line++;
-		ft_printf("\n%s:\n", file_name);
+		ft_printf("%s:\n", file_name);
 	}
 	dlst = NULL;
 	if (opt & OPT_T)

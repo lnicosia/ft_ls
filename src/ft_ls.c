@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 19:03:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 21:31:48 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,29 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 	return (0);
 }
 
+int		get_padding(t_dlist *dlst)
+{
+	int		padding;
+	int		len;
+	off_t	size;
+
+	padding = 0;
+	while (dlst)
+	{
+		len = 0;
+		size = ((t_file*)(dlst->content))->stats.st_size;
+		while (size > 0)
+		{
+			size /= 10;
+			len++;
+		}
+		if (len > padding)
+			padding = len;
+		dlst = dlst->next;
+	}
+	return (padding);
+}
+
 /*
 **	Print the list content
 **	Assumes it's made of t_file*
@@ -53,12 +76,14 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 void	print_dlist(t_dlist *dlst, int opt)
 {
 	int	first;
+	int	padding;
 
 	if (!dlst)
 		return ;
 	first = 1;
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
+	padding = get_padding(dlst);
 	while (dlst)
 	{
 		if (first)
@@ -68,10 +93,11 @@ void	print_dlist(t_dlist *dlst, int opt)
 		else if (!(opt & OPT_L))
 			ft_printf("  ");
 		print_file(((t_file*)dlst->content)->stats,
-		((t_file*)dlst->content)->name, opt);
+		((t_file*)dlst->content)->name, padding, opt);
 		dlst = dlst->next;
 	}
-	ft_printf("\n");
+	if (!(opt & OPT_L))
+		ft_printf("\n");
 }
 
 /*

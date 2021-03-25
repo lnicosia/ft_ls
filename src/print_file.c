@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 15:12:57 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 21:25:02 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	print_file_name(t_stat file_stats, char *file)
 **	Print the detailed '-l' format of a file
 */
 
-void	print_details(t_stat file_stats, char *file, int opt)
+void	print_details(t_stat file_stats, char *file, int padding, int opt)
 {
 	t_passwd	*passwd;
 	t_group		*group;
@@ -122,7 +122,7 @@ void	print_details(t_stat file_stats, char *file, int opt)
 	}
 	ft_printf("%s ", passwd->pw_name);
 	ft_printf("%s ", group->gr_name);
-	print_size(file_stats.st_size);
+	print_size(file_stats.st_size, padding, opt);
 	get_ls_time(time, ctime(&file_stats.st_mtime));
 	ft_printf("%s ", time);
 	print_file_name(file_stats, file);
@@ -133,10 +133,10 @@ void	print_details(t_stat file_stats, char *file, int opt)
 **	Print a file according to the options
 */
 
-void	print_file(t_stat file_stats, char *file, int opt)
+void	print_file(t_stat file_stats, char *file, int padding, int opt)
 {
 	if (opt & OPT_L)
-		print_details(file_stats, file, opt);
+		print_details(file_stats, file, padding, opt);
 	else
 		print_file_name(file_stats, file);
 }
