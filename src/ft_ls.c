@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 18:31:30 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:46:32 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,13 @@ int		print_files(int ac, char **av, int *new_line, int opt)
 	t_file	file;
 	t_dlist	*new;
 	t_dlist	*dlst;
+	int		(*compare_func)(void *, void *);
 
 	dlst = NULL;
+	if (opt & OPT_T)
+		compare_func = compare_times;
+	else
+		compare_func = compare_names;
 	i = 1;
 	while (i < ac)
 	{
@@ -126,9 +131,9 @@ int		print_files(int ac, char **av, int *new_line, int opt)
 			return (ft_perror(""));
 		}
 		if (opt & OPT_R)
-			ft_dlstinsert_reverse(&dlst, new, compare);
+			ft_dlstinsert_reverse(&dlst, new, compare_func);
 		else
-			ft_dlstinsert(&dlst, new, compare);
+			ft_dlstinsert(&dlst, new, compare_func);
 		(*new_line)++;
 		i++;
 	}

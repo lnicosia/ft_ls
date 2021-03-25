@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 18:33:53 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:46:55 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 	t_file			file;
 	t_dlist			*dlst;
 	t_dlist			*new;
+	int				(*compare_func)(void *, void *);
 
 	if (opt & OPT_RCAPS || new_line)
 	{
@@ -63,6 +64,10 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 		ft_printf("\n%s:\n", file_name);
 	}
 	dlst = NULL;
+	if (opt & OPT_T)
+		compare_func = compare_times;
+	else
+		compare_func = compare_names;
 	if (!(dir = opendir(file_name)))
 	{
 		return (ft_perror("opendir error"));
@@ -97,9 +102,9 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 			return (ft_perror(""));
 		}
 		if (opt & OPT_R)
-			ft_dlstinsert_reverse(&dlst, new, compare);
+			ft_dlstinsert_reverse(&dlst, new, compare_func);
 		else
-			ft_dlstinsert(&dlst, new, compare);
+			ft_dlstinsert(&dlst, new, compare_func);
 	}
 	if (closedir(dir))
 	{
