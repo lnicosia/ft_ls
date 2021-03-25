@@ -6,12 +6,13 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 15:12:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:01:55 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ls.h"
+#include "options.h"
 #include <sys/stat.h>
 
 /*
@@ -46,7 +47,7 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 
 /*
 **	Print the list content
-**	Assumes it's made of char*
+**	Assumes it's made of t_file*
 */
 
 void	print_dlist(t_dlist *dlst, int opt)
@@ -107,7 +108,7 @@ int		print_files(int ac, char **av, int opt)
 		{
 			ft_printf("ft_ls: cannot access '%s': ", av[i]);
 			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror("lstat error"));
+			return (ft_perror(""));
 		}
 		if (S_ISDIR(file.stats.st_mode))
 		{
@@ -124,7 +125,10 @@ int		print_files(int ac, char **av, int opt)
 			ft_dlstdelfront(&dlst, free_t_file);
 			return (ft_perror(""));
 		}
-		ft_dlstinsert(&dlst, new, compare);
+		if (opt & OPT_R)
+			ft_dlstinsert_reverse(&dlst, new, compare);
+		else
+			ft_dlstinsert(&dlst, new, compare);
 		i++;
 	}
 	print_dlist(dlst, opt);

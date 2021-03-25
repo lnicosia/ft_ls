@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 15:16:38 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/25 18:02:01 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,46 +18,7 @@
 #include <dirent.h>
 
 /*
-**	Print a directory's content
-*/
-
-int		print_directory(char *file, int opt)
-{
-	DIR 			*dir;
-	struct dirent	*entry;
-	char			*path;
-	t_stat			file_stats;	
-
-	if (!(dir = opendir(file)))
-	{
-		return (ft_perror(""));
-	}
-	while ((entry = readdir(dir)))
-	{
-		if (!(opt & OPT_A) && entry->d_name[0] == '.')
-			continue;
-		if (!(path = ft_strjoin(file, "/")))
-			return (ft_perror(""));
-		if (!(path = ft_strjoin_free(path, entry->d_name)))
-			return (ft_perror(""));
-		if (lstat(path, &file_stats))
-		{
-			ft_printf("ft_ls: cannot access '%s': ", path);
-			return (ft_perror(""));
-		}
-		print_file(file_stats, entry->d_name, opt);
-		ft_printf("  ");
-		ft_strdel(&path);
-	}
-	if (closedir(dir))
-	{
-		return (ft_perror(""));
-	}
-	return (0);
-}
-
-/*
-**
+**	Analyze the directories contained in our sorted list
 */
 
 void	analyze_list(t_dlist *lst, int opt)
@@ -69,7 +30,8 @@ void	analyze_list(t_dlist *lst, int opt)
 	while (lst)
 	{
 		file = (t_file*)lst->content;
-		if (!S_ISDIR(file->stats.st_mode))
+		if (!S_ISDIR(file->stats.st_mode)
+		|| file->name[ft_strlen(file->name) - 1] == '.')
 		{
 			lst = lst->next;
 			continue;
@@ -130,7 +92,10 @@ int		analyze_directory(char *file_name, int opt)
 			ft_strdel(&path);
 			return (ft_perror(""));
 		}
-		ft_dlstinsert(&dlst, new, compare);
+		if (opt & OPT_R)
+			ft_dlstinsert_reverse(&dlst, new, compare);
+		else
+			ft_dlstinsert(&dlst, new, compare);
 	}
 	if (closedir(dir))
 	{
