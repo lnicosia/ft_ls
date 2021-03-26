@@ -1,37 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_size.c                                       :+:      :+:    :+:   */
+/*   ls_padding.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/23 15:04:47 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/26 18:32:44 by lnicosia         ###   ########.fr       */
+/*   Created: 2021/03/26 18:10:57 by lnicosia          #+#    #+#             */
+/*   Updated: 2021/03/26 18:28:11 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ls.h"
-#include "options.h"
-#include <sys/stat.h>
+#ifndef LS_PADDING_H
+# define LS_PADDING_H
 
-/*
-**	Print file size shortened
-*/
-
-void	print_size_short(off_t size)
+typedef struct	s_ls_padding
 {
-	ft_printf("total %d\n", size / 1000);
-}
+	int			links;
+	int			user;
+	int			group;
+	int			size;
+}				t_ls_padding;
 
-/*
-**	Print file size
-*/
 
-void	print_size(off_t size, int padding, int opt)
-{
-	if (opt & OPT_L)
-		ft_printf("%*ld ", padding, size);
-	else
-		ft_printf("%ld ", size);
-}
+#endif

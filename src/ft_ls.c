@@ -6,20 +6,23 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/26 15:19:40 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/26 18:44:23 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ls.h"
 #include "options.h"
+#include "ls_padding.h"
 #include <sys/stat.h>
+#include <pwd.h>
+#include <grp.h>
 
 /*
 **	Checks if the given string is an option line (starting with '-')
 */
 
-int		is_arg_an_option_line(char *av)
+int				is_arg_an_option_line(char *av)
 {
 	return (ft_strlen(av) >= 1 && av[0] == '-');
 }
@@ -28,7 +31,7 @@ int		is_arg_an_option_line(char *av)
 **	Parse all the options by checking arguments starting with '-'
 */
 
-int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
+int				parse_ls_options(int ac, char **av, int *opt, int *real_args)
 {
 	int	i;
 	
@@ -45,25 +48,81 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 	return (0);
 }
 
-int		get_padding(t_dlist *dlst, blksize_t *dir_size)
+int				get_snblen(long int nb)
 {
-	int			padding;
-	int			len;
-	blksize_t	size;
+	int	len;
 
-	padding = 0;
+	len = 0;
+	while (nb > 0)
+	{
+		nb /= 10;
+		len++;
+	}
+	return (len);
+}
+
+int				get_nblen(long unsigned int nb)
+{
+	int	len;
+
+	len = 0;
+	while (nb > 0)
+	{
+		nb /= 10;
+		len++;
+	}
+	return (len);
+}
+
+int				get_userlen(t_file *file)
+{
+	t_passwd	*passwd;
+
+	if (!(passwd = getpwuid(file->stats.st_uid)))
+	{
+		ft_perror("Error: ");
+		return (0);
+	}
+	return ((int)ft_strlen(passwd->pw_name));
+}
+
+int				get_grouplen(t_file *file)
+{
+	t_group	*group;
+
+	if (!(group = getgrgid(file->stats.st_gid)))
+	{
+		ft_perror("Error: ");
+		return (0);
+	}
+	return ((int)ft_strlen(group->gr_name));
+}
+
+t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size)
+{
+	t_ls_padding		padding;
+	int					len;
+	long int			size;
+	long unsigned int	usize;
+
+	ft_bzero(&padding, sizeof(padding));
 	while (dlst)
 	{
-		len = 0;
 		size = ((t_file*)(dlst->content))->stats.st_size;
 		(*dir_size) += size;
-		while (size > 0)
-		{
-			size /= 10;
-			len++;
-		}
-		if (len > padding)
-			padding = len;
+		len = get_snblen(size);
+		if (len > padding.size)
+			padding.size = len;
+		usize = ((t_file*)(dlst->content))->stats.st_nlink;
+		len = get_nblen(usize);
+		if (len > padding.links)
+			padding.links = len;
+		len = get_userlen((t_file*)dlst->content);
+		if (len > padding.user)
+			padding.user = len;
+		len = get_grouplen((t_file*)dlst->content);
+		if (len > padding.group)
+			padding.group = len;
 		dlst = dlst->next;
 	}
 	return (padding);
@@ -74,11 +133,11 @@ int		get_padding(t_dlist *dlst, blksize_t *dir_size)
 **	Assumes it's made of t_file*
 */
 
-void	print_dlist(t_dlist *dlst, int opt)
+void			print_dlist(t_dlist *dlst, int opt)
 {
-	int			first;
-	int			padding;
-	blksize_t	dir_size;
+	int				first;
+	t_ls_padding	padding;
+	blksize_t		dir_size;
 
 	if (!dlst)
 		return ;
@@ -86,10 +145,12 @@ void	print_dlist(t_dlist *dlst, int opt)
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
 	dir_size = 0;
-	padding = get_padding(dlst, &dir_size);
 	if (opt & OPT_L)
+	{
 		ft_printf("dirsize %ld\n", dir_size / 512);
 		//print_size_short(dir_size);
+		padding = get_padding(dlst, &dir_size);
+	}
 	while (dlst)
 	{
 		if (first)
@@ -110,7 +171,7 @@ void	print_dlist(t_dlist *dlst, int opt)
 **	Frees the content of a t_file
 */
 
-void	free_t_file(void *file, size_t size)
+void			free_t_file(void *file, size_t size)
 {
 	(void)size;
 	free(((t_file*)file)->name);
@@ -120,7 +181,7 @@ void	free_t_file(void *file, size_t size)
 **	Print all the non-directory file names
 */
 
-int		print_files(int ac, char **av, int *new_line, int opt)
+int				print_files(int ac, char **av, int *new_line, int opt)
 {
 	int		i;
 	t_file	file;
@@ -174,7 +235,7 @@ int		print_files(int ac, char **av, int *new_line, int opt)
 	return (0);
 }
 
-int		ft_ls(int ac, char **av)
+int				ft_ls(int ac, char **av)
 {
 	int	i;
 	int	new_line;

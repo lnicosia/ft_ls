@@ -6,13 +6,14 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/26 18:06:25 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/26 18:46:05 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ls.h"
 #include "options.h"
+#include "ls_padding.h"
 #include <sys/stat.h>
 #include <pwd.h>
 #include <grp.h>
@@ -48,7 +49,7 @@ char	get_permission(char c, mode_t mode, unsigned int permission)
 {
 	if (mode & permission)
 		return (c);
-	return ('x');
+	return ('-');
 }
 
 /*
@@ -135,13 +136,13 @@ void	set_link_color(char *file)
 		file = buf;
 		if (lstat(buf, &stats))
 		{
-			ft_printf("{red}");
+			ft_printf("{bold}{red}");
 			return ;
 		}
 	}
 	if (lstat(file, &stats))
 	{
-		ft_printf("{red}");
+		ft_printf("{bold}{red}");
 		return ;
 	}
 	//ft_printf("Setting color of link %s\n", buf);
@@ -189,7 +190,8 @@ void	print_file_name(t_stat file_stats, char *file, int opt)
 **	Print the detailed '-l' format of a file
 */
 
-void	print_details(t_stat file_stats, char *file, int padding, int opt)
+void	print_details(t_stat file_stats, char *file, t_ls_padding padding,
+int opt)
 {
 	t_passwd	*passwd;
 	t_group		*group;
@@ -198,7 +200,7 @@ void	print_details(t_stat file_stats, char *file, int padding, int opt)
 	(void)opt;
 	print_type(file_stats.st_mode);
 	print_permissions(file_stats.st_mode);
-	ft_printf("%ld ", file_stats.st_nlink);
+	ft_printf("%*ld ", padding.links, file_stats.st_nlink);
 	if (!(passwd = getpwuid(file_stats.st_uid)))
 	{
 		ft_perror("Error: ");
@@ -209,9 +211,9 @@ void	print_details(t_stat file_stats, char *file, int padding, int opt)
 		ft_perror("Error: ");
 		return ;
 	}
-	ft_printf("%s ", passwd->pw_name);
-	ft_printf("%s ", group->gr_name);
-	print_size(file_stats.st_size, padding, opt);
+	ft_printf("%-*s ", padding.user, passwd->pw_name);
+	ft_printf("%-*s ", padding.group, group->gr_name);
+	print_size(file_stats.st_size, padding.size, opt);
 	get_ls_time(time, ctime(&file_stats.st_mtime));
 	ft_printf("%s ", time);
 	print_file_name(file_stats, file, opt);
@@ -222,7 +224,8 @@ void	print_details(t_stat file_stats, char *file, int padding, int opt)
 **	Print a file according to the options
 */
 
-void	print_file(t_stat file_stats, char *file, int padding, int opt)
+void	print_file(t_stat file_stats, char *file, t_ls_padding padding,
+int opt)
 {
 	if (opt & OPT_L)
 		print_details(file_stats, file, padding, opt);

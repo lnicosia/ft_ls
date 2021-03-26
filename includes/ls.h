@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 21:48:05 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/26 18:15:57 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include "sys/types.h"
 # include "sys/stat.h"
 # include "libft.h"
+# include "ls_padding.h"
 
 typedef struct stat		t_stat;
 typedef struct passwd	t_passwd;
@@ -31,8 +32,8 @@ int						ft_ls(int ac, char **av);
 int						parse_option_line(char *av, int *opt);
 int						analyze_args(char *file, int new_line, int opt);
 int						analyze_file(char *file, int new_line, int opt);
-void					print_file(t_stat file_stats, char *file, int padding,
-int opt);
+void					print_file(t_stat file_stats, char *file,
+t_ls_padding padding, int opt);
 void					get_ls_time(char *res, char *ctime);
 void					print_size(off_t size, int padding, int opt);
 void					print_size_short(off_t size);
