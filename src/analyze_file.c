@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 21:35:55 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:16:10 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,15 @@ void	analyze_list(t_dlist *lst, int new_line, int opt)
 		{
 			lst = lst->next;
 			continue;
+		}
+		if (opt & OPT_L)
+		{
+			ft_printf("blocksize %ld\n",
+			file->stats.st_blksize);
+			ft_printf("block count %ld\n",
+			file->stats.st_blocks);
+			ft_printf("dir size %ld\n",
+			file->stats.st_size);
 		}
 		analyze_directory(file->name, new_line, opt);
 		lst = lst->next;
@@ -134,6 +143,15 @@ int		analyze_args(char *file, int new_line, int opt)
 		return (ft_perror(""));
 	}
 	if (S_ISDIR(file_stats.st_mode))
+	{
+		if (opt & OPT_L)
+		{
+			ft_printf("blocksize %ld\n",
+			file_stats.st_blksize);
+			ft_printf("block count %ld\n",
+			file_stats.st_blocks);
+		}
 		analyze_directory(file, new_line, opt);
+	}
 	return (0);
 }

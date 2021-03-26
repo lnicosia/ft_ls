@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/25 21:31:48 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/26 15:19:40 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,18 @@ int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
 	return (0);
 }
 
-int		get_padding(t_dlist *dlst)
+int		get_padding(t_dlist *dlst, blksize_t *dir_size)
 {
-	int		padding;
-	int		len;
-	off_t	size;
+	int			padding;
+	int			len;
+	blksize_t	size;
 
 	padding = 0;
 	while (dlst)
 	{
 		len = 0;
 		size = ((t_file*)(dlst->content))->stats.st_size;
+		(*dir_size) += size;
 		while (size > 0)
 		{
 			size /= 10;
@@ -75,15 +76,20 @@ int		get_padding(t_dlist *dlst)
 
 void	print_dlist(t_dlist *dlst, int opt)
 {
-	int	first;
-	int	padding;
+	int			first;
+	int			padding;
+	blksize_t	dir_size;
 
 	if (!dlst)
 		return ;
 	first = 1;
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
-	padding = get_padding(dlst);
+	dir_size = 0;
+	padding = get_padding(dlst, &dir_size);
+	if (opt & OPT_L)
+		ft_printf("dirsize %ld\n", dir_size / 512);
+		//print_size_short(dir_size);
 	while (dlst)
 	{
 		if (first)
