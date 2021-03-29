@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/26 18:46:05 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 11:20:11 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,5 +230,9 @@ int opt)
 	if (opt & OPT_L)
 		print_details(file_stats, file, padding, opt);
 	else
+	{
 		print_file_name(file_stats, file, opt);
+		if (!isatty(STDOUT_FILENO))
+			ft_printf("\n");
+	}
 }

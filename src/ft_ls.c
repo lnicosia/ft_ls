@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:07:16 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 11:25:10 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,6 @@ void			print_dlist(t_dlist *dlst, int opt)
 		dlst = dlst->prev;
 	dir_size = 0;
 	//term = ttyname(STDOUT_FILENO);
-	//ft_printf("Terminal is %s\n", term);
 	//ft_bzero(&winsize, sizeof(winsize));
 	//ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
 	//ft_printf("Window size = %d\n", winsize.ws_col);
@@ -173,13 +172,13 @@ void			print_dlist(t_dlist *dlst, int opt)
 		{
 			first = 0;
 		}
-		else if (!(opt & OPT_L))
+		else if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
 			ft_printf("  ");
 		print_file(((t_file*)dlst->content)->stats,
 		((t_file*)dlst->content)->name, padding, opt);
 		dlst = dlst->next;
 	}
-	if (!(opt & OPT_L))
+	if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
 		ft_printf("\n");
 }
 
