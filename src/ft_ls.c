@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:02:49 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 11:07:16 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ long int		get_block_size(t_file *file)
 	long int	size;
 
 	size = 0;
-	size = file->stats.st_blocks * file->stats.st_blksize;
+	size = file->stats.st_blocks * 512;
 	return (size);
 }
 
