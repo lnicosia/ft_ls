@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 12:23:00 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 16:24:54 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ void					free_t_file(void *file, size_t size);
 int						analyze_directory(char *file_name, int new_line,
 int opt);
 int						(*get_compare_func(int opt))(void*, void*);
+int						print_dlist_col(t_dlist *lst, size_t len,
+unsigned short winsize, int opt);
 
 #endif

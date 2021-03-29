@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:26:37 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 12:14:46 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 17:25:09 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@
 # define OPT_MCAPS (1 << 11)
 # define OPT_0 (1 << 12)
 # define OPT_C (1 << 13)
+# define OPT_CCAPS (1 << 14)
+# define OPT_UCAPS (1 << 15)
 
 #endif

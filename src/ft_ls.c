@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 12:29:31 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 17:32:12 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,6 @@ void			print_dlist(t_dlist *dlst, int opt)
 	int				first;
 	t_ls_padding	padding;
 	blksize_t		dir_size;
-	//t_winsize		winsize;
-	//char			*term;
 
 	if (!dlst)
 		return ;
@@ -157,10 +155,6 @@ void			print_dlist(t_dlist *dlst, int opt)
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
 	dir_size = 0;
-	//term = ttyname(STDOUT_FILENO);
-	//ft_bzero(&winsize, sizeof(winsize));
-	//ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
-	//ft_printf("Window size = %d\n", winsize.ws_col);
 	if (opt & OPT_L)
 	{
 		padding = get_padding(dlst, &dir_size);
@@ -198,7 +192,7 @@ void			free_t_file(void *file, size_t size)
 
 int				(*get_compare_func(int opt))(void*, void*)
 {
-	if (opt & OPT_0)
+	if (opt & OPT_F || opt & OPT_UCAPS)
 		return (compare_none);
 	if (opt & OPT_T)
 	{
@@ -219,14 +213,17 @@ int				(*get_compare_func(int opt))(void*, void*)
 
 int				print_files(int ac, char **av, int *new_line, int opt)
 {
-	int		i;
-	t_file	file;
-	t_dlist	*new;
-	t_dlist	*dlst;
-	int		(*compare_func)(void *, void *);
+	int			i;
+	t_file		file;
+	t_dlist		*new;
+	t_dlist		*dlst;
+	size_t		len;
+	int			(*compare_func)(void *, void *);
+	t_winsize	winsize;
 
 	dlst = NULL;
 	compare_func = get_compare_func(opt);
+	len = 0;
 	i = 1;
 	while (i < ac)
 	{
@@ -246,6 +243,7 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 			i++;
 			continue;
 		}
+		len += ft_strlen(av[i]) + 2;
 		if (!(file.name = ft_strdup(av[i])))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
@@ -253,6 +251,7 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 		}
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
+			ft_strdel(&file.name);
 			ft_dlstdelfront(&dlst, free_t_file);
 			return (ft_perror(""));
 		}
@@ -263,7 +262,12 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 		(*new_line)++;
 		i++;
 	}
-	print_dlist(dlst, opt);
+	ft_bzero(&winsize, sizeof(winsize));
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
+	if (opt & OPT_CCAPS && len > winsize.ws_col && isatty(STDOUT_FILENO))
+		print_dlist_col(dlst, len, winsize.ws_col, opt);
+	else
+		print_dlist(dlst, opt);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }
