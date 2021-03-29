@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/26 18:44:23 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 11:02:49 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include <pwd.h>
 #include <grp.h>
+#include <sys/ioctl.h>
 
 /*
 **	Checks if the given string is an option line (starting with '-')
@@ -98,6 +99,15 @@ int				get_grouplen(t_file *file)
 	return ((int)ft_strlen(group->gr_name));
 }
 
+long int		get_block_size(t_file *file)
+{
+	long int	size;
+
+	size = 0;
+	size = file->stats.st_blocks * file->stats.st_blksize;
+	return (size);
+}
+
 t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size)
 {
 	t_ls_padding		padding;
@@ -108,9 +118,9 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size)
 	ft_bzero(&padding, sizeof(padding));
 	while (dlst)
 	{
-		size = ((t_file*)(dlst->content))->stats.st_size;
+		size = get_block_size(((t_file*)(dlst->content)));
 		(*dir_size) += size;
-		len = get_snblen(size);
+		len = get_snblen(((t_file*)(dlst->content))->stats.st_size);
 		if (len > padding.size)
 			padding.size = len;
 		usize = ((t_file*)(dlst->content))->stats.st_nlink;
@@ -138,6 +148,8 @@ void			print_dlist(t_dlist *dlst, int opt)
 	int				first;
 	t_ls_padding	padding;
 	blksize_t		dir_size;
+	//t_winsize		winsize;
+	//char			*term;
 
 	if (!dlst)
 		return ;
@@ -145,11 +157,15 @@ void			print_dlist(t_dlist *dlst, int opt)
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
 	dir_size = 0;
+	//term = ttyname(STDOUT_FILENO);
+	//ft_printf("Terminal is %s\n", term);
+	//ft_bzero(&winsize, sizeof(winsize));
+	//ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
+	//ft_printf("Window size = %d\n", winsize.ws_col);
 	if (opt & OPT_L)
 	{
-		ft_printf("dirsize %ld\n", dir_size / 512);
-		//print_size_short(dir_size);
 		padding = get_padding(dlst, &dir_size);
+		ft_printf("total %ld\n", dir_size / 1024);
 	}
 	while (dlst)
 	{
