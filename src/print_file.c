@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:20:11 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 12:22:54 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,6 @@ int opt)
 	t_group		*group;
 	char		time[30];
 
-	(void)opt;
 	print_type(file_stats.st_mode);
 	print_permissions(file_stats.st_mode);
 	ft_printf("%*ld ", padding.links, file_stats.st_nlink);
@@ -214,7 +213,7 @@ int opt)
 	ft_printf("%-*s ", padding.user, passwd->pw_name);
 	ft_printf("%-*s ", padding.group, group->gr_name);
 	print_size(file_stats.st_size, padding.size, opt);
-	get_ls_time(time, ctime(&file_stats.st_mtime));
+	get_ls_time(time, file_stats, opt);
 	ft_printf("%s ", time);
 	print_file_name(file_stats, file, opt);
 	ft_printf("\n");

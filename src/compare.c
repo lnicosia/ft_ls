@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:06:12 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:48:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 12:13:22 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,24 @@ int		compare_names_no_case(void *s1, void *s2)
 int		compare_times(void *s1, void *s2)
 {
 	return (((t_file*)s1)->stats.st_mtime < ((t_file*)s2)->stats.st_mtime);
+}
+
+/*
+**	Function comparing the two times that is going to be used
+**	to go through our dlist
+*/
+
+int		compare_atimes(void *s1, void *s2)
+{
+	return (((t_file*)s1)->stats.st_atime < ((t_file*)s2)->stats.st_atime);
+}
+
+/*
+**	Function comparing the two times that is going to be used
+**	to go through our dlist
+*/
+
+int		compare_ctimes(void *s1, void *s2)
+{
+	return (((t_file*)s1)->stats.st_ctime < ((t_file*)s2)->stats.st_ctime);
 }

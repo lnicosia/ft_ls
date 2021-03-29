@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:57:20 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 12:29:31 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,13 @@ int				(*get_compare_func(int opt))(void*, void*)
 	if (opt & OPT_0)
 		return (compare_none);
 	if (opt & OPT_T)
+	{
+		if (opt & OPT_C)
+			return (compare_ctimes);
+		if (opt & OPT_U)
+			return (compare_atimes);
 		return (compare_times);
+	}
 	if (opt & OPT_MCAPS)
 		return (compare_names_no_case);
 	return (compare_names);
