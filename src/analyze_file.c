@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:22:17 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 11:58:02 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,7 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 		ft_printf("%s:\n", file_name);
 	}
 	dlst = NULL;
-	if (opt & OPT_T)
-		compare_func = compare_times;
-	else
-		compare_func = compare_names;
+	compare_func = get_compare_func(opt);
 	if (!(dir = opendir(file_name)))
 	{
 		return (ft_perror("opendir error"));

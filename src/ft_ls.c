@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 11:25:10 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/29 11:57:20 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,21 @@ void			free_t_file(void *file, size_t size)
 }
 
 /*
+**
+*/
+
+int				(*get_compare_func(int opt))(void*, void*)
+{
+	if (opt & OPT_0)
+		return (compare_none);
+	if (opt & OPT_T)
+		return (compare_times);
+	if (opt & OPT_MCAPS)
+		return (compare_names_no_case);
+	return (compare_names);
+}
+
+/*
 **	Print all the non-directory file names
 */
 
@@ -205,10 +220,7 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 	int		(*compare_func)(void *, void *);
 
 	dlst = NULL;
-	if (opt & OPT_T)
-		compare_func = compare_times;
-	else
-		compare_func = compare_names;
+	compare_func = get_compare_func(opt);
 	i = 1;
 	while (i < ac)
 	{
