@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 12:22:54 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/31 14:55:37 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,13 @@ int opt)
 	ft_printf("%-*s ", padding.group, group->gr_name);
 	print_size(file_stats.st_size, padding.size, opt);
 	get_ls_time(time, file_stats, opt);
-	ft_printf("%s ", time);
+	ft_printf("%s", time);
+	if (opt & OPT_TCAPS)
+	{
+		ft_printf(":%.2ld.%ld", file_stats.st_atim.tv_sec % 60,
+		file_stats.st_atim.tv_nsec);
+	}
+	ft_printf(" ");
 	print_file_name(file_stats, file, opt);
 	ft_printf("\n");
 }

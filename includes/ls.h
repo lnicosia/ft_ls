@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 16:24:54 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/31 14:47:07 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct stat		t_stat;
 typedef struct passwd	t_passwd;
 typedef struct group	t_group;
 typedef struct winsize	t_winsize;
+typedef struct timespec	t_timespec;
 
 typedef struct			s_file
 {

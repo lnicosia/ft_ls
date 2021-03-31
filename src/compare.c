@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:06:12 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 12:13:22 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/03/31 15:05:52 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		compare_none(void *s1, void *s2)
 {
 	(void)s1;
 	(void)s2;
-	return (1);
+	return (0);
 }
 
 /*
@@ -51,7 +51,18 @@ int		compare_names_no_case(void *s1, void *s2)
 
 int		compare_times(void *s1, void *s2)
 {
-	return (((t_file*)s1)->stats.st_mtime < ((t_file*)s2)->stats.st_mtime);
+	t_file	*f1;
+	t_file	*f2;
+
+	f1 = (t_file*)s1;
+	f2 = (t_file*)s2;
+	if (f1->stats.st_mtime == f2->stats.st_mtime)
+	{
+		if (f1->stats.st_mtim.tv_nsec == f2->stats.st_mtim.tv_nsec)
+			return (compare_names(s1, s2));
+		return (f1->stats.st_mtim.tv_nsec < f2->stats.st_mtim.tv_nsec);
+	}
+	return (f1->stats.st_mtime < f2->stats.st_mtime);
 }
 
 /*
@@ -61,7 +72,18 @@ int		compare_times(void *s1, void *s2)
 
 int		compare_atimes(void *s1, void *s2)
 {
-	return (((t_file*)s1)->stats.st_atime < ((t_file*)s2)->stats.st_atime);
+	t_file	*f1;
+	t_file	*f2;
+
+	f1 = (t_file*)s1;
+	f2 = (t_file*)s2;
+	if (f1->stats.st_atime == f2->stats.st_atime)
+	{
+		if (f1->stats.st_atim.tv_nsec == f2->stats.st_atim.tv_nsec)
+			return (compare_names(s1, s2));
+		return (f1->stats.st_atim.tv_nsec < f2->stats.st_atim.tv_nsec);
+	}
+	return (f1->stats.st_atime < f2->stats.st_atime);
 }
 
 /*
@@ -71,5 +93,16 @@ int		compare_atimes(void *s1, void *s2)
 
 int		compare_ctimes(void *s1, void *s2)
 {
-	return (((t_file*)s1)->stats.st_ctime < ((t_file*)s2)->stats.st_ctime);
+	t_file	*f1;
+	t_file	*f2;
+
+	f1 = (t_file*)s1;
+	f2 = (t_file*)s2;
+	if (f1->stats.st_ctime == f2->stats.st_ctime)
+	{
+		if (f1->stats.st_ctim.tv_nsec == f2->stats.st_ctim.tv_nsec)
+			return (compare_names(s1, s2));
+		return (f1->stats.st_ctim.tv_nsec < f2->stats.st_ctim.tv_nsec);
+	}
+	return (f1->stats.st_ctime < f2->stats.st_ctime);
 }
