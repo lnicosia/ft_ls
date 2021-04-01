@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/03/29 18:47:53 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/04/01 10:46:34 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ ROOT = sudo
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMFT = $(LIBMFT_DIR)/libmft.a
 
-LDLIBS = $(LIBFT)
+LDLIBS = $(LIBFT) -lm
 
 LDFLAGS = -L $(LIBFT_DIR)
 

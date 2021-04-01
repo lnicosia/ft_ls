@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/31 14:55:37 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:27:17 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	set_link_color(char *file)
 **	Cuts the path after the last '/'
 */
 
-void	print_file_name(t_stat file_stats, char *file, int opt)
+void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 {
 	char	*name;
 	char	buf[256];
@@ -166,7 +166,7 @@ void	print_file_name(t_stat file_stats, char *file, int opt)
 		name++;
 	if (opt & OPT_GCAPS)
 		set_color(file, file_stats.st_mode);
-	ft_printf("%s", name);
+	ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
 	if (opt & OPT_L && S_ISLNK(file_stats.st_mode))
@@ -221,7 +221,7 @@ int opt)
 		file_stats.st_atim.tv_nsec);
 	}
 	ft_printf(" ");
-	print_file_name(file_stats, file, opt);
+	print_file_name(file_stats, file, 0, opt);
 	ft_printf("\n");
 }
 
@@ -236,7 +236,7 @@ int opt)
 		print_details(file_stats, file, padding, opt);
 	else
 	{
-		print_file_name(file_stats, file, opt);
+		print_file_name(file_stats, file, 0, opt);
 		if (!isatty(STDOUT_FILENO))
 			ft_printf("\n");
 	}

@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/31 14:47:48 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/01 18:26:14 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 	compare_func = get_compare_func(opt);
 	if (!(dir = opendir(file_name)))
 	{
-		return (ft_perror("opendir error"));
+		custom_error("ls: cannot open directory '%s': ", file_name);
+		return (ft_perror(""));
 	}
 	while ((entry = readdir(dir)))
 	{
@@ -93,7 +94,7 @@ int		analyze_directory(char *file_name, int new_line, int opt)
 		}
 		if (lstat(path, &file.stats))
 		{
-			ft_printf("ft_ls: cannot access '%s': ", path);
+			custom_error("ft_ls: cannot access '%s': ", path);
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
 			return (ft_perror(""));

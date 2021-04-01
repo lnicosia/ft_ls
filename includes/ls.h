@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/31 14:47:07 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:30:59 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int						analyze_args(char *file, int new_line, int opt);
 int						analyze_file(char *file, int new_line, int opt);
 void					print_file(t_stat file_stats, char *file,
 t_ls_padding padding, int opt);
+void					print_file_name(t_stat file_stats, char *file,
+size_t padding, int opt);
 void					get_ls_time(char *res, t_stat stats, int opt);
 void					print_size(off_t size, int padding, int opt);
 void					print_size_short(off_t size);
