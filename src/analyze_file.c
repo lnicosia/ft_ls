@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/01 18:26:14 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/02 10:18:46 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,8 @@ int		analyze_args(char *file, int new_line, int opt)
 
 	if (lstat(file, &file_stats))
 	{
-		ft_printf("ft_ls: cannot access '%s': ", file);
-		return (ft_perror(""));
+		//custom_error("ft_ls: cannot access '%s': ", file);
+		//return (ft_perror(""));
 	}
 	if (S_ISDIR(file_stats.st_mode))
 	{

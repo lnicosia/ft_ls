@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/31 14:47:00 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/02 10:53:57 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int				(*get_compare_func(int opt))(void*, void*)
 **	Print all the non-directory file names
 */
 
-int				print_files(int ac, char **av, int *new_line, int opt)
+int				print_files(int ac, char **av, int *new_line, int *opt)
 {
 	int			i;
 	t_file		file;
@@ -104,7 +104,7 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 	t_winsize	winsize;
 
 	dlst = NULL;
-	compare_func = get_compare_func(opt);
+	compare_func = get_compare_func(*opt);
 	len = 0;
 	i = 1;
 	while (i < ac)
@@ -116,9 +116,11 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 		}
 		if (lstat(av[i], &file.stats))
 		{
-			ft_printf("ft_ls: cannot access '%s': ", av[i]);
-			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror(""));
+			custom_error("ft_ls: cannot access '%s': ", av[i]);
+			ft_perror("");
+			(*opt) |= OPT_ERROR;
+			i++;
+			continue;
 		}
 		if (S_ISDIR(file.stats.st_mode))
 		{
@@ -137,7 +139,7 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 			ft_dlstdelfront(&dlst, free_t_file);
 			return (ft_perror(""));
 		}
-		if (opt & OPT_R)
+		if (*opt & OPT_R)
 			ft_dlstinsert_reverse(&dlst, new, compare_func);
 		else
 			ft_dlstinsert(&dlst, new, compare_func);
@@ -145,11 +147,13 @@ int				print_files(int ac, char **av, int *new_line, int opt)
 		i++;
 	}
 	ft_bzero(&winsize, sizeof(winsize));
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
-	if (opt & OPT_CCAPS && len > winsize.ws_col && isatty(STDOUT_FILENO))
-		print_dlist_col(dlst, len, winsize.ws_col, opt);
+	if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize))
+		return (ft_perror(""));
+	if (*opt & OPT_CCAPS && len > winsize.ws_col && isatty(STDOUT_FILENO))
+		print_dlist_col(dlst, len, winsize.ws_col, *opt);
 	else
-		print_dlist(dlst, opt);
+		print_dlist(dlst, *opt);
+	*opt &= ~OPT_ERROR;
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }
@@ -165,7 +169,7 @@ int				ft_ls(int ac, char **av)
 	new_line = 0;
 	real_args = ac - 1;
 	parse_ls_options(ac, av, &opt, &real_args);
-	print_files(ac, av, &new_line, opt);
+	print_files(ac, av, &new_line, &opt);
 	i = 1;
 	while (i < ac)
 	{

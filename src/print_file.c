@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/01 17:27:17 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/02 10:51:16 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 		name++;
 	if (opt & OPT_GCAPS)
 		set_color(file, file_stats.st_mode);
+	if (opt & OPT_ERROR)
+		ft_printf(" ");
 	ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
