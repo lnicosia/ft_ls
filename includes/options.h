@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:26:37 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/02 10:50:53 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/02 18:09:15 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,7 @@
 # define OPT_UCAPS (1 << 15)
 # define OPT_TCAPS (1 << 16)
 # define OPT_ERROR (1 << 17)
+# define OPT_B (1 << 18)
+# define OPT_PATH (1 << 19)
 
 #endif

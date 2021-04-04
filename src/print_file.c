@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/02 10:51:16 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/04 12:31:15 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,48 @@ int		is_link_valid(char *file)
 	char	buf[256];
 	ssize_t	size;
 	t_stat	stats;
+	char	*last_slash;
+	char	*dir;
+	size_t	dirlen;
 	
+	if (!(last_slash = ft_strrchr(file, '/')))
+	{
+		if (!(dir = ft_strdup("./")))
+		{
+			ft_perror("ft_strdup");
+			return (0);
+		}
+	}
+	else
+	{
+		if (!(dir = ft_strsub(file, 0,
+				ft_strlen(file) - ft_strlen(last_slash) + 1)))
+		{
+			ft_perror("ft_strsub");
+			return (0);
+		}
+	}
+	//ft_printf("Dir = %s\n", dir);
+	dirlen = ft_strlen(dir);
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
 		buf[size] = '\0';
+		if (buf[0] != '/')
+		{
+			ft_memmove(buf + dirlen, buf, (size_t)size);
+			ft_memmove(buf, dir, dirlen);
+		}
+		//ft_printf("Link %s towards %s\n", file, buf);
 		file = buf;
-		if (lstat(buf, &stats))
+		if (stat(file, &stats))
+		{
+			//custom_error("stat %s: ", file);
+			//ft_perror("");
+			ft_strdel(&dir);
 			return (0);
+		}
 	}
+	ft_strdel(&dir);
 	return (1);
 }
 
@@ -89,12 +123,13 @@ int		is_link_valid(char *file)
 **	Sets the right color according to the type of a file
 */
 
-void	set_color(char *file, mode_t mode)
+void	set_color(char *file, mode_t mode, int opt)
 {
-	ft_printf("{bold}");
+	if (opt & OPT_B)
+		ft_printf("{bold}");
 	if (S_ISDIR(mode))
 	{
-		if (mode & 00777)
+		if ((mode & S_IWUSR) && (mode & S_IWGRP) && (mode & S_IWOTH))
 			ft_printf("{reset}{bgreen}");
 		ft_printf("{blue}");
 	}
@@ -124,29 +159,77 @@ void	set_color(char *file, mode_t mode)
 **	Sets the right color for a link
 */
 
-void	set_link_color(char *file)
+void	print_link(char *file, int opt)
 {
 	char	buf[256];
+	char	link[256];
 	ssize_t	size;
-	t_stat	stats;
-	
-	while ((size = readlink(file, buf, 256)) != -1)
+	char	*last_slash;
+	char	*dir;
+	size_t	dirlen;
+	t_stat stats;
+
+	ft_printf(" -> ");
+	ft_bzero(buf, 256);
+	ft_bzero(link, 256);
+	if (opt & OPT_B)
+		ft_printf("{bold}");
+	if ((size = readlink(file, link, 256)) == -1)
 	{
-		buf[size] = '\0';
-		file = buf;
-		if (lstat(buf, &stats))
+		if (opt & OPT_GCAPS)
+			ft_printf("{red}");
+	}
+	else
+		link[size] = 0;
+	if (!(last_slash = ft_strrchr(file, '/')))
+	{
+		if (!(dir = ft_strdup("./")))
 		{
-			ft_printf("{bold}{red}");
+			ft_perror("ft_strdup");
 			return ;
 		}
 	}
-	if (lstat(file, &stats))
+	else
 	{
-		ft_printf("{bold}{red}");
-		return ;
+		if (!(dir = ft_strsub(file, 0,
+				ft_strlen(file) - ft_strlen(last_slash) + 1)))
+		{
+			ft_perror("ft_strsub");
+			return ;
+		}
 	}
-	//ft_printf("Setting color of link %s\n", buf);
-	set_color(buf, stats.st_mode);
+	//ft_printf("Dir = %s\n", dir);
+	dirlen = ft_strlen(dir);
+	while ((size = readlink(file, buf, 256)) != -1)
+	{
+		buf[size] = '\0';
+		if (buf[0] != '/')
+		{
+			ft_memmove(buf + dirlen, buf, (size_t)size);
+			ft_memmove(buf, dir, dirlen);
+		}
+		//ft_printf("Link %s towards %s\n", file, buf);
+		file = buf;
+		if (stat(file, &stats))
+		{
+			//custom_error("stat %s: ", file);
+			//ft_perror("");
+			if (opt & OPT_GCAPS)
+				ft_printf("{red}");
+			break;
+		}
+	}
+	if (stat(buf, &stats))
+	{
+		//custom_error("stat %s: ", file);
+		//ft_perror("");
+		if (opt & OPT_GCAPS)
+			ft_printf("{red}");
+	}
+	if (opt & OPT_GCAPS)
+		set_color(buf, stats.st_mode, opt);
+	ft_printf("%s", link);
+	ft_strdel(&dir);
 }
 
 /*
@@ -157,32 +240,21 @@ void	set_link_color(char *file)
 void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 {
 	char	*name;
-	char	buf[256];
-	ssize_t	size;
 
-	if (!(name = ft_strrchr(file, '/')))
+	if (opt & OPT_GCAPS)
+		set_color(file, file_stats.st_mode, opt);
+	if (opt & OPT_ERROR)
+		ft_printf(" ");
+	if (opt & OPT_PATH || !(name = ft_strrchr(file, '/')))
 		name = file;
 	else
 		name++;
-	if (opt & OPT_GCAPS)
-		set_color(file, file_stats.st_mode);
-	if (opt & OPT_ERROR)
-		ft_printf(" ");
 	ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
 	if (opt & OPT_L && S_ISLNK(file_stats.st_mode))
 	{
-		ft_printf(" -> ");
-		if ((size = readlink(file, buf, 256)) == -1)
-		{
-			ft_perror("");
-			return ;
-		}
-		buf[size] = '\0';
-		if (opt & OPT_GCAPS)
-			set_link_color(buf);
-		ft_printf("%s", buf);
+		print_link(file, opt);	
 		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");
 	}
