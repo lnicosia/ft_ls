@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/02 18:10:10 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/05 10:20:52 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,8 @@ int				print_files(int ac, char **av, int *new_line, int *opt)
 		print_dlist_col(dlst, len, winsize.ws_col, *opt);
 	else
 		print_dlist(dlst, *opt);
+	if (*opt & OPT_L)
+		*opt |= OPT_TOTAL;
 	*opt &= ~OPT_ERROR;
 	*opt &= ~OPT_PATH;
 	ft_dlstdelfront(&dlst, free_t_file);
@@ -170,6 +172,7 @@ int				ft_ls(int ac, char **av)
 	opt = 0;
 	new_line = 0;
 	real_args = ac - 1;
+	//ft_printf("Printing file args\n");
 	parse_ls_options(ac, av, &opt, &real_args);
 	print_files(ac, av, &new_line, &opt);
 	i = 1;

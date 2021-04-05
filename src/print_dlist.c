@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/02 10:37:36 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/05 10:28:19 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,12 @@ void			print_dlist(t_dlist *dlst, int opt)
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
 	dir_size = 0;
+	ft_bzero(&padding, sizeof(padding));
 	if (opt & OPT_L)
 	{
 		padding = get_padding(dlst, &dir_size);
-		ft_printf("total %ld\n", dir_size / 1024);
+		if (opt & OPT_TOTAL)
+			ft_printf("total %ld\n", dir_size / 1024);
 	}
 	while (dlst)
 	{
@@ -162,10 +164,12 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 	while (dlst && dlst->next)
 		dlst = dlst->next;
 	dir_size = 0;
+	ft_bzero(&padding, sizeof(padding));
 	if (opt & OPT_L)
 	{
 		padding = get_padding(dlst, &dir_size);
-		ft_printf("total %ld\n", dir_size / 1024);
+		if (opt & OPT_TOTAL)
+			ft_printf("total %ld\n", dir_size / 1024);
 	}
 	while (dlst)
 	{

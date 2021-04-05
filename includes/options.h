@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:26:37 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/02 18:09:15 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/05 09:58:09 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@
 # define OPT_ERROR (1 << 17)
 # define OPT_B (1 << 18)
 # define OPT_PATH (1 << 19)
+# define OPT_TOTAL (1 << 20)
 
 #endif
