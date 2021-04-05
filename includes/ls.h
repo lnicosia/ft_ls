@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/01 17:30:59 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/05 13:52:57 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ typedef struct			s_file
 
 int						ft_ls(int ac, char **av);
 int						parse_option_line(char *av, int *opt);
-int						analyze_args(char *file, int new_line, int opt);
-int						analyze_file(char *file, int new_line, int opt);
+t_dlist					*analyze_args(int ac, char **av, int *opt);
+int						analyze_file(char *file, int opt);
 void					print_file(t_stat file_stats, char *file,
 t_ls_padding padding, int opt);
 void					print_file_name(t_stat file_stats, char *file,
@@ -51,10 +51,10 @@ int						compare_ctimes(void *s1, void *s2);
 void					print_dlist(t_dlist *dlst, int opt);
 void					print_dlist_reverse(t_dlist *dlst, int opt);
 void					free_t_file(void *file, size_t size);
-int						analyze_directory(char *file_name, int new_line,
-int opt);
+int						analyze_directory(char *file_name, int *opt);
 int						(*get_compare_func(int opt))(void*, void*);
 int						print_dlist_col(t_dlist *lst, size_t len,
 unsigned short winsize, int opt);
+int						is_arg_an_option_line(char *av);
 
 #endif

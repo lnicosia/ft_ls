@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/05 10:28:19 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/04/05 14:40:43 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,9 +134,7 @@ void			print_dlist(t_dlist *dlst, int opt)
 	while (dlst)
 	{
 		if (first)
-		{
 			first = 0;
-		}
 		else if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
 			ft_printf("  ");
 		print_file(((t_file*)dlst->content)->stats,
@@ -174,9 +172,7 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 	while (dlst)
 	{
 		if (first)
-		{
 			first = 0;
-		}
 		else if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
 			ft_printf("  ");
 		print_file(((t_file*)dlst->content)->stats,
