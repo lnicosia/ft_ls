@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:26:37 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/05 11:33:23 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/06 13:53:25 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@
 # define OPT_TOTAL (1 << 20)
 # define OPT_NEWLINE (1 << 21)
 # define OPT_MULTIPLE_DIRS (1 << 22)
+# define OPT_1 (1 << 23)
 
 #endif

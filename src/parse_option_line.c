@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/02 17:34:51 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/06 13:53:48 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ int		check_opt(char av, int *opt)
 	else if (av == 'b')
 	{
 		*opt |= OPT_B;
+	}
+	else if (av == '1')
+	{
+		*opt |= OPT_1;
 	}
 	return (0);
 }
