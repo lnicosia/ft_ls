@@ -135,6 +135,8 @@ int				print_files(t_dlist *dlst, int *opt)
 	}
 	if (nb_files > 0 && !(*opt & OPT_L) && isatty(STDOUT_FILENO))
 		ft_printf("\n");
+	if (nb_files > 0 && *opt & OPT_MULTIPLE_DIRS)
+		*opt |= OPT_NEWLINE;
 	if (*opt & OPT_L)
 		*opt |= OPT_TOTAL;
 	*opt &= ~OPT_ERROR;
@@ -172,6 +174,7 @@ t_dlist		*analyze_args(int ac, char **av, int *opt)
 {
 	int			i;
 	int			nb_dir;
+	int			nb_files;
 	t_file		file;
 	t_dlist		*new;
 	t_dlist		*dlst;
@@ -183,6 +186,7 @@ t_dlist		*analyze_args(int ac, char **av, int *opt)
 	len = 0;
 	i = 1;
 	nb_dir = 0;
+	nb_files = 0;
 	while (i < ac)
 	{
 		if (is_arg_an_option_line(av[i]))
@@ -201,6 +205,8 @@ t_dlist		*analyze_args(int ac, char **av, int *opt)
 		}
 		if (S_ISDIR(file.stats.st_mode))
 			nb_dir++;
+		else
+			nb_files++;
 		len += ft_strlen(av[i]) + 2;
 		if (!(file.name = ft_strdup(av[i])))
 		{
@@ -221,8 +227,10 @@ t_dlist		*analyze_args(int ac, char **av, int *opt)
 			ft_dlstinsert(&dlst, new, compare_func);
 		i++;
 	}
-	if (nb_dir > 1)
+	if (nb_dir > 1 || (nb_dir > 0 && nb_files > 0))
+	{
 		*opt |= OPT_MULTIPLE_DIRS;
+	}
 	return (dlst);
 }
 

@@ -179,7 +179,12 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 		if (first)
 			first = 0;
 		else if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
-			ft_printf("  ");
+		{
+			if (opt & OPT_CCAPS)
+				ft_printf("  ");
+			else
+				ft_printf("\n");
+		}
 		print_file(((t_file*)dlst->content)->stats,
 		((t_file*)dlst->content)->name, padding, opt);
 		dlst = dlst->prev;
