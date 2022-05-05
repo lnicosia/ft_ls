@@ -37,5 +37,14 @@
 # define OPT_NEWLINE (1 << 21)
 # define OPT_MULTIPLE_DIRS (1 << 22)
 # define OPT_1 (1 << 23)
+# define OPT_ACAPS (1 << 24)
+# define OPT_AUTHOR (1 << 25)
+# define OPT_H (1 << 26)
+# define OPT_SI (1 << 27)
+# define OPT_N (1 << 28)
+# define OPT_NCAPS (1 << 29)
+# define OPT_P (1 << 30)
+
+
 
 #endif

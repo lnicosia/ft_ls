@@ -13,11 +13,59 @@
 #include "options.h"
 #include "libft.h"
 
+int    print_usage_stdin(void)
+{
+	ft_printf("Usage: ft_ls [OPTION]... [FILE]...\n");
+	ft_printf("List information about the FILEs (the current directory by default).\n");
+	ft_printf("Sort entries alphabetically if none of -cftuvSUX nor --sort is specified\n");
+	ft_printf("\n");
+	//
+	ft_printf("Mandatory arguments to long options are mandatory for short options too.\n");
+	ft_printf("%4s%-25s%s", "-a", ", --all", "do not ignore entries starting with .\n");
+	ft_printf("%4s%-25s%s", "-A", ", --almost-all", "do no list implied . and ..\n");
+	ft_printf("%4s%-25s%s", "", "  --author", "with -l, print the author of each file\n");
+	ft_printf("%4s%-25s%s", "-b", ", --bold", "with -G: print the names in bold\n");
+	ft_printf("%4s%-25s%s", "-c", "", "with -lt: sort by, and show, ctime (time of last\n");
+	ft_printf("%4s%-25s%s", "", "", "  modification of file status information);\n");
+	ft_printf("%4s%-25s%s", "", "", "  with -l: show ctime and sort by name;\n");
+	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
+	ft_printf("%4s%-25s%s", "-C", "", "list entries by column\n");
+	ft_printf("%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
+	ft_printf("%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
+	ft_printf("%4s%-25s%s", "-G", ", --color", "colorize the output\n");
+	ft_printf("%4s%-25s%s", "-h", ", --human-readable", "with -l, print sizes like 1K 234M 2G etc.\n");
+	ft_printf("%4s%-25s%s", "", "  --si", "likewise, but use powers of 1000 not 1024\n");
+	ft_printf("%4s%-25s%s", "-l", "", "use a long listing format\n");
+	ft_printf("%4s%-25s%s", "-m", "", "fill width with a comma separated list of entries\n");
+	ft_printf("%4s%-25s%s", "-n", ", --numeric-uid-gid", "like -l, but list numeric user and group IDs\n");
+	ft_printf("%4s%-25s%s", "-N", ", --literal", "print entry names without quoting\n");
+	ft_printf("%4s%-25s%s", "-o", "", "like -l, but do not list group information\n");
+	ft_printf("%4s%-25s%s", "-p", ", --indicator-style=slash", "\n");
+	ft_printf("%4s%-25s%s", "", "", "append / indicator to directories\n");
+	ft_printf("%4s%-25s%s", "-r", ", --reverse", "reverse order while sorting\n");
+	ft_printf("%4s%-25s%s", "-R", ", --recursive", "list subdirectories recursively\n");
+	ft_printf("%4s%-25s%s", "-S", "", "sort by file size, largest first\n");
+	ft_printf("%4s%-25s%s", "-t", "", "sort by modification time, newest first\n");
+	ft_printf("%4s%-25s%s", "-T", "", "with -l, print the full timestamp\n");
+	ft_printf("%4s%-25s%s", "-u", "", "with -lt: sort by, and show, access time;\n");
+	ft_printf("%4s%-25s%s", "", "", "  with -l: show access time and sort by name;\n");
+	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by access time, newest first\n");
+	ft_printf("%4s%-25s%s", "-U", "", "do not sort; list entries in directory order\n");
+	ft_printf("%4s%-25s%s", "-1", "", "list one file per line\n");
+	ft_printf("      --help     display this help and exit\n");
+	ft_printf("      --version  ouput version information and exit\n");
+	return (-2);
+}
+
 int		check_opt(char av, int *opt)
 {
 	if (av == 'a')
 	{
 		*opt |= OPT_A;
+	}
+	else if (av == 'A')
+	{
+		*opt |= OPT_ACAPS;
 	}
 	else if (av == 'R')
 	{
@@ -44,6 +92,7 @@ int		check_opt(char av, int *opt)
 	else if (av == 'f')
 	{
 		*opt &= ~OPT_L;
+		*opt &= ~OPT_GCAPS;
 		*opt |= OPT_F;
 		*opt |= OPT_UCAPS;
 		*opt |= OPT_A;
@@ -93,16 +142,124 @@ int		check_opt(char av, int *opt)
 	{
 		*opt |= OPT_1;
 	}
+	else
+	{
+		custom_error("ft_ls: invalid option -- '%c'\n", av);
+		custom_error("Try 'ft_ls --help' for more information.\n");
+		return (-1);
+	}
 	return (0);
 }
 
 int		parse_option_line(char *av, int *opt)
 {
-	av++;
-	while (*av)
+	if (ft_strbegin(av, "--"))
 	{
-		check_opt(*av, opt);
+		if (ft_strnequ(av, "--help", ft_strlen(av)))
+			return (print_usage_stdin());
+		else if (ft_strnequ(av, "--version", ft_strlen(av)))
+		{
+			ft_printf("ft_ls version 1.0\n");
+			ft_printf("This program is free software; you may redistribute it\n");
+			ft_printf("This program has absolutely no warranty ;)\n");
+			ft_printf("\nWritten by Lucas Nicosia\n");
+			return (-2);
+		}
+		else if (ft_strequ(av, "--all"))
+		{
+			*opt |= OPT_A;
+		}
+		else if (ft_strequ(av, "--almost-all"))
+		{
+			*opt |= OPT_ACAPS;
+		}
+		else if (ft_strnequ(av, "--author", ft_strlen(av)))
+		{
+			*opt |= OPT_AUTHOR;
+		}
+		else if (ft_strnequ(av, "--bold", ft_strlen(av)))
+		{
+			*opt |= OPT_B;
+		}
+		else if (ft_strnequ(av, "--color", ft_strlen(av)))
+		{
+			*opt |= OPT_GCAPS;
+		}
+		else if (ft_strnequ(av, "--human-readable", ft_strlen(av)))
+		{
+			*opt |= OPT_H;
+		}
+		else if (ft_strnequ(av, "--si", ft_strlen(av)))
+		{
+			*opt |= OPT_SI;
+		}
+		else if (ft_strnequ(av, "--numeric-uid-gid", ft_strlen(av)))
+		{
+			*opt |= OPT_N;
+		}
+		else if (ft_strnequ(av, "--literal", ft_strlen(av)))
+		{
+			*opt |= OPT_NCAPS;
+		}
+		else if (ft_strnequ(av, "--indicator-style=slash", ft_strlen(av)))
+		{
+			*opt |= OPT_P;
+		}
+		else if (ft_strnequ(av, "--reverse", ft_strlen(av)))
+		{
+			*opt |= OPT_R;
+		}
+		else if (ft_strnequ(av, "--recursive", ft_strlen(av)))
+		{
+			*opt |= OPT_RCAPS;
+		}
+		else
+		{
+			custom_error("ft_ls: unrecognized option '%s'\n", av);
+			custom_error("Try 'ft_ls --help' for more information.\n");
+			return (-1);
+		}
+	}
+	else
+	{
 		av++;
+		while (*av)
+		{
+			if (check_opt(*av, opt))
+				return (-1);
+			av++;
+		}
+	}
+	return (0);
+}
+
+/*
+**	Checks if the given string is an option line (starting with '-')
+*/
+
+int				is_arg_an_option_line(char *av)
+{
+	return (ft_strlen(av) >= 1 && av[0] == '-');
+}
+
+/*
+**	Parse all the options by checking arguments starting with '-'
+*/
+
+int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
+{
+	int	i;
+
+	i = 1;
+	while (i < ac)
+	{
+		if (is_arg_an_option_line(av[i]))
+		{
+			if (parse_option_line(av[i], opt))
+				return (-1);
+			(*real_args)--;
+		}
+		i++;
 	}
 	return (0);
 }

@@ -31,6 +31,7 @@ typedef struct			s_file
 
 
 int						ft_ls(int ac, char **av);
+int						parse_ls_options(int ac, char **av, int *opt, int *real_args);
 int						parse_option_line(char *av, int *opt);
 t_dlist					*analyze_args(int ac, char **av, int *opt);
 int						analyze_file(char *file, int opt);
