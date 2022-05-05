@@ -32,7 +32,7 @@ int				is_arg_an_option_line(char *av)
 int				parse_ls_options(int ac, char **av, int *opt, int *real_args)
 {
 	int	i;
-	
+
 	i = 1;
 	while (i < ac)
 	{
@@ -95,75 +95,6 @@ int				(*get_compare_func(int opt))(void*, void*)
 
 int				print_files(t_dlist *dlst, int *opt)
 {
-	/*int			i;
-	int			nb_dir;
-	t_file		file;
-	t_dlist		*new;
-	t_dlist		*dlst;
-	size_t		len;
-	int			(*compare_func)(void *, void *);
-	t_winsize	winsize;
-
-	dlst = NULL;
-	compare_func = get_compare_func(*opt);
-	len = 0;
-	i = 1;
-	nb_dir = 0;
-	while (i < ac)
-	{
-		if (is_arg_an_option_line(av[i]))
-		{
-			i++;
-			continue;
-		}
-		if (lstat(av[i], &file.stats))
-		{
-			custom_error("ft_ls: cannot access '%s': ", av[i]);
-			ft_perror("");
-			if (ft_strchr(av[i], ' '))
-				(*opt) |= OPT_ERROR;
-			i++;
-			continue;
-		}
-		if (S_ISDIR(file.stats.st_mode))
-		{
-			nb_dir++;
-			i++;
-			continue;
-		}
-		len += ft_strlen(av[i]) + 2;
-		if (!(file.name = ft_strdup(av[i])))
-		{
-			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror(""));
-		}
-		if (!(new = ft_dlstnew(&file, sizeof(file))))
-		{
-			ft_strdel(&file.name);
-			ft_dlstdelfront(&dlst, free_t_file);
-			return (ft_perror(""));
-		}
-		if (*opt & OPT_R)
-			ft_dlstinsert_reverse(&dlst, new, compare_func);
-		else
-			ft_dlstinsert(&dlst, new, compare_func);
-		*opt |= OPT_NEWLINE;
-		i++;
-	}
-	ft_bzero(&winsize, sizeof(winsize));
-	if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize))
-		return (ft_perror(""));
-	*opt |= OPT_PATH;
-	if (*opt & OPT_CCAPS && len > winsize.ws_col && isatty(STDOUT_FILENO))
-		print_dlist_col(dlst, len, winsize.ws_col, *opt);
-	else
-		print_dlist(dlst, *opt);
-	if (*opt & OPT_L)
-		*opt |= OPT_TOTAL;
-	*opt &= ~OPT_ERROR;
-	*opt &= ~OPT_PATH;
-	ft_dlstdelfront(&dlst, free_t_file);
-	*/
 	int				first;
 	int				nb_files;
 	t_ls_padding	padding;
@@ -192,7 +123,12 @@ int				print_files(t_dlist *dlst, int *opt)
 		if (first)
 			first = 0;
 		else if (!(*opt & OPT_L) && isatty(STDOUT_FILENO))
-			ft_printf("  ");
+		{
+			if (*opt & OPT_CCAPS)
+				ft_printf("  ");
+			else
+				ft_printf("\n");
+		}
 		print_file(file->stats, file->name, padding, *opt);
 		nb_files++;
 		dlst = dlst->next;

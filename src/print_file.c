@@ -29,7 +29,7 @@ void	print_type(mode_t mode)
 	else if (S_ISLNK(mode))
 		ft_printf("l");
 	else if (S_ISCHR(mode))
-		ft_printf("c");	
+		ft_printf("c");
 	else if (S_ISBLK(mode))
 		ft_printf("b");
 	else if (S_ISFIFO(mode))
@@ -41,7 +41,7 @@ void	print_type(mode_t mode)
 }
 
 /*
-**	Returns the character to print according to the permission 
+**	Returns the character to print according to the permission
 **	we want to check: [r,w,x] if granted or '-' if not
 */
 
@@ -77,7 +77,7 @@ int		is_link_valid(char *file)
 	char	*last_slash;
 	char	*dir;
 	size_t	dirlen;
-	
+
 	if (!(last_slash = ft_strrchr(file, '/')))
 	{
 		if (!(dir = ft_strdup("./")))
@@ -125,7 +125,7 @@ int		is_link_valid(char *file)
 
 void	set_color(char *file, mode_t mode, int opt)
 {
-	if (opt & OPT_B)
+	if (opt & OPT_B && !S_ISREG(mode))
 		ft_printf("{bold}");
 	if (S_ISDIR(mode))
 	{
@@ -141,7 +141,7 @@ void	set_color(char *file, mode_t mode, int opt)
 			ft_printf("{red}");
 	}
 	else if (S_ISCHR(mode))
-		ft_printf("{yellow}");	
+		ft_printf("{yellow}");
 	else if (S_ISBLK(mode))
 		ft_printf("{reset}");
 	else if (S_ISFIFO(mode))
@@ -151,7 +151,11 @@ void	set_color(char *file, mode_t mode, int opt)
 	else if (S_ISREG(mode))
 	{
 		if ((mode & S_IXUSR) || (mode & S_IXGRP) || (mode & S_IXOTH))
+		{
+			if (opt & OPT_B)
+				ft_printf("{bold}");
 			ft_printf("{green}");
+		}
 	}
 }
 
@@ -176,7 +180,7 @@ void	print_link(char *file, int opt)
 		ft_printf("{bold}");
 	if ((size = readlink(file, link, 256)) == -1)
 	{
-		if (opt & OPT_GCAPS)
+		if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 			ft_printf("{red}");
 	}
 	else
@@ -214,7 +218,7 @@ void	print_link(char *file, int opt)
 		{
 			//custom_error("stat %s: ", file);
 			//ft_perror("");
-			if (opt & OPT_GCAPS)
+			if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 				ft_printf("{red}");
 			break;
 		}
@@ -223,10 +227,10 @@ void	print_link(char *file, int opt)
 	{
 		//custom_error("stat %s: ", file);
 		//ft_perror("");
-		if (opt & OPT_GCAPS)
+		if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 			ft_printf("{red}");
 	}
-	if (opt & OPT_GCAPS)
+	if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 		set_color(buf, stats.st_mode, opt);
 	ft_printf("%s", link);
 	ft_strdel(&dir);
@@ -241,7 +245,7 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 {
 	char	*name;
 
-	if (opt & OPT_GCAPS)
+	if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 		set_color(file, file_stats.st_mode, opt);
 	if (opt & OPT_ERROR)
 		ft_printf(" ");
@@ -250,12 +254,12 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 	else
 		name++;
 	ft_printf("%-*s", padding, name);
-	if (opt & OPT_GCAPS)
+	if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 		ft_printf("{reset}");
 	if (opt & OPT_L && S_ISLNK(file_stats.st_mode))
 	{
-		print_link(file, opt);	
-		if (opt & OPT_GCAPS)
+		print_link(file, opt);
+		if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
 			ft_printf("{reset}");
 	}
 }
