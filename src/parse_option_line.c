@@ -35,6 +35,7 @@ int		check_opt(char av, int *opt)
 	{
 		*opt &= ~OPT_CCAPS;
 		*opt |= OPT_L;
+		*opt |= OPT_TOTAL;
 	}
 		else if (av == 'u')
 	{

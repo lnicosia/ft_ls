@@ -137,8 +137,6 @@ int				print_files(t_dlist *dlst, int *opt)
 		ft_printf("\n");
 	if (nb_files > 0 && *opt & OPT_MULTIPLE_DIRS)
 		*opt |= OPT_NEWLINE;
-	if (*opt & OPT_L)
-		*opt |= OPT_TOTAL;
 	*opt &= ~OPT_ERROR;
 	*opt &= ~OPT_PATH;
 	return (0);
