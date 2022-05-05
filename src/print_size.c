@@ -30,7 +30,7 @@ void	print_size_short(off_t size)
 
 void	print_size(off_t size, int padding, int opt)
 {
-	if (opt & OPT_L)
+	if (opt & OPT_L || opt & OPT_G)
 		ft_printf("%*ld ", padding, size);
 	else
 		ft_printf("%ld ", size);

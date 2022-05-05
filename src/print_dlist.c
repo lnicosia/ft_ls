@@ -125,7 +125,7 @@ void			print_dlist(t_dlist *dlst, int opt)
 		dlst = dlst->prev;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
-	if (opt & OPT_L)
+	if (opt & OPT_L || opt & OPT_G)
 	{
 		padding = get_padding(dlst, &dir_size);
 		double size = (double)dir_size / 1024.0 + 0.5;
@@ -136,7 +136,7 @@ void			print_dlist(t_dlist *dlst, int opt)
 	{
 		if (first)
 			first = 0;
-		else if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
+		else if (!(opt & OPT_L || opt & OPT_G) && isatty(STDOUT_FILENO))
 		{
 			if (opt & OPT_CCAPS)
 				ft_printf("  ");
@@ -147,7 +147,7 @@ void			print_dlist(t_dlist *dlst, int opt)
 		((t_file*)dlst->content)->name, padding, opt);
 		dlst = dlst->next;
 	}
-	if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
+	if (!(opt & OPT_L || opt & OPT_G) && isatty(STDOUT_FILENO))
 		ft_printf("\n");
 }
 
@@ -169,7 +169,7 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 		dlst = dlst->next;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
-	if (opt & OPT_L)
+	if (opt & OPT_L || opt & OPT_G)
 	{
 		padding = get_padding(dlst, &dir_size);
 		double size = (double)dir_size / 1024.0 + 0.5;
@@ -180,7 +180,7 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 	{
 		if (first)
 			first = 0;
-		else if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
+		else if (!(opt & OPT_L || opt & OPT_G) && isatty(STDOUT_FILENO))
 		{
 			if (opt & OPT_CCAPS)
 				ft_printf("  ");

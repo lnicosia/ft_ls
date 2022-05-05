@@ -34,16 +34,16 @@ void			free_t_file(void *file, size_t size)
 
 int				(*get_compare_func(int opt))(void*, void*)
 {
-	if (opt & OPT_UCAPS && !(opt & OPT_T))
+	if ((opt & OPT_UCAPS && !(opt & OPT_T)) || !(opt & OPT_SORT))
 		return (compare_none);
 	if (opt & OPT_C)
 	{
-		if (!(opt & OPT_L) || opt & OPT_T)
+		if (!(opt & OPT_L || opt & OPT_G) || opt & OPT_T)
 			return (compare_ctimes);
 	}
 	if (opt & OPT_U)
 	{
-		if (!(opt & OPT_L) || opt & OPT_T)
+		if (!(opt & OPT_L || opt & OPT_G) || opt & OPT_T)
 			return (compare_atimes);
 	}
 	if (opt & OPT_T)
@@ -70,6 +70,7 @@ int				print_files(t_dlist *dlst, int *opt)
 	t_ls_padding	padding;
 	t_file			*file;
 	t_winsize		winsize;
+	blksize_t		dir_size;
 
 	if (!dlst)
 		return (-1);
@@ -78,6 +79,8 @@ int				print_files(t_dlist *dlst, int *opt)
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
 	ft_bzero(&padding, sizeof(padding));
+	if (*opt & OPT_L || *opt & OPT_G)
+		padding = get_padding(dlst, &dir_size);
 	ft_bzero(&winsize, sizeof(winsize));
 	if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize))
 		return (ft_perror(""));
@@ -92,7 +95,7 @@ int				print_files(t_dlist *dlst, int *opt)
 		}
 		if (first)
 			first = 0;
-		else if (!(*opt & OPT_L) && isatty(STDOUT_FILENO))
+		else if (!(*opt & OPT_L || *opt & OPT_G) && isatty(STDOUT_FILENO))
 		{
 			if (*opt & OPT_CCAPS)
 				ft_printf("  ");
@@ -103,7 +106,7 @@ int				print_files(t_dlist *dlst, int *opt)
 		nb_files++;
 		dlst = dlst->next;
 	}
-	if (nb_files > 0 && !(*opt & OPT_L) && isatty(STDOUT_FILENO))
+	if (nb_files > 0 && !(*opt & OPT_L || *opt & OPT_G) && isatty(STDOUT_FILENO))
 		ft_printf("\n");
 	if (nb_files > 0 && *opt & OPT_MULTIPLE_DIRS)
 		*opt |= OPT_NEWLINE;
@@ -189,7 +192,7 @@ t_dlist		*analyze_args(int ac, char **av, int *opt)
 			ft_perror("lstnew");
 			return (NULL);
 		}
-		if (*opt & OPT_R)
+		if (*opt & OPT_R && *opt & OPT_SORT)
 			ft_dlstinsert_reverse(&dlst, new, compare_func);
 		else
 			ft_dlstinsert(&dlst, new, compare_func);
@@ -208,7 +211,7 @@ int				ft_ls(int ac, char **av)
 	int		real_args;
 	t_dlist	*dlst;
 
-	opt = 0;
+	opt = OPT_SORT;
 	dlst = NULL;
 	real_args = ac - 1;
 	if (parse_ls_options(ac, av, &opt, &real_args))

@@ -44,6 +44,7 @@
 # define OPT_N (1 << 28)
 # define OPT_NCAPS (1 << 29)
 # define OPT_P (1 << 30)
+# define OPT_SORT (1 << 31)
 
 
 

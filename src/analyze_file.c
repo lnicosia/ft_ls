@@ -25,7 +25,7 @@
 void	analyze_list(t_dlist *lst, int opt)
 {
 	t_file	*file;
-	
+
 	while (lst && lst->prev)
 		lst = lst->prev;
 	while (lst)
@@ -106,7 +106,7 @@ int		analyze_directory(char *file_name, int *opt)
 			ft_strdel(&path);
 			return (ft_perror(""));
 		}
-		if (*opt & OPT_R)
+		if (*opt & OPT_R && *opt & OPT_SORT)
 			ft_dlstinsert_reverse(&dlst, new, compare_func);
 		else
 			ft_dlstinsert(&dlst, new, compare_func);

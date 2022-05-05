@@ -78,6 +78,7 @@ int		check_opt(char av, int *opt)
 	else if (av == 't')
 	{
 		*opt |= OPT_T;
+		*opt |= OPT_SORT;
 	}
 	else if (av == 'l')
 	{
@@ -85,12 +86,13 @@ int		check_opt(char av, int *opt)
 		*opt |= OPT_L;
 		*opt |= OPT_TOTAL;
 	}
-		else if (av == 'u')
+	else if (av == 'u')
 	{
 		*opt |= OPT_U;
 	}
 	else if (av == 'f')
 	{
+		*opt &= ~OPT_SORT;
 		*opt &= ~OPT_L;
 		*opt &= ~OPT_GCAPS;
 		*opt |= OPT_F;
@@ -99,7 +101,9 @@ int		check_opt(char av, int *opt)
 	}
 	else if (av == 'g')
 	{
+		*opt &= ~OPT_CCAPS;
 		*opt |= OPT_G;
+		*opt |= OPT_TOTAL;
 	}
 	else if (av == 'G')
 	{
@@ -128,6 +132,8 @@ int		check_opt(char av, int *opt)
 	}
 	else if (av == 'U')
 	{
+		*opt &= ~OPT_SORT;
+		*opt |= OPT_SORT;
 		*opt |= OPT_UCAPS;
 	}
 	else if (av == 'T')
@@ -142,6 +148,10 @@ int		check_opt(char av, int *opt)
 	{
 		*opt |= OPT_1;
 	}
+	else if (av == 'A')
+	{
+		*opt |= OPT_ACAPS;
+	}
 	else
 	{
 		custom_error("ft_ls: invalid option -- '%c'\n", av);
@@ -155,9 +165,9 @@ int		parse_option_line(char *av, int *opt)
 {
 	if (ft_strbegin(av, "--"))
 	{
-		if (ft_strnequ(av, "--help", ft_strlen(av)))
+		if (ft_strequ(av, "--help"))
 			return (print_usage_stdin());
-		else if (ft_strnequ(av, "--version", ft_strlen(av)))
+		else if (ft_strequ(av, "--version"))
 		{
 			ft_printf("ft_ls version 1.0\n");
 			ft_printf("This program is free software; you may redistribute it\n");
@@ -167,53 +177,54 @@ int		parse_option_line(char *av, int *opt)
 		}
 		else if (ft_strequ(av, "--all"))
 		{
+			ft_printf("--all\n");
 			*opt |= OPT_A;
 		}
 		else if (ft_strequ(av, "--almost-all"))
 		{
 			*opt |= OPT_ACAPS;
 		}
-		else if (ft_strnequ(av, "--author", ft_strlen(av)))
+		else if (ft_strequ(av, "--author"))
 		{
 			*opt |= OPT_AUTHOR;
 		}
-		else if (ft_strnequ(av, "--bold", ft_strlen(av)))
+		else if (ft_strequ(av, "--bold"))
 		{
 			*opt |= OPT_B;
 		}
-		else if (ft_strnequ(av, "--color", ft_strlen(av)))
+		else if (ft_strequ(av, "--color"))
 		{
 			*opt |= OPT_GCAPS;
 		}
-		else if (ft_strnequ(av, "--human-readable", ft_strlen(av)))
+		else if (ft_strequ(av, "--human-readable"))
 		{
 			*opt |= OPT_H;
 		}
-		else if (ft_strnequ(av, "--si", ft_strlen(av)))
+		else if (ft_strequ(av, "--si"))
 		{
 			*opt |= OPT_SI;
 		}
-		else if (ft_strnequ(av, "--numeric-uid-gid", ft_strlen(av)))
+		else if (ft_strequ(av, "--numeric-uid-gid"))
 		{
 			*opt |= OPT_N;
 		}
-		else if (ft_strnequ(av, "--literal", ft_strlen(av)))
+		else if (ft_strequ(av, "--literal"))
 		{
 			*opt |= OPT_NCAPS;
 		}
-		else if (ft_strnequ(av, "--indicator-style=slash", ft_strlen(av)))
+		else if (ft_strequ(av, "--indicator-style=slash"))
 		{
 			*opt |= OPT_P;
 		}
-		else if (ft_strnequ(av, "--reverse", ft_strlen(av)))
+		else if (ft_strequ(av, "--reverse"))
 		{
 			*opt |= OPT_R;
 		}
-		else if (ft_strnequ(av, "--recursive", ft_strlen(av)))
+		else if (ft_strequ(av, "--recursive"))
 		{
 			*opt |= OPT_RCAPS;
 		}
-		else
+		else if (!ft_strequ(av, "--"))
 		{
 			custom_error("ft_ls: unrecognized option '%s'\n", av);
 			custom_error("Try 'ft_ls --help' for more information.\n");
