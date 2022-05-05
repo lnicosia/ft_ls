@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/04/01 10:46:34 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/05 12:30:59 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ CFLAGS =	-Wall -Wextra -Werror -Wpadded -Wconversion -I $(INCLUDES_DIR) \
 	  	-I $(LIBFT_DIR)/includes -I $(BMP_PARSER_DIR)/includes \
 		-I $(LIBMFT_DIR)/includes -I $(GLAD_DIR)/include \
 		$(OPTI_FLAGS) \
-		-fsanitize=address -g3 \
+		#-fsanitize=address -g3 \
 		
 	
 #
@@ -112,11 +112,11 @@ $(OBJ_DIR):
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	@printf $(YELLOW)"Compiling $<\n"$(RESET)
-	@gcc -c $< -o $@ $(CFLAGS) 
+	gcc -c $< -o $@ $(CFLAGS) 
 
 $(NAME): $(LIBFT) $(OBJ_DIR) $(OBJ) 
 	@printf $(CYAN)"[INFO] Linking ${BIN_DIR}/${NAME}\n"$(RESET)
-	@gcc $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
+	gcc $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 	@printf ${GREEN}"[INFO] Compiled $(BIN_DIR)/$(NAME) with success!\n"
 	@printf ${RESET}
 

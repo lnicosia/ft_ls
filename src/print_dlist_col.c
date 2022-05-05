@@ -168,9 +168,9 @@ int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, int opt)
 	lstlen = ft_dlstlen(lst) + 1;
 	nb_col = (size_t)ceil((double)lstlen / (double)nb_lines);
 	i = 0;
-	/*ft_printf("\n{green}Nb lines = %d\n{reset}", nb_lines);
-	ft_printf("\n{green}Nb col = %d\n{reset}", nb_col);
-	ft_printf("\n{green}lstlen = %d\n{reset}", lstlen);*/
+	//ft_printf("\n{green}Nb lines = %d\n{reset}", nb_lines);
+	//ft_printf("\n{green}Nb col = %d\n{reset}", nb_col);
+	//ft_printf("\n{green}lstlen = %d\n{reset}", lstlen);
 	while (i < nb_lines)
 	{
 		printed_char = 0;
@@ -182,7 +182,7 @@ int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, int opt)
 			if (printed_char <= winsize)
 			{
 				current_col++;
-			}		
+			}
 		}
 		i++;
 	}
@@ -197,6 +197,7 @@ int opt)
 {
 	size_t	nb_lines;
 
+	ft_printf("Len = %d\n", len);
 	nb_lines = (size_t)ceil((double)len / winsize);
 	while (preprint_n_lines(lst, nb_lines, winsize, opt))
 	{

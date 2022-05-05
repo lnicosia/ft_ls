@@ -245,7 +245,7 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 {
 	char	*name;
 
-	if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
+	if (opt & OPT_GCAPS)
 		set_color(file, file_stats.st_mode, opt);
 	if (opt & OPT_ERROR)
 		ft_printf(" ");
@@ -254,12 +254,12 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 	else
 		name++;
 	ft_printf("%-*s", padding, name);
-	if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
+	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
 	if (opt & OPT_L && S_ISLNK(file_stats.st_mode))
 	{
 		print_link(file, opt);
-		if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
+		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");
 	}
 }
