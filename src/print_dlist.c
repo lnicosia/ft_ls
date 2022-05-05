@@ -128,8 +128,9 @@ void			print_dlist(t_dlist *dlst, int opt)
 	if (opt & OPT_L)
 	{
 		padding = get_padding(dlst, &dir_size);
+		double size = (double)dir_size / 1024.0 + 0.5;
 		if (opt & OPT_TOTAL)
-			ft_printf("total %ld\n", dir_size / 1024);
+			ft_printf("total %ld\n", (long int)size);
 	}
 	while (dlst)
 	{
@@ -171,8 +172,9 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 	if (opt & OPT_L)
 	{
 		padding = get_padding(dlst, &dir_size);
+		double size = (double)dir_size / 1024.0 + 0.5;
 		if (opt & OPT_TOTAL)
-			ft_printf("total %ld\n", dir_size / 1024);
+			ft_printf("total %ld\n", (long int)size);
 	}
 	while (dlst)
 	{
