@@ -80,7 +80,7 @@ int				print_files(t_dlist *dlst, int *opt)
 		dlst = dlst->prev;
 	ft_bzero(&padding, sizeof(padding));
 	if (*opt & OPT_L || *opt & OPT_G)
-		padding = get_padding(dlst, &dir_size);
+		padding = get_padding(dlst, &dir_size, *opt);
 	ft_bzero(&winsize, sizeof(winsize));
 	if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize))
 		return (ft_perror(""));

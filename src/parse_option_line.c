@@ -152,6 +152,10 @@ int		check_opt(char av, int *opt)
 	{
 		*opt |= OPT_ACAPS;
 	}
+	else if (av == 'h')
+	{
+		*opt |= OPT_H;
+	}
 	else
 	{
 		custom_error("ft_ls: invalid option -- '%c'\n", av);
