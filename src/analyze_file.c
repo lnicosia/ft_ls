@@ -17,12 +17,13 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <dirent.h>
+#include <fcntl.h>
 
 /*
 **	Analyze the directories contained in our sorted list
 */
 
-void	analyze_list(t_dlist *lst, int opt)
+void	analyze_list(t_dlist *lst, unsigned long long opt)
 {
 	t_file	*file;
 
@@ -48,7 +49,7 @@ void	analyze_list(t_dlist *lst, int opt)
 **	then if '-R' was given, explore it
 */
 
-int		analyze_directory(char *file_name, int *opt)
+int		analyze_directory(char *file_name, unsigned long long *opt)
 {
 	DIR 			*dir;
 	struct dirent	*entry;
@@ -116,9 +117,20 @@ int		analyze_directory(char *file_name, int *opt)
 		ft_dlstdelfront(&dlst, free_t_file);
 		return (ft_perror(""));
 	}
-	ft_bzero(&winsize, sizeof(winsize));
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
-	if (*opt & OPT_CCAPS && len > winsize.ws_col && isatty(STDOUT_FILENO))
+	//	If not a tty (i.e. if piped), used the current term size..
+	if (!isatty(STDOUT_FILENO))
+	{
+
+		int fd = open("/dev/tty", O_RDONLY);
+		if (fd != -1)
+		{
+			ioctl(fd, TIOCGWINSZ, &winsize);
+		}
+		close(fd);
+	}
+	else
+		ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
+	if (*opt & OPT_CCAPS && len > winsize.ws_col)
 		print_dlist_col(dlst, len, winsize.ws_col, *opt);
 	else
 		print_dlist(dlst, *opt);

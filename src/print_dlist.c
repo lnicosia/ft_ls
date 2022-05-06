@@ -118,7 +118,7 @@ long int		get_block_size(t_file *file)
 	return (size);
 }
 
-t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, int opt)
+t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, unsigned long long opt)
 {
 	t_ls_padding		padding;
 	int					len;
@@ -156,7 +156,7 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, int opt)
 	return (padding);
 }
 
-void			print_total(long int long_size, int opt)
+void			print_total(long int long_size, unsigned long long opt)
 {
 	double size = (double)long_size;
 	if (opt & OPT_H || opt & OPT_SI)
@@ -241,7 +241,7 @@ void			print_total(long int long_size, int opt)
 **	Assumes it's made of t_file*
 */
 
-void			print_dlist(t_dlist *dlst, int opt)
+void			print_dlist(t_dlist *dlst, unsigned long long opt)
 {
 	int				first;
 	t_ls_padding	padding;
@@ -268,9 +268,11 @@ void			print_dlist(t_dlist *dlst, int opt)
 	{
 		if (first)
 			first = 0;
-		else if (!(opt & OPT_L || opt & OPT_G) && isatty(STDOUT_FILENO))
+		else
 		{
-			if (opt & OPT_CCAPS)
+			if (opt & OPT_M)
+				ft_printf(", ");
+			else if (opt & OPT_CCAPS)
 				ft_printf("  ");
 			else
 				ft_printf("\n");
@@ -279,8 +281,7 @@ void			print_dlist(t_dlist *dlst, int opt)
 		((t_file*)dlst->content)->name, padding, opt);
 		dlst = dlst->next;
 	}
-	if (!(opt & OPT_L || opt & OPT_G) && isatty(STDOUT_FILENO))
-		ft_printf("\n");
+	ft_printf("\n");
 }
 
 /*
@@ -288,7 +289,7 @@ void			print_dlist(t_dlist *dlst, int opt)
 **	Assumes it's made of t_file*
 */
 
-void			print_dlist_reverse(t_dlist *dlst, int opt)
+void			print_dlist_reverse(t_dlist *dlst, unsigned long long opt)
 {
 	int				first;
 	t_ls_padding	padding;
@@ -315,17 +316,18 @@ void			print_dlist_reverse(t_dlist *dlst, int opt)
 	{
 		if (first)
 			first = 0;
-		else if (!(opt & OPT_L || opt & OPT_G) && isatty(STDOUT_FILENO))
-		{
-			if (opt & OPT_CCAPS)
-				ft_printf("  ");
 			else
-				ft_printf("\n");
-		}
+			{
+				if (opt & OPT_M)
+					ft_printf(", ");
+				else if (opt & OPT_CCAPS)
+					ft_printf("  ");
+				else
+					ft_printf("\n");
+			}
 		print_file(((t_file*)dlst->content)->stats,
 		((t_file*)dlst->content)->name, padding, opt);
 		dlst = dlst->prev;
 	}
-	if (!(opt & OPT_L) && isatty(STDOUT_FILENO))
-		ft_printf("\n");
+	ft_printf("\n");
 }

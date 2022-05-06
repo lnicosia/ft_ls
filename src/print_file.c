@@ -123,7 +123,7 @@ int		is_link_valid(char *file)
 **	Sets the right color according to the type of a file
 */
 
-void	set_color(char *file, mode_t mode, int opt)
+void	set_color(char *file, mode_t mode, unsigned long long opt)
 {
 	if (opt & OPT_B && !S_ISREG(mode))
 		ft_printf("{bold}");
@@ -163,7 +163,7 @@ void	set_color(char *file, mode_t mode, int opt)
 **	Sets the right color for a link
 */
 
-void	print_link(char *file, int opt)
+void	print_link(char *file, unsigned long long opt)
 {
 	char	buf[256];
 	char	link[256];
@@ -241,7 +241,7 @@ void	print_link(char *file, int opt)
 **	Cuts the path after the last '/'
 */
 
-void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
+void	print_file_name(t_stat file_stats, char *file, size_t padding, unsigned long long opt)
 {
 	char	*name;
 
@@ -269,7 +269,7 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, int opt)
 */
 
 void	print_details(t_stat file_stats, char *file, t_ls_padding padding,
-int opt)
+unsigned long long opt)
 {
 	t_passwd	*passwd;
 	t_group		*group;
@@ -301,7 +301,6 @@ int opt)
 	}
 	ft_printf(" ");
 	print_file_name(file_stats, file, 0, opt);
-	ft_printf("\n");
 }
 
 /*
@@ -309,14 +308,16 @@ int opt)
 */
 
 void	print_file(t_stat file_stats, char *file, t_ls_padding padding,
-int opt)
+unsigned long long opt)
 {
 	if (opt & OPT_L || opt & OPT_G)
 		print_details(file_stats, file, padding, opt);
 	else
 	{
 		print_file_name(file_stats, file, 0, opt);
-		if (!isatty(STDOUT_FILENO))
-			ft_printf("\n");
+		//if (opt & OPT_M)
+		//	ft_printf(", ");
+		//else if (!isatty(STDOUT_FILENO))
+		//	ft_printf("\n");
 	}
 }

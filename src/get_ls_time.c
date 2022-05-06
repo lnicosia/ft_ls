@@ -80,7 +80,7 @@ void	get_hour(char **buf, char **time)
 **	Cut the date returned by time for the ls format
 */
 
-void	get_ls_time(char *buf, t_stat stats, int opt)
+void	get_ls_time(char *buf, t_stat stats, unsigned long long opt)
 {
 	char	*time;
 

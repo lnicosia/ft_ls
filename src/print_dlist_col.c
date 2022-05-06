@@ -40,7 +40,7 @@ size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize)
 
 size_t	print_current_file(t_dlist *lst, size_t current_col,
 size_t current_line, size_t nb_lines, size_t place_left, size_t winsize,
-size_t *len, int opt)
+size_t *len, unsigned long long opt)
 {
 	size_t	i;
 	size_t	j;
@@ -81,7 +81,7 @@ size_t *len, int opt)
 	return (padding);
 }
 
-int		print_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, int opt)
+int		print_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, unsigned long long opt)
 {
 	size_t	nb_col;
 	size_t	lstlen;
@@ -120,7 +120,7 @@ int		print_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, int opt)
 
 size_t	preprint_current_file(t_dlist *lst, size_t current_col,
 size_t current_line, size_t nb_lines, size_t place_left, size_t winsize,
-size_t *len, int opt)
+size_t *len, unsigned long long opt)
 {
 	size_t	i;
 	size_t	j;
@@ -154,7 +154,7 @@ size_t *len, int opt)
 	return (padding);
 }
 
-int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, int opt)
+int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, unsigned long long opt)
 {
 	size_t	nb_col;
 	size_t	lstlen;
@@ -193,11 +193,11 @@ int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, int opt)
 }
 
 int		print_dlist_col(t_dlist *lst, size_t len, unsigned short winsize,
-int opt)
+unsigned long long opt)
 {
 	size_t	nb_lines;
 
-	ft_printf("Len = %d\n", len);
+	//ft_printf("Len = %d\n", len);
 	nb_lines = (size_t)ceil((double)len / winsize);
 	while (preprint_n_lines(lst, nb_lines, winsize, opt))
 	{

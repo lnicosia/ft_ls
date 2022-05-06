@@ -32,7 +32,7 @@ void			free_t_file(void *file, size_t size)
 **	to sort our files
 */
 
-int				(*get_compare_func(int opt))(void*, void*)
+int				(*get_compare_func(unsigned long long opt))(void*, void*)
 {
 	if ((opt & OPT_UCAPS && !(opt & OPT_T)) || !(opt & OPT_SORT))
 		return (compare_none);
@@ -63,7 +63,7 @@ int				(*get_compare_func(int opt))(void*, void*)
 **	Print all the non-directory file names
 */
 
-int				print_files(t_dlist *dlst, int *opt)
+int				print_files(t_dlist *dlst, unsigned long long *opt)
 {
 	int				first;
 	int				nb_files;
@@ -95,9 +95,11 @@ int				print_files(t_dlist *dlst, int *opt)
 		}
 		if (first)
 			first = 0;
-		else if (!(*opt & OPT_L || *opt & OPT_G) && isatty(STDOUT_FILENO))
+		else
 		{
-			if (*opt & OPT_CCAPS)
+			if (*opt & OPT_M)
+				ft_printf(", ");
+			else if (*opt & OPT_CCAPS)
 				ft_printf("  ");
 			else
 				ft_printf("\n");
@@ -106,7 +108,7 @@ int				print_files(t_dlist *dlst, int *opt)
 		nb_files++;
 		dlst = dlst->next;
 	}
-	if (nb_files > 0 && !(*opt & OPT_L || *opt & OPT_G) && isatty(STDOUT_FILENO))
+	if (nb_files > 0)
 		ft_printf("\n");
 	if (nb_files > 0 && *opt & OPT_MULTIPLE_DIRS)
 		*opt |= OPT_NEWLINE;
@@ -119,7 +121,7 @@ int				print_files(t_dlist *dlst, int *opt)
 **	Print the content of all the directories arguments
 */
 
-int				print_directories(t_dlist *dlst, int *opt)
+int				print_directories(t_dlist *dlst, unsigned long long *opt)
 {
 	t_file			*file;
 
@@ -141,7 +143,7 @@ int				print_directories(t_dlist *dlst, int *opt)
 	return (0);
 }
 
-t_dlist		*analyze_args(int ac, char **av, int *opt)
+t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 {
 	int			i;
 	int			nb_dir;
@@ -207,7 +209,7 @@ t_dlist		*analyze_args(int ac, char **av, int *opt)
 
 int				ft_ls(int ac, char **av)
 {
-	int		opt;
+	unsigned long long	opt;
 	int		real_args;
 	t_dlist	*dlst;
 

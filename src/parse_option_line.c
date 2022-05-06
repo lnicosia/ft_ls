@@ -57,7 +57,7 @@ int    print_usage_stdin(void)
 	return (-2);
 }
 
-int		check_opt(char av, int *opt)
+int		check_opt(char av, unsigned long long *opt)
 {
 	if (av == 'a')
 	{
@@ -127,6 +127,7 @@ int		check_opt(char av, int *opt)
 	}
 	else if (av == 'C')
 	{
+		*opt &= ~OPT_M;
 		*opt &= ~OPT_L;
 		*opt |= OPT_CCAPS;
 	}
@@ -146,6 +147,8 @@ int		check_opt(char av, int *opt)
 	}
 	else if (av == '1')
 	{
+		*opt &= ~OPT_M;
+		*opt &= ~OPT_CCAPS;
 		*opt |= OPT_1;
 	}
 	else if (av == 'A')
@@ -157,6 +160,12 @@ int		check_opt(char av, int *opt)
 		*opt &= ~OPT_SI;
 		*opt |= OPT_H;
 	}
+	else if (av == 'm')
+	{
+		*opt &= ~OPT_L;
+		*opt &= ~OPT_CCAPS;
+		*opt |= OPT_M;
+	}
 	else
 	{
 		custom_error("ft_ls: invalid option -- '%c'\n", av);
@@ -166,7 +175,7 @@ int		check_opt(char av, int *opt)
 	return (0);
 }
 
-int		parse_option_line(char *av, int *opt)
+int		parse_option_line(char *av, unsigned long long *opt)
 {
 	if (ft_strbegin(av, "--"))
 	{
@@ -264,7 +273,7 @@ int				is_arg_an_option_line(char *av)
 **	Parse all the options by checking arguments starting with '-'
 */
 
-int		parse_ls_options(int ac, char **av, int *opt, int *real_args)
+int		parse_ls_options(int ac, char **av, unsigned long long *opt, int *real_args)
 {
 	int	i;
 
