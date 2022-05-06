@@ -185,7 +185,7 @@ void	print_size_readable_si(off_t long_size, int padding, double divider)
 
 void	print_size(off_t size, int padding, unsigned long long opt)
 {
-	if (opt & OPT_L || opt & OPT_G)
+	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
 	{
 		if (opt & OPT_H)
 			print_size_readable(size, padding, 1024);

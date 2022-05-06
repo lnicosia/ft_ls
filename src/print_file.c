@@ -256,7 +256,7 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 	ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
-	if ((opt & OPT_L || opt & OPT_G) && S_ISLNK(file_stats.st_mode))
+	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N) && S_ISLNK(file_stats.st_mode))
 	{
 		print_link(file, opt);
 		if (opt & OPT_GCAPS)
@@ -289,8 +289,16 @@ unsigned long long opt)
 		return ;
 	}
 	if (!(opt & OPT_G))
-		ft_printf("%-*s ", padding.user, passwd->pw_name);
-	ft_printf("%-*s ", padding.group, group->gr_name);
+	{
+		if (opt & OPT_N)
+			ft_printf("%-*d ", padding.user, file_stats.st_uid);
+		else
+			ft_printf("%-*s ", padding.user, passwd->pw_name);
+	}
+	if (opt & OPT_N)
+		ft_printf("%-*d ", padding.group, file_stats.st_gid);
+	else
+		ft_printf("%-*s ", padding.group, group->gr_name);
 	print_size(file_stats.st_size, padding.size, opt);
 	get_ls_time(time, file_stats, opt);
 	ft_printf("%s", time);
@@ -310,7 +318,7 @@ unsigned long long opt)
 void	print_file(t_stat file_stats, char *file, t_ls_padding padding,
 unsigned long long opt)
 {
-	if (opt & OPT_L || opt & OPT_G)
+	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
 		print_details(file_stats, file, padding, opt);
 	else
 	{

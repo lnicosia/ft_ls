@@ -102,6 +102,7 @@ int		check_opt(char av, unsigned long long *opt)
 	else if (av == 'g')
 	{
 		*opt &= ~OPT_CCAPS;
+		*opt &= ~OPT_M;
 		*opt |= OPT_G;
 		*opt |= OPT_TOTAL;
 	}
@@ -128,7 +129,9 @@ int		check_opt(char av, unsigned long long *opt)
 	else if (av == 'C')
 	{
 		*opt &= ~OPT_M;
+		*opt &= ~OPT_G;
 		*opt &= ~OPT_L;
+		*opt &= ~OPT_N;
 		*opt |= OPT_CCAPS;
 	}
 	else if (av == 'U')
@@ -163,8 +166,16 @@ int		check_opt(char av, unsigned long long *opt)
 	else if (av == 'm')
 	{
 		*opt &= ~OPT_L;
+		*opt &= ~OPT_G;
+		*opt &= ~OPT_N;
 		*opt &= ~OPT_CCAPS;
 		*opt |= OPT_M;
+	}
+	else if (av == 'n')
+	{
+		*opt &= ~OPT_CCAPS;
+		*opt |= OPT_N;
+		*opt |= OPT_TOTAL;
 	}
 	else
 	{
@@ -223,6 +234,7 @@ int		parse_option_line(char *av, unsigned long long *opt)
 		else if (ft_strequ(av, "--numeric-uid-gid"))
 		{
 			*opt |= OPT_N;
+			*opt |= OPT_TOTAL;
 		}
 		else if (ft_strequ(av, "--literal"))
 		{

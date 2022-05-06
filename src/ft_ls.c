@@ -38,12 +38,12 @@ int				(*get_compare_func(unsigned long long opt))(void*, void*)
 		return (compare_none);
 	if (opt & OPT_C)
 	{
-		if (!(opt & OPT_L || opt & OPT_G) || opt & OPT_T)
+		if (!(opt & OPT_L || opt & OPT_G || opt & OPT_N) || opt & OPT_T)
 			return (compare_ctimes);
 	}
 	if (opt & OPT_U)
 	{
-		if (!(opt & OPT_L || opt & OPT_G) || opt & OPT_T)
+		if (!(opt & OPT_L || opt & OPT_G || opt & OPT_N) || opt & OPT_T)
 			return (compare_atimes);
 	}
 	if (opt & OPT_T)

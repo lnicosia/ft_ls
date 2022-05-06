@@ -144,10 +144,16 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, unsigned long long 
 		len = get_nblen(usize);
 		if (len > padding.links)
 			padding.links = len;
-		len = get_userlen(file);
+		if (opt & OPT_N)
+			len = get_nblen(file->stats.st_uid);
+		else
+			len = get_userlen(file);
 		if (len > padding.user)
 			padding.user = len;
-		len = get_grouplen(file);
+		if (opt & OPT_N)
+			len = get_nblen(file->stats.st_gid);
+		else
+			len = get_grouplen(file);
 		if (len > padding.group)
 			padding.group = len;
 		dlst = dlst->next;
@@ -258,7 +264,7 @@ void			print_dlist(t_dlist *dlst, unsigned long long opt)
 		dlst = dlst->prev;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
-	if (opt & OPT_L || opt & OPT_G)
+	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
 	{
 		padding = get_padding(dlst, &dir_size, opt);
 		if (opt & OPT_TOTAL)
@@ -306,7 +312,7 @@ void			print_dlist_reverse(t_dlist *dlst, unsigned long long opt)
 		dlst = dlst->next;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
-	if (opt & OPT_L || opt & OPT_G)
+	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
 	{
 		padding = get_padding(dlst, &dir_size, opt);
 		if (opt & OPT_TOTAL)
