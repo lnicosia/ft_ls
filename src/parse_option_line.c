@@ -154,6 +154,7 @@ int		check_opt(char av, int *opt)
 	}
 	else if (av == 'h')
 	{
+		*opt &= ~OPT_SI;
 		*opt |= OPT_H;
 	}
 	else
@@ -202,10 +203,12 @@ int		parse_option_line(char *av, int *opt)
 		}
 		else if (ft_strequ(av, "--human-readable"))
 		{
+			*opt &= ~OPT_SI;
 			*opt |= OPT_H;
 		}
 		else if (ft_strequ(av, "--si"))
 		{
+			*opt &= ~OPT_H;
 			*opt |= OPT_SI;
 		}
 		else if (ft_strequ(av, "--numeric-uid-gid"))

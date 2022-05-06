@@ -33,9 +33,9 @@ int				get_human_readable_nblen(long int nb, long int divider)
 	}
 	len = 0;
 	//ft_printf("Nb after divide = %f\n", dnb);
-	dnb += 0.1;
+	dnb = ft_centiceil(dnb);
 	nb = (long int)dnb;
-	//ft_printf("Nb after rounding = %f\n", nb);
+	//ft_printf("Nb after rounding = %f\n", dnb);
 	while (nb > 0)
 	{
 		nb /= 10;
@@ -50,6 +50,11 @@ int				get_human_readable_nblen(long int nb, long int divider)
 	//	If size < 1024, count one less len because there will be no letter
 	if (rest == 0)
 		len--;
+	if (dnb >= divider)
+	{
+		len = 3;
+		//ft_printf("Ceil overflows\n");
+	}
 	//ft_printf("Len = %d\n", len);
 	return (len);
 }
@@ -129,6 +134,8 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, int opt)
 		(*dir_size) += size;
 		if (opt & OPT_H)
 			len = get_human_readable_nblen(file->stats.st_size, 1024);
+		else if (opt & OPT_SI)
+			len = get_human_readable_nblen(file->stats.st_size, 1000);
 		else
 			len = get_signed_nblen(file->stats.st_size);
 		if (len > padding.size)
@@ -149,55 +156,65 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, int opt)
 	return (padding);
 }
 
-void			print_total(long int size, int opt)
+void			print_total(long int long_size, int opt)
 {
-	if (opt & OPT_H)
+	double size = (double)long_size;
+	if (opt & OPT_H || opt & OPT_SI)
 	{
-		long int divider = 1024;
+		double divider = 1024;
+		if (opt & OPT_H)
+		 	divider = 1024;
+		else if (opt & OPT_SI)
+		 	divider = 1000;
 		char letter = ' ';
 		double final_size = 0.0;
+		//ft_printf("divider = %f\n", divider);
+		//ft_printf("size = %f\n", size);
 		if (size < divider)
 		{
-			ft_printf("total %ld\n", size);
+			ft_printf("total %ld\n", (long int)size);
 			return ;
 		}
-		else if (size < divider * divider)
+		else if (ft_ceil(size / divider) < divider)
 		{
-			final_size = (double)size / (double)divider;
-			letter = 'K';
+			final_size = size / divider;
+			if (opt & OPT_H)
+				letter = 'K';
+			else if (opt & OPT_SI)
+				letter = 'k';
 		}
-		else if (size < divider * divider * divider)
+		else if (ft_ceil(size / (divider * divider)) < divider)
 		{
-			final_size = (double)size / (double)(divider * divider);
+			final_size = size / (divider * divider);
 			letter = 'M';
 		}
-		else if (size < divider * divider * divider * divider)
+		else if (ft_ceil(size / (divider * divider * divider)) < divider)
 		{
-			final_size = (double)size / (double)(divider * divider * divider);
+			final_size = size / (divider * divider * divider);
 			letter = 'G';
 		}
-		else if (size < divider * divider * divider * divider * divider)
+		else if (ft_ceil(size / (divider * divider * divider * divider)) < divider)
 		{
-			final_size = (double)size / (double)(divider * divider * divider
+			final_size = size / (divider * divider * divider
 				 * divider);
 			letter = 'T';
 		}
-		else if (size < divider * divider * divider * divider * divider * divider)
+		else if (ft_ceil(size / (divider * divider * divider * divider * divider)) < divider)
 		{
-			final_size = (double)size / (double)(divider * divider * divider
+			final_size = size / (divider * divider * divider
 				 * divider * divider);
 			letter = 'P';
 		}
-		else if (size < divider * divider * divider * divider * divider * divider
-			 * divider)
+		else if (ft_ceil(size / (divider * divider * divider * divider * divider * divider))
+			 < divider)
 		{
-			final_size = (double)size / (double)(divider * divider * divider
+			final_size = size / (divider * divider * divider
 				 * divider * divider * divider);
 			letter = 'E';
 		}
 		else
 		{
-			final_size = (double)size / (double)(divider * divider * divider
+			final_size = size / (divider * divider * divider
 				 * divider * divider * divider * divider);
 			letter = '?';
 		}
@@ -216,7 +233,7 @@ void			print_total(long int size, int opt)
 		}
 	}
 	else
-		ft_printf("total %ld\n", (long int)((double)size / 1024.0 + 0.5));
+		ft_printf("total %ld\n", (long int)(size / 1024.0 + 0.5));
 }
 
 /*
