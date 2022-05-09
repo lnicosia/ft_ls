@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 11:12:18 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 15:01:37 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,9 @@ void	set_color(char *file, mode_t mode, unsigned long long opt)
 	if (S_ISDIR(mode))
 	{
 		if ((mode & S_IWUSR) && (mode & S_IWGRP) && (mode & S_IWOTH))
-			ft_printf("{reset}{bgreen}");
-		ft_printf("{blue}");
+			ft_printf("{reset}{black}{bgreen}");
+		else
+			ft_printf("{blue}");
 	}
 	else if (S_ISLNK(mode))
 	{
