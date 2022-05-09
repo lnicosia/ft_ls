@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 15:01:37 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 15:46:30 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "options.h"
 #include "ls_padding.h"
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 #include <pwd.h>
 #include <grp.h>
 
@@ -266,6 +267,17 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 }
 
 /*
+**	Print the device ids for character and block files
+*/
+
+void	print_device_id(t_stat file_stats, t_ls_padding padding)
+{
+	ft_printf("%*ld, %*ld ",
+		padding.major_size, major(file_stats.st_rdev),
+		padding.minor_size, minor(file_stats.st_rdev));
+}
+
+/*
 **	Print the detailed '-l' format of a file
 */
 
@@ -300,7 +312,10 @@ unsigned long long opt)
 		ft_printf("%-*d ", padding.group, file_stats.st_gid);
 	else
 		ft_printf("%-*s ", padding.group, group->gr_name);
-	print_size(file_stats.st_size, padding.size, opt);
+	if (S_ISCHR(file_stats.st_mode) || S_ISBLK(file_stats.st_mode))
+		print_device_id(file_stats, padding);
+	else
+		print_size(file_stats.st_size, padding.size, opt);
 	get_ls_time(time, file_stats, opt);
 	ft_printf("%s", time);
 	if (opt & OPT_TCAPS)

@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 14:24:20 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 16:20:42 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft.h"
 #include "options.h"
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 #include <pwd.h>
 #include <grp.h>
 #include <sys/ioctl.h>
@@ -132,7 +133,16 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, unsigned long long 
 		file = (t_file*)(dlst->content);
 		size = get_block_size(file);
 		(*dir_size) += size;
-		if (opt & OPT_H)
+		if (S_ISCHR(file->stats.st_mode) || S_ISBLK(file->stats.st_mode))
+		{
+			len = get_nblen(major(file->stats.st_rdev));
+			if (len > padding.major_size)
+				padding.major_size = len;
+			len = get_nblen(minor(file->stats.st_rdev));
+			if (len > padding.minor_size)
+				padding.minor_size = len;
+		}
+		else if (opt & OPT_H)
 			len = get_human_readable_nblen(file->stats.st_size, 1024);
 		else if (opt & OPT_SI)
 			len = get_human_readable_nblen(file->stats.st_size, 1000);
@@ -157,6 +167,12 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, unsigned long long 
 		if (len > padding.group)
 			padding.group = len;
 		dlst = dlst->next;
+	}
+	if (padding.major_size + padding.minor_size > padding.size)
+	{
+		padding.size = padding.major_size + padding.minor_size + 2;
+		if (opt & OPT_H)
+			padding.size--;
 	}
 	//ft_printf("Final len = %d\n", padding.size);
 	return (padding);

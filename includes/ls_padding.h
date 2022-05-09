@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 18:10:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/26 18:28:11 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 15:46:02 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ typedef struct	s_ls_padding
 	int			user;
 	int			group;
 	int			size;
+	int			major_size;
+	int			minor_size;
 }				t_ls_padding;
 
 
