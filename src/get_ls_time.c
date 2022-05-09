@@ -6,13 +6,31 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 14:54:31 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/03/29 12:25:56 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 14:00:47 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ls.h"
 #include "options.h"
+
+/*
+**	Get the year [2021, 2022...]
+*/
+
+void	get_year(char **buf, char **time)
+{
+	while (**time != ' ')
+	{
+		(*time)++;
+	}
+	while (**time != '\n')
+	{
+		**buf = **time;
+		(*buf)++;
+		(*time)++;
+	}
+}
 
 /*
 **	Get the month [Jan,Feb,Mar...]
@@ -29,8 +47,6 @@ void	get_month(char **buf, char **time)
 		(*buf)++;
 		(*time)++;
 	}
-	**buf = ' ';
-	(*buf)++;
 }
 
 /*
@@ -39,9 +55,12 @@ void	get_month(char **buf, char **time)
 
 void	get_day(char **buf, char **time)
 {
-	while (**time != ' ')
+	while (**time == ' ')
+	{
+		**buf = **time;
+		(*buf)++;
 		(*time)++;
-	(*time)++;
+	}
 	while (**time != ' ')
 	{
 		**buf = **time;
@@ -82,16 +101,27 @@ void	get_hour(char **buf, char **time)
 
 void	get_ls_time(char *buf, t_stat stats, unsigned long long opt)
 {
-	char	*time;
+	char	*time_str;
+	time_t	used_time;
+	time_t	current_time;
 
 	if (opt & OPT_U)
-		time = ctime(&stats.st_atime);
+		used_time = stats.st_atime;
 	else if (opt & OPT_C)
-		time = ctime(&stats.st_mtime);
+		used_time = stats.st_mtime;
 	else
-		time = ctime(&stats.st_mtime);
+		used_time = stats.st_mtime;
 	ft_bzero(buf, 30);
-	get_month(&buf, &time);
-	get_day(&buf, &time);
-	get_hour(&buf, &time);
+	time_str = ctime(&used_time);
+	current_time = time(NULL);
+	get_month(&buf, &time_str);
+	get_day(&buf, &time_str);
+	if (current_time - used_time >= 15778458)
+	{
+		get_year(&buf, &time_str);
+	}
+	else
+	{
+		get_hour(&buf, &time_str);
+	}
 }
