@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/05 14:40:43 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 14:24:20 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int				get_human_readable_nblen(long int nb, long int divider)
 	//	If size < 1024, count one less len because there will be no letter
 	if (rest == 0)
 		len--;
-	if (dnb >= divider)
+	if (ft_ceil(dnb) >= divider)
 	{
 		len = 3;
 		//ft_printf("Ceil overflows\n");
