@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 16:20:42 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 17:59:11 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ int				get_human_readable_nblen(long int nb, long int divider)
 	}
 	len = 0;
 	//ft_printf("Nb after divide = %f\n", dnb);
-	dnb = ft_centiceil(dnb);
+	if (dnb < 10)
+		dnb = ft_centiceil(dnb);
+	else
+		dnb = ft_ceil(dnb);
 	nb = (long int)dnb;
 	//ft_printf("Nb after rounding = %f\n", dnb);
 	while (nb > 0)
