@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 17:14:47 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 17:38:32 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int    print_usage_stdin(void)
 	ft_printf("%4s%-25s%s", "", "", "  with -l: show ctime and sort by name;\n");
 	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
 	ft_printf("%4s%-25s%s", "-C", "", "list entries by column\n");
+	ft_printf("%4s%-25s%s", "-d", "--directory", "list directories themselves, not their contents\n");
 	ft_printf("%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
 	ft_printf("%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
 	ft_printf("%4s%-25s%s", "-G", ", --color", "colorize the output\n");
@@ -61,10 +62,12 @@ int		check_opt(char av, unsigned long long *opt)
 {
 	if (av == 'a')
 	{
+		*opt &= ~OPT_ACAPS;
 		*opt |= OPT_A;
 	}
 	else if (av == 'A')
 	{
+		*opt &= ~OPT_A;
 		*opt |= OPT_ACAPS;
 	}
 	else if (av == 'R')
@@ -204,11 +207,12 @@ int		parse_option_line(char *av, unsigned long long *opt)
 		}
 		else if (ft_strequ(av, "--all"))
 		{
-			ft_printf("--all\n");
+			*opt &= ~OPT_ACAPS;
 			*opt |= OPT_A;
 		}
 		else if (ft_strequ(av, "--almost-all"))
 		{
+			*opt &= ~OPT_A;
 			*opt |= OPT_ACAPS;
 		}
 		else if (ft_strequ(av, "--author"))
@@ -222,6 +226,10 @@ int		parse_option_line(char *av, unsigned long long *opt)
 		else if (ft_strequ(av, "--color"))
 		{
 			*opt |= OPT_GCAPS;
+		}
+		else if (ft_strequ(av, "--directory"))
+		{
+			*opt |= OPT_D;
 		}
 		else if (ft_strequ(av, "--human-readable"))
 		{

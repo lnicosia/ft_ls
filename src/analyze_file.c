@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/05 15:33:43 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 17:37:24 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	}
 	while ((entry = readdir(dir)))
 	{
-		if (!(*opt & OPT_A) && entry->d_name[0] == '.')
+		if (*opt & OPT_ACAPS
+			&& (ft_strequ(entry->d_name, ".") || ft_strequ(entry->d_name, "..")))
+			continue;
+		else if (!(*opt & OPT_A || *opt & OPT_ACAPS) && entry->d_name[0] == '.')
 			continue;
 		len += ft_strlen(entry->d_name) + 2;
 		if (!(path = ft_strjoin(file_name, "/")))
