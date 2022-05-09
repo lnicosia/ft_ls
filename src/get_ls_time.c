@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 14:54:31 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 14:00:47 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 17:10:38 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	get_ls_time(char *buf, t_stat stats, unsigned long long opt)
 	if (opt & OPT_U)
 		used_time = stats.st_atime;
 	else if (opt & OPT_C)
-		used_time = stats.st_mtime;
+		used_time = stats.st_ctime;
 	else
 		used_time = stats.st_mtime;
 	ft_bzero(buf, 30);

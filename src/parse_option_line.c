@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/06 13:53:48 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/09 17:14:47 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int		check_opt(char av, unsigned long long *opt)
 	}
 	else if (av == 'u')
 	{
+		*opt &= ~OPT_C;
 		*opt |= OPT_U;
 	}
 	else if (av == 'f')
@@ -124,6 +125,7 @@ int		check_opt(char av, unsigned long long *opt)
 	}
 	else if (av == 'c')
 	{
+		*opt &= ~OPT_U;
 		*opt |= OPT_C;
 	}
 	else if (av == 'C')
