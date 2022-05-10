@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/05 15:13:23 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 09:53:30 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int				print_files(t_dlist *dlst, unsigned long long *opt)
 	while (dlst)
 	{
 		file = (t_file*)dlst->content;
-		if (S_ISDIR(file->stats.st_mode))
+		if (S_ISDIR(file->stats.st_mode) && !(*opt & OPT_D))
 		{
 			dlst = dlst->next;
 			continue;
@@ -227,7 +227,8 @@ int				ft_ls(int ac, char **av)
 		dlst = analyze_args(ac, av, &opt);
 	}
 	print_files(dlst, &opt);
-	print_directories(dlst, &opt);
+	if (!(opt & OPT_D))
+		print_directories(dlst, &opt);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }
