@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 16:21:45 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 18:40:37 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 19:22:32 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize,
 			if (opt & OPT_SPECIAL_CHAR && !(opt & OPT_NCAPS))
 				special_char_padding++;
 		}
+		//if (S_ISDIR(((t_file*)lst->content)->stats.st_mode))
+		//	padding++;
 		if ((strlen = ft_strlen(name) + 2 + special_char_padding) > padding && strlen < winsize)
 			padding = strlen;
 		lst = lst->next;

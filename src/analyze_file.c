@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 18:59:42 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 19:17:41 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	int				(*compare_func)(void *, void *);
 	t_winsize		winsize;
 	int				special_chars;
-	size_t			dirname_len;
+	size_t			filename_len;
 
 	dlst = NULL;
 	len = 0;
@@ -85,7 +85,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			continue;
 		else if (!(*opt & OPT_A || *opt & OPT_ACAPS) && entry->d_name[0] == '.')
 			continue;
-		dirname_len = ft_strlen(entry->d_name) + 2;
+		filename_len = ft_strlen(entry->d_name) + 2;
 		if (isatty(STDOUT_FILENO))
 		{
 			special_chars = contains_special_chars(entry->d_name);
@@ -93,7 +93,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			{
 				if (!(*opt & OPT_NCAPS))
 				{
-					dirname_len += 2;
+					filename_len += 2;
 					*opt |= OPT_SPECIAL_CHAR;
 				}
 			}
@@ -101,14 +101,14 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			{
 				if (!(*opt & OPT_NCAPS))
 				{
-					dirname_len += 8;
+					filename_len += 8;
 					*opt |= OPT_SPECIAL_CHAR;
 				}
 				else
-					dirname_len += 1;
+					filename_len += 1;
 			}
 		}
-		len += dirname_len;
+		len += filename_len;
 		if (!(path = ft_strjoin(file_name, "/")))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
@@ -127,6 +127,8 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			ft_strdel(&path);
 			return (ft_perror(""));
 		}
+		if (*opt & OPT_P && S_ISDIR(file.stats.st_mode))
+			len++;
 		file.name = path;
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
