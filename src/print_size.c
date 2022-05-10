@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/23 15:04:47 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 15:52:55 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:10:39 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void	print_size_readable_si(off_t long_size, int padding, double divider)
 
 void	print_size(off_t size, int padding, unsigned long long opt)
 {
-	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
+	if (opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 	{
 		if (opt & OPT_H)
 			print_size_readable(size, padding, 1024);

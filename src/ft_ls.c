@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 14:56:14 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:18:50 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ int				(*get_compare_func(unsigned long long opt))(void*, void*)
 		return (compare_none);
 	if (opt & OPT_C)
 	{
-		if (!(opt & OPT_L || opt & OPT_G || opt & OPT_N) || opt & OPT_T)
+		if (!(opt & OPT_L || opt & OPT_G || opt & OPT_N
+			|| opt & OPT_O) || opt & OPT_T)
 			return (compare_ctimes);
 	}
 	if (opt & OPT_U)
 	{
-		if (!(opt & OPT_L || opt & OPT_G || opt & OPT_N) || opt & OPT_T)
+		if (!(opt & OPT_L || opt & OPT_G || opt & OPT_N
+			|| opt & OPT_O) || opt & OPT_T)
 			return (compare_atimes);
 	}
 	if (opt & OPT_T)
@@ -79,7 +81,7 @@ int				print_files(t_dlist *dlst, unsigned long long *opt)
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
 	ft_bzero(&padding, sizeof(padding));
-	if (*opt & OPT_L || *opt & OPT_G)
+	if (*opt & OPT_L || *opt & OPT_G || *opt & OPT_O)
 		padding = get_padding(dlst, &dir_size, *opt);
 	ft_bzero(&winsize, sizeof(winsize));
 	if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize))

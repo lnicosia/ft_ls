@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 14:54:40 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:18:40 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,8 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		len += ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
-	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N) && S_ISLNK(file_stats.st_mode))
+	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
+		&& S_ISLNK(file_stats.st_mode))
 	{
 		print_link(file, opt);
 		if (opt & OPT_GCAPS)
@@ -345,10 +346,13 @@ unsigned long long opt)
 		else
 			ft_printf("%-*s ", padding.user, passwd->pw_name);
 	}
-	if (opt & OPT_N)
-		ft_printf("%-*d ", padding.group, file_stats.st_gid);
-	else
-		ft_printf("%-*s ", padding.group, group->gr_name);
+	if (!(opt & OPT_O))
+	{
+		if (opt & OPT_N)
+			ft_printf("%-*d ", padding.group, file_stats.st_gid);
+		else
+			ft_printf("%-*s ", padding.group, group->gr_name);
+	}
 	if (S_ISCHR(file_stats.st_mode) || S_ISBLK(file_stats.st_mode))
 		print_device_id(file_stats, padding);
 	else
@@ -371,7 +375,7 @@ unsigned long long opt)
 int		print_file(t_stat file_stats, char *file, t_ls_padding padding,
 unsigned long long opt)
 {
-	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
+	if (opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 		print_details(file_stats, file, padding, opt);
 	else
 	{
