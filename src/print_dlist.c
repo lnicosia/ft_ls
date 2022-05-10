@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 17:59:11 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 10:46:39 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,11 +177,10 @@ t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, unsigned long long 
 		if (opt & OPT_H)
 			padding.size--;
 	}
-	//ft_printf("Final len = %d\n", padding.size);
 	return (padding);
 }
 
-void			print_total(long int long_size, unsigned long long opt)
+void		print_total(long int long_size, unsigned long long opt)
 {
 	double size = (double)long_size;
 	if (opt & OPT_H || opt & OPT_SI)
@@ -193,8 +192,6 @@ void			print_total(long int long_size, unsigned long long opt)
 		 	divider = 1000;
 		char letter = ' ';
 		double final_size = 0.0;
-		//ft_printf("divider = %f\n", divider);
-		//ft_printf("size = %f\n", size);
 		if (size < divider)
 		{
 			ft_printf("total %ld\n", (long int)size);
@@ -244,15 +241,12 @@ void			print_total(long int long_size, unsigned long long opt)
 			letter = '?';
 		}
 		int len = get_doublelen(final_size);
-		//ft_printf("final size = %f\n", final_size);
 		if (len == 1 && letter != ' ')
 		{
 			ft_printf("total %.1f%c\n", ft_centiceil(final_size), letter);
 		}
 		else
 		{
-			//if ((long)size % 1024 != 0)
-			//	final_size += 1;
 			final_size = ft_ceil(final_size);
 			ft_printf("total %ld%c\n", (long int)(final_size), letter);
 		}
@@ -266,11 +260,13 @@ void			print_total(long int long_size, unsigned long long opt)
 **	Assumes it's made of t_file*
 */
 
-void			print_dlist(t_dlist *dlst, unsigned long long opt)
+void			print_dlist(t_dlist *dlst, unsigned short winsize,
+	unsigned long long opt)
 {
 	int				first;
 	t_ls_padding	padding;
 	blksize_t		dir_size;
+	int				len;
 
 	if (!dlst)
 	{
@@ -278,6 +274,7 @@ void			print_dlist(t_dlist *dlst, unsigned long long opt)
 			ft_printf("total 0\n");
 		return ;
 	}
+	len = 0;
 	first = 1;
 	while (dlst && dlst->prev)
 		dlst = dlst->prev;
@@ -291,19 +288,32 @@ void			print_dlist(t_dlist *dlst, unsigned long long opt)
 	}
 	while (dlst)
 	{
+		t_file* file = (t_file*)dlst->content;
 		if (first)
 			first = 0;
 		else
 		{
 			if (opt & OPT_M)
-				ft_printf(", ");
+			{
+				char* name;
+				if (opt & OPT_PATH || !(name = ft_strrchr(file->name, '/')))
+					name = file->name;
+				else
+					name++;
+				if (len + 2 + (int)ft_strlen(name) < winsize)
+					len += ft_printf(", ");
+				else
+				{
+					ft_printf(",\n");
+					len = 0;
+				}
+			}
 			else if (opt & OPT_CCAPS)
 				ft_printf("  ");
 			else
 				ft_printf("\n");
 		}
-		print_file(((t_file*)dlst->content)->stats,
-		((t_file*)dlst->content)->name, padding, opt);
+		len += print_file(file->stats, file->name, padding, opt);
 		dlst = dlst->next;
 	}
 	ft_printf("\n");
@@ -314,11 +324,13 @@ void			print_dlist(t_dlist *dlst, unsigned long long opt)
 **	Assumes it's made of t_file*
 */
 
-void			print_dlist_reverse(t_dlist *dlst, unsigned long long opt)
+void			print_dlist_reverse(t_dlist *dlst, unsigned short winsize,
+	unsigned long long opt)
 {
 	int				first;
 	t_ls_padding	padding;
 	blksize_t		dir_size;
+	int				len;
 
 	if (!dlst)
 	{
@@ -339,19 +351,32 @@ void			print_dlist_reverse(t_dlist *dlst, unsigned long long opt)
 	}
 	while (dlst)
 	{
+		t_file* file = (t_file*)dlst->content;
 		if (first)
-			first = 0;
-			else
+		first = 0;
+		else
+		{
+			if (opt & OPT_M)
 			{
-				if (opt & OPT_M)
-					ft_printf(", ");
-				else if (opt & OPT_CCAPS)
-					ft_printf("  ");
+				char* name;
+				if (opt & OPT_PATH || !(name = ft_strrchr(file->name, '/')))
+					name = file->name;
 				else
-					ft_printf("\n");
+					name++;
+				if (len + 2 + (int)ft_strlen(name) < winsize)
+					len += ft_printf(", ");
+				else
+				{
+					ft_printf(",\n");
+					len = 0;
+				}
 			}
-		print_file(((t_file*)dlst->content)->stats,
-		((t_file*)dlst->content)->name, padding, opt);
+			else if (opt & OPT_CCAPS)
+				ft_printf("  ");
+			else
+				ft_printf("\n");
+		}
+		len += print_file(file->stats, file->name, padding, opt);
 		dlst = dlst->prev;
 	}
 	ft_printf("\n");

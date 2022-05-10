@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 09:53:07 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 10:15:26 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	if (*opt & OPT_CCAPS && len > winsize.ws_col)
 		print_dlist_col(dlst, len, winsize.ws_col, *opt);
 	else
-		print_dlist(dlst, *opt);
+		print_dlist(dlst, winsize.ws_col, *opt);
 	if (*opt & OPT_RCAPS)
 		analyze_list(dlst, *opt);
 	ft_dlstdelfront(&dlst, free_t_file);

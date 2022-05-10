@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/09 15:46:30 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 10:21:22 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,19 +243,21 @@ void	print_link(char *file, unsigned long long opt)
 **	Cuts the path after the last '/'
 */
 
-void	print_file_name(t_stat file_stats, char *file, size_t padding, unsigned long long opt)
+int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned long long opt)
 {
 	char	*name;
+	int		len;
 
+	len = 0;
 	if (opt & OPT_GCAPS)
 		set_color(file, file_stats.st_mode, opt);
 	if (opt & OPT_ERROR)
-		ft_printf(" ");
+		len += ft_printf(" ");
 	if (opt & OPT_PATH || !(name = ft_strrchr(file, '/')))
 		name = file;
 	else
 		name++;
-	ft_printf("%-*s", padding, name);
+	len += ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N) && S_ISLNK(file_stats.st_mode))
@@ -264,6 +266,7 @@ void	print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");
 	}
+	return (len);
 }
 
 /*
@@ -331,17 +334,18 @@ unsigned long long opt)
 **	Print a file according to the options
 */
 
-void	print_file(t_stat file_stats, char *file, t_ls_padding padding,
+int		print_file(t_stat file_stats, char *file, t_ls_padding padding,
 unsigned long long opt)
 {
 	if (opt & OPT_L || opt & OPT_G || opt & OPT_N)
 		print_details(file_stats, file, padding, opt);
 	else
 	{
-		print_file_name(file_stats, file, 0, opt);
+		return (print_file_name(file_stats, file, 0, opt));
 		//if (opt & OPT_M)
 		//	ft_printf(", ");
 		//else if (!isatty(STDOUT_FILENO))
 		//	ft_printf("\n");
 	}
+	return (0);
 }
