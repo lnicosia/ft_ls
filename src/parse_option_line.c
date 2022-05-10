@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:21:25 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:36:38 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ int		check_opt(char av, unsigned long long *opt)
 	else if (av == 'U')
 	{
 		*opt &= ~OPT_SORT;
-		*opt |= OPT_SORT;
 		*opt |= OPT_UCAPS;
 	}
 	else if (av == 'T')

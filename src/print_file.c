@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:22:59 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:30:49 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");
 	}
-	if (S_ISDIR(file_stats.st_mode))
+	if (S_ISDIR(file_stats.st_mode) && opt & OPT_P)
 		len += ft_printf("/");
 	return (len);
 }
