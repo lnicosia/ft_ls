@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 10:15:26 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 18:59:42 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <dirent.h>
-#include <fcntl.h>
 
 /*
 **	Analyze the directories contained in our sorted list
@@ -60,6 +59,8 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	size_t			len;
 	int				(*compare_func)(void *, void *);
 	t_winsize		winsize;
+	int				special_chars;
+	size_t			dirname_len;
 
 	dlst = NULL;
 	len = 0;
@@ -84,7 +85,30 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			continue;
 		else if (!(*opt & OPT_A || *opt & OPT_ACAPS) && entry->d_name[0] == '.')
 			continue;
-		len += ft_strlen(entry->d_name) + 2;
+		dirname_len = ft_strlen(entry->d_name) + 2;
+		if (isatty(STDOUT_FILENO))
+		{
+			special_chars = contains_special_chars(entry->d_name);
+			if (special_chars == 1 || special_chars == 2)
+			{
+				if (!(*opt & OPT_NCAPS))
+				{
+					dirname_len += 2;
+					*opt |= OPT_SPECIAL_CHAR;
+				}
+			}
+			else if (special_chars == 3)
+			{
+				if (!(*opt & OPT_NCAPS))
+				{
+					dirname_len += 8;
+					*opt |= OPT_SPECIAL_CHAR;
+				}
+				else
+					dirname_len += 1;
+			}
+		}
+		len += dirname_len;
 		if (!(path = ft_strjoin(file_name, "/")))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
@@ -120,17 +144,8 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		ft_dlstdelfront(&dlst, free_t_file);
 		return (ft_perror(""));
 	}
-	//	If not a tty (i.e. if piped), used the current term size..
 	if (!isatty(STDOUT_FILENO))
-	{
-
-		int fd = open("/dev/tty", O_RDONLY);
-		if (fd != -1)
-		{
-			ioctl(fd, TIOCGWINSZ, &winsize);
-		}
-		close(fd);
-	}
+		winsize.ws_col = 80;
 	else
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
 	if (*opt & OPT_CCAPS && len > winsize.ws_col)

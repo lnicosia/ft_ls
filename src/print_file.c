@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:30:49 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 18:52:05 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void	set_color(char *file, mode_t mode, unsigned long long opt)
 	if (S_ISDIR(mode))
 	{
 		if ((mode & S_IWUSR) && (mode & S_IWGRP) && (mode & S_IWOTH))
-			ft_printf("{reset}{black}{bgreen}");
+			ft_printf("{reset}{blue}{bgreen}");
 		else
 			ft_printf("{blue}");
 	}
@@ -263,10 +263,20 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 	{
 		if (isatty(STDOUT_FILENO))
 		{
-			if (special_chars == 1 && !(opt & OPT_NCAPS))
-				len += ft_printf("'%-*s'", padding, name);
-			else if (special_chars == 2 && !(opt & OPT_NCAPS))
-				len += ft_printf("\"%-*s\"", padding, name);
+			if (special_chars == 1)
+			{
+				if (opt & OPT_NCAPS)
+					len += ft_printf("%-s", name);
+				else
+					len += ft_printf("'%-s'", name);
+			}
+			else if (special_chars == 2)
+			{
+				if (opt & OPT_NCAPS)
+					len += ft_printf("%-s", name);
+				else
+					len += ft_printf("\"%-s\"", name);
+			}
 			else if (special_chars == 3)
 			{
 				if (opt & OPT_NCAPS)
@@ -274,7 +284,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 					char* replaced = NULL;
 					if (!(replaced = replace_char(name, '\n', "?")))
 						ft_perror("replace_char:");
-					len += ft_printf("%-*s", padding, replaced);
+					len += ft_printf("%-s", replaced);
 					ft_strdel(&replaced);
 				}
 				else
@@ -282,18 +292,42 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 					char* replaced = NULL;
 					if (!(replaced = replace_char(name, '\n', "'$'\\n''")))
 						ft_perror("replace_char:");
-					len += ft_printf("'%-*s'", padding, replaced);
+					len += ft_printf("'%-s'", replaced);
 					ft_strdel(&replaced);
 				}		
 			}
 		}
 		else
-			len += ft_printf("%-*s", padding, name);
+			len += ft_printf("%-s", name);
 	}
 	else
-		len += ft_printf("%-*s", padding, name);
+	{
+		if (opt & OPT_SPECIAL_CHAR && opt & OPT_CCAPS && !(opt & OPT_NCAPS))
+			len += ft_printf("{reset} ");
+		if (opt & OPT_GCAPS)
+			set_color(file, file_stats.st_mode, opt);
+		len += ft_printf("%-s", name);
+	}
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
+	if (opt & OPT_CCAPS)
+	{
+		if (special_chars == 1 || special_chars == 2)
+		{
+			if (!(opt & OPT_NCAPS))
+				padding -= 1;
+		}
+		else if (special_chars == 3)
+		{
+			if (!(opt & OPT_NCAPS))
+				padding -= 7;
+			else
+				padding -= 1;
+		}
+		if (opt & OPT_SPECIAL_CHAR)
+			padding--;
+		ft_printf("%*c", padding - ft_strlen(name), ' ');
+	}
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 		&& S_ISLNK(file_stats.st_mode))
 	{

@@ -6,19 +6,23 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 16:21:45 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/04/01 18:26:06 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 18:40:37 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ls.h"
 #include "libft.h"
+#include "options.h"
 #include <math.h>
 
-size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize)
+size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize,
+	unsigned long long opt)
 {
 	size_t	i;
 	size_t	padding;
 	size_t	strlen;
+	size_t	special_char_padding;
+	int		special_chars;
 	char	*name;
 
 	strlen = 0;
@@ -30,7 +34,26 @@ size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize)
 			name = ((t_file*)lst->content)->name;
 		else
 			name++;
-		if ((strlen = ft_strlen(name) + 2) > padding && strlen < winsize)
+		special_char_padding = 0;
+		if (isatty(STDOUT_FILENO))
+		{
+			special_chars = contains_special_chars(name);
+			if (special_chars == 1 || special_chars == 2)
+			{
+				if (!(opt & OPT_NCAPS))
+					special_char_padding += 1;
+			}
+			else if (special_chars == 3)
+			{
+				if (!(opt & OPT_NCAPS))
+					special_char_padding += 7;
+				else
+					special_char_padding += 1;
+			}
+			if (opt & OPT_SPECIAL_CHAR && !(opt & OPT_NCAPS))
+				special_char_padding++;
+		}
+		if ((strlen = ft_strlen(name) + 2 + special_char_padding) > padding && strlen < winsize)
 			padding = strlen;
 		lst = lst->next;
 		i++;
@@ -58,7 +81,7 @@ size_t *len, unsigned long long opt)
 		}
 		i++;
 	}
-	padding = get_col_padding(lst, nb_lines, winsize);
+	padding = get_col_padding(lst, nb_lines, winsize, opt);
 	i = 0;
 	while (i < current_line && lst->next)
 	{
@@ -126,7 +149,6 @@ size_t *len, unsigned long long opt)
 	size_t	j;
 	size_t	padding;
 
-	(void)opt;
 	i = 0;
 	while (i < current_col)
 	{
@@ -138,7 +160,7 @@ size_t *len, unsigned long long opt)
 		}
 		i++;
 	}
-	padding = get_col_padding(lst, nb_lines, winsize);
+	padding = get_col_padding(lst, nb_lines, winsize, opt);
 	i = 0;
 	while (i < current_line && lst->next)
 	{
@@ -162,7 +184,6 @@ int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, unsigned lo
 	size_t	printed_char;
 	size_t	current_col;
 
-	(void)opt;
 	while (lst && lst->prev)
 		lst = lst->prev;
 	lstlen = ft_dlstlen(lst) + 1;
