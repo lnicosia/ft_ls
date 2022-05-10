@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 09:53:30 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 14:56:14 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			i++;
 			continue;
 		}
-		if (lstat(av[i], &file.stats))
+		if (stat(av[i], &file.stats))
 		{
 			custom_error("ft_ls: cannot access '%s': ", av[i]);
 			ft_perror("");
@@ -179,7 +179,13 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 		if (S_ISDIR(file.stats.st_mode))
 			nb_dir++;
 		else
+		{
+			if (S_ISLNK(file.stats.st_mode))
+			{
+				ft_printf("Link\n");
+			}
 			nb_files++;
+		}
 		len += ft_strlen(av[i]) + 2;
 		if (!(file.name = ft_strdup(av[i])))
 		{

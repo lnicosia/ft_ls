@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 14:43:35 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 14:54:40 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,10 +376,6 @@ unsigned long long opt)
 	else
 	{
 		return (print_file_name(file_stats, file, 0, opt));
-		//if (opt & OPT_M)
-		//	ft_printf(", ");
-		//else if (!isatty(STDOUT_FILENO))
-		//	ft_printf("\n");
 	}
 	return (0);
 }
