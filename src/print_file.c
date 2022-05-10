@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 10:21:22 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 14:43:35 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,6 +247,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 {
 	char	*name;
 	int		len;
+	int		special_chars;
 
 	len = 0;
 	if (opt & OPT_GCAPS)
@@ -257,7 +258,40 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		name = file;
 	else
 		name++;
-	len += ft_printf("%-*s", padding, name);
+	special_chars = contains_special_chars(name);
+	if (special_chars != 0)
+	{
+		if (isatty(STDOUT_FILENO))
+		{
+			if (special_chars == 1 && !(opt & OPT_NCAPS))
+				len += ft_printf("'%-*s'", padding, name);
+			else if (special_chars == 2 && !(opt & OPT_NCAPS))
+				len += ft_printf("\"%-*s\"", padding, name);
+			else if (special_chars == 3)
+			{
+				if (opt & OPT_NCAPS)
+				{
+					char* replaced = NULL;
+					if (!(replaced = replace_char(name, '\n', "?")))
+						ft_perror("replace_char:");
+					len += ft_printf("%-*s", padding, replaced);
+					ft_strdel(&replaced);
+				}
+				else
+				{
+					char* replaced = NULL;
+					if (!(replaced = replace_char(name, '\n', "'$'\\n''")))
+						ft_perror("replace_char:");
+					len += ft_printf("'%-*s'", padding, replaced);
+					ft_strdel(&replaced);
+				}		
+			}
+		}
+		else
+			len += ft_printf("%-*s", padding, name);
+	}
+	else
+		len += ft_printf("%-*s", padding, name);
 	if (opt & OPT_GCAPS)
 		ft_printf("{reset}");
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N) && S_ISLNK(file_stats.st_mode))

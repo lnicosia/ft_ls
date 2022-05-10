@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 10:14:56 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 11:01:01 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,10 @@ int		check_opt(char av, unsigned long long *opt)
 		*opt &= ~OPT_M;
 		*opt |= OPT_N;
 		*opt |= OPT_TOTAL;
+	}
+	else if (av == 'N')
+	{
+		*opt |= OPT_NCAPS;
 	}
 	else
 	{
