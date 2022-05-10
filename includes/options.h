@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:26:37 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:06:05 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:21:32 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,5 @@
 # define OPT_SORT (1UL << 31)
 # define OPT_M (1UL << 32)
 # define OPT_O (1UL << 33)
-
-
 
 #endif
