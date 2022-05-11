@@ -302,7 +302,9 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 	}
 	else
 	{
-		if (opt & OPT_SPECIAL_CHAR && opt & OPT_CCAPS && !(opt & OPT_NCAPS))
+		if (opt & OPT_SPECIAL_CHAR && !(opt & OPT_NCAPS)
+			&& (opt & OPT_CCAPS ||
+				opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O))
 			len += ft_printf("{reset} ");
 		if (opt & OPT_GCAPS)
 			set_color(file, file_stats.st_mode, opt);
