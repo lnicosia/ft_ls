@@ -325,9 +325,14 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		else if (special_chars == 3)
 		{
 			if (!(opt & OPT_NCAPS))
-				padding -= 7;
+			{
+				//if (opt & OPT_P)
+				//	padding -= 6;
+				//else
+					padding -= 7;
+			}
 		}
-		if (opt & OPT_SPECIAL_CHAR)
+		if (opt & OPT_SPECIAL_CHAR) //|| opt & OPT_P)
 			padding--;
 		ft_printf("%*c", padding - ft_strlen(name), ' ');
 	}
