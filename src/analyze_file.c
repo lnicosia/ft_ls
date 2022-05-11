@@ -74,7 +74,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	{
 		if (*opt & OPT_NEWLINE)
 			ft_printf("\n");
-		if (!(*opt & OPT_NEWLINE))
+		if (!(*opt & OPT_NEWLINE) && dir)
 			*opt |= OPT_NEWLINE;
 		special_chars = contains_special_chars(file_name);
 		if (isatty(STDOUT_FILENO))
