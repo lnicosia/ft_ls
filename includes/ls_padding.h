@@ -21,6 +21,7 @@ typedef struct	s_ls_padding
 	int			size;
 	int			major_size;
 	int			minor_size;
+	int			xattr;
 }				t_ls_padding;
 
 

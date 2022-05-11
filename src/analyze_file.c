@@ -112,6 +112,8 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 					ft_strdel(&replaced);
 				}
 			}
+			else
+				ft_printf("%s:\n", file_name);
 		}
 		else
 			ft_printf("%s:\n", file_name);

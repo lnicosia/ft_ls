@@ -18,6 +18,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/ioctl.h>
+#include <sys/xattr.h>
 
 int				get_human_readable_nblen(long int nb, long int divider)
 {
@@ -67,6 +68,8 @@ int				get_signed_nblen(long int nb)
 {
 	int	len;
 
+	if (nb == 0)
+		return (1);
 	len = 0;
 	while (nb > 0)
 	{
@@ -80,6 +83,8 @@ int				get_nblen(long unsigned int nb)
 {
 	int	len;
 
+	if (nb == 0)
+		return (1);
 	len = 0;
 	while (nb > 0)
 	{
@@ -130,8 +135,10 @@ t_ls_padding	get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 	long int			size;
 	long unsigned int	usize;
 	t_file				file;
+	int					char_device;
 
 	ft_bzero(&padding, sizeof(padding));
+	char_device = 0;
 	for (size_t i = 0; i < array_len; i++)
 	{
 		file = files[i];
@@ -139,6 +146,7 @@ t_ls_padding	get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 		(*dir_size) += size;
 		if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
 		{
+			char_device = 1;
 			len = get_nblen(major(file.stats.st_rdev));
 			if (len > padding.major_size)
 				padding.major_size = len;
@@ -170,8 +178,10 @@ t_ls_padding	get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 			len = get_grouplen(&file);
 		if (len > padding.group)
 			padding.group = len;
+		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
+			padding.xattr = 1;
 	}
-	if (padding.major_size + padding.minor_size > padding.size)
+	if (char_device && padding.major_size + padding.minor_size + 2 > padding.size)
 	{
 		padding.size = padding.major_size + padding.minor_size + 2;
 		if (opt & OPT_H)

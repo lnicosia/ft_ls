@@ -18,6 +18,7 @@
 #include <sys/sysmacros.h>
 #include <pwd.h>
 #include <grp.h>
+#include <sys/xattr.h>
 
 /*
 **	Print the type of the file as the first letter [-dbclps]
@@ -59,11 +60,15 @@ char	get_permission(char c, mode_t mode, unsigned int permission)
 
 void	print_permissions(mode_t mode)
 {
-	ft_printf("%c%c%c%c%c%c%c%c%c ", get_permission('r', mode, S_IRUSR),
+	ft_printf("%c%c%c%c%c%c%c%c", get_permission('r', mode, S_IRUSR),
 	get_permission('w', mode, S_IWUSR), get_permission('x', mode, S_IXUSR),
 	get_permission('r', mode, S_IRGRP), get_permission('w', mode, S_IWGRP),
 	get_permission('x', mode, S_IXGRP), get_permission('r', mode, S_IROTH),
-	get_permission('w', mode, S_IWOTH), get_permission('x', mode, S_IXOTH));
+	get_permission('w', mode, S_IWOTH));
+	if (mode & S_ISVTX)
+		ft_printf("t");
+	else
+		ft_printf("%c", get_permission('x', mode, S_IXOTH));
 }
 
 /*
@@ -372,6 +377,11 @@ unsigned long long opt)
 
 	print_type(file_stats.st_mode);
 	print_permissions(file_stats.st_mode);
+	if (listxattr(file, NULL, 0) > 0 && S_ISCHR(file_stats.st_mode))
+		ft_printf("+");
+	else if (padding.xattr)
+		ft_printf(" ");
+	ft_printf(" ");
 	ft_printf("%*ld ", padding.links, file_stats.st_nlink);
 	if (!(passwd = getpwuid(file_stats.st_uid)))
 	{
