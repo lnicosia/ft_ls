@@ -268,11 +268,7 @@ void			print_dlist(t_file* files, size_t array_len, unsigned short winsize,
 	int				len;
 
 	if (!files)
-	{
-		if (opt & OPT_TOTAL)
-			ft_printf("total 0\n");
 		return ;
-	}
 	len = 0;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));

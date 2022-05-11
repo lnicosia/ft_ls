@@ -77,37 +77,40 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		if (!(*opt & OPT_NEWLINE))
 			*opt |= OPT_NEWLINE;
 		special_chars = contains_special_chars(file_name);
-		if (special_chars == 1)
+		if (isatty(STDOUT_FILENO))
 		{
-			if (*opt & OPT_NCAPS)
-				ft_printf("%-s:\n", file_name);
-			else
-				ft_printf("'%-s':\n", file_name);
-		}
-		else if (special_chars == 2)
-		{
-			if (*opt & OPT_NCAPS)
-				ft_printf("%-s:\n", file_name);
-			else
-				ft_printf("\"%-s\":\n", file_name);
-		}
-		else if (special_chars == 3)
-		{
-			if (*opt & OPT_NCAPS)
+			if (special_chars == 1)
 			{
-				char* replaced = NULL;
-				if (!(replaced = replace_char(file_name, '\n', "?")))
-					ft_perror("replace_char:");
-				ft_printf("%-s:\n", replaced);
-				ft_strdel(&replaced);
+				if (*opt & OPT_NCAPS)
+					ft_printf("%-s:\n", file_name);
+				else
+					ft_printf("'%-s':\n", file_name);
 			}
-			else
+			else if (special_chars == 2)
 			{
-				char* replaced = NULL;
-				if (!(replaced = replace_char(file_name, '\n', "'$'\\n''")))
-					ft_perror("replace_char:");
-				ft_printf("'%-s':\n", replaced);
-				ft_strdel(&replaced);
+				if (*opt & OPT_NCAPS)
+					ft_printf("%-s:\n", file_name);
+				else
+					ft_printf("\"%-s\":\n", file_name);
+			}
+			else if (special_chars == 3)
+			{
+				if (*opt & OPT_NCAPS)
+				{
+					char* replaced = NULL;
+					if (!(replaced = replace_char(file_name, '\n', "?")))
+						ft_perror("replace_char:");
+					ft_printf("%-s:\n", replaced);
+					ft_strdel(&replaced);
+				}
+				else
+				{
+					char* replaced = NULL;
+					if (!(replaced = replace_char(file_name, '\n', "'$'\\n''")))
+						ft_perror("replace_char:");
+					ft_printf("'%-s':\n", replaced);
+					ft_strdel(&replaced);
+				}
 			}
 		}
 		else
@@ -184,6 +187,11 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	{
 		ft_dlstdelfront(&dlst, free_t_file);
 		return (ft_perror(""));
+	}
+	if (!dlst)
+	{
+		if (*opt & OPT_TOTAL)
+			ft_printf("total 0\n");
 	}
 	if (!isatty(STDOUT_FILENO))
 		winsize.ws_col = 80;
