@@ -47,14 +47,10 @@ size_t	get_col_padding(t_file* files, size_t array_len, size_t nb_lines,
 			{
 				if (!(opt & OPT_NCAPS))
 					special_char_padding += 7;
-				else
-					special_char_padding += 1;
 			}
-			if (opt & OPT_SPECIAL_CHAR && !(opt & OPT_NCAPS))
+			if (opt & OPT_SPECIAL_CHAR)
 				special_char_padding++;
 		}
-		//if (S_ISDIR(((t_file*)lst->content)->stats.st_mode))
-		//	padding++;
 		if ((strlen = ft_strlen(name) + 2 + special_char_padding) > padding && strlen < winsize)
 			padding = strlen;
 		i++;

@@ -326,8 +326,6 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		{
 			if (!(opt & OPT_NCAPS))
 				padding -= 7;
-			else
-				padding -= 1;
 		}
 		if (opt & OPT_SPECIAL_CHAR)
 			padding--;
