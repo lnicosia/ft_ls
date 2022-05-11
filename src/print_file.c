@@ -143,11 +143,11 @@ void	set_color(char *file, mode_t mode, unsigned long long opt)
 			ft_printf("{red}");
 	}
 	else if (S_ISCHR(mode))
-		ft_printf("{yellow}");
+		ft_printf("{bblack}{yellow}");
 	else if (S_ISBLK(mode))
 		ft_printf("{reset}");
 	else if (S_ISFIFO(mode))
-		ft_printf("{reset}");
+		ft_printf("{reset}{bblack}{yellow}");
 	else if (S_ISSOCK(mode))
 		ft_printf("{reset}");
 	else if (S_ISREG(mode))
@@ -294,7 +294,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 						ft_perror("replace_char:");
 					len += ft_printf("'%-s'", replaced);
 					ft_strdel(&replaced);
-				}		
+				}
 			}
 		}
 		else
@@ -315,7 +315,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		len += ft_printf("/");
 		padding--;
 	}
-	if (opt & OPT_CCAPS)
+	if (opt & OPT_CCAPS && padding != 0)
 	{
 		if (special_chars == 1 || special_chars == 2)
 		{
@@ -381,14 +381,14 @@ unsigned long long opt)
 	if (!(opt & OPT_G))
 	{
 		if (opt & OPT_N)
-			ft_printf("%-*d ", padding.user, file_stats.st_uid);
+			ft_printf("%*d ", padding.user, file_stats.st_uid);
 		else
 			ft_printf("%-*s ", padding.user, passwd->pw_name);
 	}
 	if (!(opt & OPT_O))
 	{
 		if (opt & OPT_N)
-			ft_printf("%-*d ", padding.group, file_stats.st_gid);
+			ft_printf("%*d ", padding.group, file_stats.st_gid);
 		else
 			ft_printf("%-*s ", padding.group, group->gr_name);
 	}

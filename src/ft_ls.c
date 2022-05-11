@@ -65,39 +65,30 @@ int				(*get_compare_func(unsigned long long opt))(void*, void*)
 **	Print all the non-directory file names
 */
 
-int				print_files(t_dlist *dlst, unsigned long long *opt)
+int				print_files(t_file* files, size_t len, unsigned long long *opt)
 {
-	int				first;
 	int				nb_files;
 	t_ls_padding	padding;
-	t_file			*file;
 	t_winsize		winsize;
 	blksize_t		dir_size;
+	t_file			file;
 
-	if (!dlst)
+	if (!files)
 		return (-1);
-	first = 1;
 	nb_files = 0;
-	while (dlst && dlst->prev)
-		dlst = dlst->prev;
 	ft_bzero(&padding, sizeof(padding));
 	if (*opt & OPT_L || *opt & OPT_G || *opt & OPT_O)
-		padding = get_padding(dlst, &dir_size, *opt);
+		padding = get_padding(files, len, &dir_size, *opt);
 	ft_bzero(&winsize, sizeof(winsize));
 	if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize))
 		return (ft_perror(""));
 	*opt |= OPT_PATH;
-	while (dlst)
+	for (size_t i = 0; i < len; i++)
 	{
-		file = (t_file*)dlst->content;
-		if (S_ISDIR(file->stats.st_mode) && !(*opt & OPT_D))
-		{
-			dlst = dlst->next;
+		file = files[i];
+		if (S_ISDIR(file.stats.st_mode) && !(*opt & OPT_D))
 			continue;
-		}
-		if (first)
-			first = 0;
-		else
+		if (i != 0)
 		{
 			if (*opt & OPT_M)
 				ft_printf(", ");
@@ -106,9 +97,8 @@ int				print_files(t_dlist *dlst, unsigned long long *opt)
 			else
 				ft_printf("\n");
 		}
-		print_file(file->stats, file->name, padding, *opt);
+		print_file(file.stats, file.name, padding, *opt);
 		nb_files++;
-		dlst = dlst->next;
 	}
 	if (nb_files > 0)
 		ft_printf("\n");
@@ -123,24 +113,15 @@ int				print_files(t_dlist *dlst, unsigned long long *opt)
 **	Print the content of all the directories arguments
 */
 
-int				print_directories(t_dlist *dlst, unsigned long long *opt)
+int				print_directories(t_file* files, size_t len, unsigned long long *opt)
 {
-	t_file			*file;
-
-	if (!dlst)
+	if (!files)
 		return (-1);
-	while (dlst && dlst->prev)
-		dlst = dlst->prev;
-	while (dlst)
+	for (size_t i = 0; i < len; i++)
 	{
-		file = (t_file*)dlst->content;
-		if (!S_ISDIR(file->stats.st_mode))
-		{
-			dlst = dlst->next;
+		if (!S_ISDIR(files[i].stats.st_mode))
 			continue;
-		}
-		analyze_directory(file->name, opt);
-		dlst = dlst->next;
+		analyze_directory(files[i].name, opt);
 	}
 	return (0);
 }
@@ -220,6 +201,8 @@ int				ft_ls(int ac, char **av)
 	unsigned long long	opt;
 	int		real_args;
 	t_dlist	*dlst;
+	t_file*	files;
+	size_t	lstlen;
 
 	opt = OPT_SORT;
 	dlst = NULL;
@@ -234,9 +217,13 @@ int				ft_ls(int ac, char **av)
 	{
 		dlst = analyze_args(ac, av, &opt);
 	}
-	print_files(dlst, &opt);
+	if (!(files = (t_file*)ft_dlist_to_array(dlst)))
+		return (-1);
+	lstlen = ft_dlstlen(dlst);
+	print_files(files, lstlen, &opt);
 	if (!(opt & OPT_D))
-		print_directories(dlst, &opt);
+		print_directories(files, lstlen, &opt);
+	ft_memdel((void**)&files);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }

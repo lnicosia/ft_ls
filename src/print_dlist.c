@@ -122,54 +122,54 @@ long int		get_block_size(t_file *file)
 	return (size);
 }
 
-t_ls_padding	get_padding(t_dlist *dlst, blksize_t *dir_size, unsigned long long opt)
+t_ls_padding	get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
+	unsigned long long opt)
 {
 	t_ls_padding		padding;
 	int					len;
 	long int			size;
 	long unsigned int	usize;
-	t_file*				file;
+	t_file				file;
 
 	ft_bzero(&padding, sizeof(padding));
-	while (dlst)
+	for (size_t i = 0; i < array_len; i++)
 	{
-		file = (t_file*)(dlst->content);
-		size = get_block_size(file);
+		file = files[i];
+		size = get_block_size(&file);
 		(*dir_size) += size;
-		if (S_ISCHR(file->stats.st_mode) || S_ISBLK(file->stats.st_mode))
+		if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
 		{
-			len = get_nblen(major(file->stats.st_rdev));
+			len = get_nblen(major(file.stats.st_rdev));
 			if (len > padding.major_size)
 				padding.major_size = len;
-			len = get_nblen(minor(file->stats.st_rdev));
+			len = get_nblen(minor(file.stats.st_rdev));
 			if (len > padding.minor_size)
 				padding.minor_size = len;
 		}
 		else if (opt & OPT_H)
-			len = get_human_readable_nblen(file->stats.st_size, 1024);
+			len = get_human_readable_nblen(file.stats.st_size, 1024);
 		else if (opt & OPT_SI)
-			len = get_human_readable_nblen(file->stats.st_size, 1000);
+			len = get_human_readable_nblen(file.stats.st_size, 1000);
 		else
-			len = get_signed_nblen(file->stats.st_size);
+			len = get_signed_nblen(file.stats.st_size);
 		if (len > padding.size)
 			padding.size = len;
-		usize = file->stats.st_nlink;
+		usize = file.stats.st_nlink;
 		len = get_nblen(usize);
 		if (len > padding.links)
 			padding.links = len;
 		if (opt & OPT_N)
-			len = get_nblen(file->stats.st_uid);
+			len = get_nblen(file.stats.st_uid);
 		else
-			len = get_userlen(file);
+			len = get_userlen(&file);
 		if (len > padding.user)
 			padding.user = len;
 		if (opt & OPT_N)
-			len = get_nblen(file->stats.st_gid);
+			len = get_nblen(file.stats.st_gid);
 		else
-			len = get_grouplen(file);
+			len = get_grouplen(&file);
 		if (len > padding.group)
 			padding.group = len;
-		dlst = dlst->next;
 	}
 	if (padding.major_size + padding.minor_size > padding.size)
 	{
@@ -260,44 +260,38 @@ void		print_total(long int long_size, unsigned long long opt)
 **	Assumes it's made of t_file*
 */
 
-void			print_dlist(t_dlist *dlst, unsigned short winsize,
+void			print_dlist(t_file* files, size_t array_len, unsigned short winsize,
 	unsigned long long opt)
 {
-	int				first;
 	t_ls_padding	padding;
 	blksize_t		dir_size;
 	int				len;
 
-	if (!dlst)
+	if (!files)
 	{
 		if (opt & OPT_TOTAL)
 			ft_printf("total 0\n");
 		return ;
 	}
 	len = 0;
-	first = 1;
-	while (dlst && dlst->prev)
-		dlst = dlst->prev;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
 	if (opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 	{
-		padding = get_padding(dlst, &dir_size, opt);
+		padding = get_padding(files, array_len, &dir_size, opt);
 		if (opt & OPT_TOTAL)
 			print_total((long int)dir_size, opt);
 	}
-	while (dlst)
+	for (size_t i = 0; i < array_len; i++)
 	{
-		t_file* file = (t_file*)dlst->content;
-		if (first)
-			first = 0;
-		else
+		t_file file = files[i];
+		if (i != 0)
 		{
 			if (opt & OPT_M)
 			{
 				char* name;
-				if (opt & OPT_PATH || !(name = ft_strrchr(file->name, '/')))
-					name = file->name;
+				if (opt & OPT_PATH || !(name = ft_strrchr(file.name, '/')))
+					name = file.name;
 				else
 					name++;
 				if (len + 2 + (int)ft_strlen(name) < winsize)
@@ -313,8 +307,7 @@ void			print_dlist(t_dlist *dlst, unsigned short winsize,
 			else
 				ft_printf("\n");
 		}
-		len += print_file(file->stats, file->name, padding, opt);
-		dlst = dlst->next;
+		len += print_file(file.stats, file.name, padding, opt);
 	}
 	ft_printf("\n");
 }
@@ -324,43 +317,37 @@ void			print_dlist(t_dlist *dlst, unsigned short winsize,
 **	Assumes it's made of t_file*
 */
 
-void			print_dlist_reverse(t_dlist *dlst, unsigned short winsize,
+void			print_dlist_reverse(t_file* files, size_t array_len, unsigned short winsize,
 	unsigned long long opt)
 {
-	int				first;
 	t_ls_padding	padding;
 	blksize_t		dir_size;
 	int				len;
 
-	if (!dlst)
+	if (!files)
 	{
 		if (opt & OPT_TOTAL)
 			ft_printf("total 0\n");
 		return ;
 	}
-	first = 1;
-	while (dlst && dlst->next)
-		dlst = dlst->next;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
 	if (opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 	{
-		padding = get_padding(dlst, &dir_size, opt);
+		padding = get_padding(files, array_len, &dir_size, opt);
 		if (opt & OPT_TOTAL)
 			print_total((long int)dir_size, opt);
 	}
-	while (dlst)
+	for (size_t i = 0; i < array_len; i++)
 	{
-		t_file* file = (t_file*)dlst->content;
-		if (first)
-		first = 0;
-		else
+		t_file file = files[array_len - 1 - i];
+		if (i != 0)
 		{
 			if (opt & OPT_M)
 			{
 				char* name;
-				if (opt & OPT_PATH || !(name = ft_strrchr(file->name, '/')))
-					name = file->name;
+				if (opt & OPT_PATH || !(name = ft_strrchr(file.name, '/')))
+					name = file.name;
 				else
 					name++;
 				if (len + 2 + (int)ft_strlen(name) < winsize)
@@ -376,8 +363,7 @@ void			print_dlist_reverse(t_dlist *dlst, unsigned short winsize,
 			else
 				ft_printf("\n");
 		}
-		len += print_file(file->stats, file->name, padding, opt);
-		dlst = dlst->prev;
+		len += print_file(file.stats, file.name, padding, opt);
 	}
 	ft_printf("\n");
 }

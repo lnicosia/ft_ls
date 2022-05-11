@@ -15,8 +15,8 @@
 #include "options.h"
 #include <math.h>
 
-size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize,
-	unsigned long long opt)
+size_t	get_col_padding(t_file* files, size_t array_len, size_t nb_lines,
+	size_t current_file, size_t winsize, unsigned long long opt)
 {
 	size_t	i;
 	size_t	padding;
@@ -28,10 +28,10 @@ size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize,
 	strlen = 0;
 	padding = 0;
 	i = 0;
-	while (i < nb_lines && lst)
+	while (i < nb_lines && current_file < array_len)
 	{
-		if (!(name = ft_strrchr(((t_file*)lst->content)->name, '/')))
-			name = ((t_file*)lst->content)->name;
+		if (!(name = ft_strrchr(files[current_file].name, '/')))
+			name = files[current_file].name;
 		else
 			name++;
 		special_char_padding = 0;
@@ -57,177 +57,75 @@ size_t	get_col_padding(t_dlist *lst, size_t nb_lines, size_t winsize,
 		//	padding++;
 		if ((strlen = ft_strlen(name) + 2 + special_char_padding) > padding && strlen < winsize)
 			padding = strlen;
-		lst = lst->next;
 		i++;
+		current_file++;
 	}
 	return (padding);
 }
 
-size_t	print_current_file(t_dlist *lst, size_t current_col,
-size_t current_line, size_t nb_lines, size_t place_left, size_t winsize,
-size_t *len, unsigned long long opt)
-{
-	size_t	i;
-	size_t	j;
-	size_t	padding;
-	t_stat	stats;
-
-	i = 0;
-	while (i < current_col)
-	{
-		j = 0;
-		while (j < nb_lines && lst->next)
-		{
-			lst = lst->next;
-			j++;
-		}
-		i++;
-	}
-	padding = get_col_padding(lst, nb_lines, winsize, opt);
-	i = 0;
-	while (i < current_line && lst->next)
-	{
-		lst = lst->next;
-		i++;
-	}
-	if (i < current_line)
-		return (place_left);
-	if (lstat(((t_file*)lst->content)->name, &stats))
-	{
-		custom_error("ft_ls: cannot access '%s': ", ((t_file*)lst->content)->name);
-		ft_perror("");
-		return (padding);
-	}
-	if (padding <= place_left || (padding > winsize && current_col == 0))
-	{
-		print_file_name(stats, ((t_file*)lst->content)->name, padding, opt);
-		(*len)--;
-	}
-	return (padding);
-}
-
-int		print_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, unsigned long long opt)
+int		print_n_lines(t_file* files, size_t array_len, size_t nb_lines,
+	size_t winsize, unsigned long long opt)
 {
 	size_t	nb_col;
 	size_t	lstlen;
-	size_t	i;
-	size_t	printed_char;
-	size_t	current_col;
 
-	//ft_printf("Trying to print %d height\n", nb_lines);
-	while (lst && lst->prev)
-		lst = lst->prev;
-	lstlen = ft_dlstlen(lst) + 1;
+	lstlen = array_len;
 	nb_col = (size_t)ceil((double)lstlen / (double)nb_lines);
-	i = 0;
-	//ft_printf("There will be %d names per line\n", nb_col);
-	while (i < nb_lines)
+	for (size_t line = 0; line < nb_lines; line++)
 	{
-		printed_char = 0;
-		current_col = 0;
-		while (printed_char < winsize && current_col < nb_col)
+		for (size_t current_col = 0; current_col < nb_col; current_col++)
 		{
-			printed_char += print_current_file(lst, current_col, i, nb_lines,
-			winsize - printed_char, winsize, &lstlen, opt);
-			if (printed_char < winsize)
+			size_t col_padding = get_col_padding(files, array_len, nb_lines,
+				current_col * nb_lines, winsize, opt);
+			size_t index = current_col * nb_lines + line;
+			size_t next_index = (current_col + 1) * nb_lines + line;
+			if (index < array_len)
 			{
-				current_col++;
+				if (current_col == nb_col - 1 || next_index >= array_len)
+				{
+					print_file_name(files[index].stats, files[index].name,
+						0, opt);
+					ft_printf("\n");
+				}
+				else
+					print_file_name(files[index].stats, files[index].name,
+						col_padding, opt);
 			}
 		}
-		ft_printf("\n");
-		i++;
 	}
-	//ft_printf("\n{red}lstlen = %d\n{reset}", lstlen);
 	if (lstlen != 0)
 		return (-1);
 	return (0);
 }
 
-size_t	preprint_current_file(t_dlist *lst, size_t current_col,
-size_t current_line, size_t nb_lines, size_t place_left, size_t winsize,
-size_t *len, unsigned long long opt)
-{
-	size_t	i;
-	size_t	j;
-	size_t	padding;
-
-	i = 0;
-	while (i < current_col)
-	{
-		j = 0;
-		while (j < nb_lines && lst->next)
-		{
-			lst = lst->next;
-			j++;
-		}
-		i++;
-	}
-	padding = get_col_padding(lst, nb_lines, winsize, opt);
-	i = 0;
-	while (i < current_line && lst->next)
-	{
-		lst = lst->next;
-		i++;
-	}
-	if (i < current_line)
-		return (place_left);
-	if (padding <= place_left || (padding > winsize && current_col == 0))
-	{
-		(*len)--;
-	}
-	return (padding);
-}
-
-int		preprint_n_lines(t_dlist *lst, size_t nb_lines, size_t winsize, unsigned long long opt)
+int		preprint_n_lines(t_file* files, size_t array_len, size_t nb_lines, size_t winsize,
+	unsigned long long opt)
 {
 	size_t	nb_col;
-	size_t	lstlen;
-	size_t	i;
-	size_t	printed_char;
-	size_t	current_col;
 
-	while (lst && lst->prev)
-		lst = lst->prev;
-	lstlen = ft_dlstlen(lst) + 1;
-	nb_col = (size_t)ceil((double)lstlen / (double)nb_lines);
-	i = 0;
-	//ft_printf("\n{green}Nb lines = %d\n{reset}", nb_lines);
-	//ft_printf("\n{green}Nb col = %d\n{reset}", nb_col);
-	//ft_printf("\n{green}lstlen = %d\n{reset}", lstlen);
-	while (i < nb_lines)
+	nb_col = (size_t)ceil((double)array_len / (double)nb_lines);
+	size_t printed_chars = 0;
+	for (size_t current_col = 0; current_col < nb_col; current_col++)
 	{
-		printed_char = 0;
-		current_col = 0;
-		while (printed_char <= winsize && current_col < nb_col)
-		{
-			printed_char += preprint_current_file(lst, current_col, i, nb_lines,
-			winsize - printed_char, winsize, &lstlen, opt);
-			if (printed_char <= winsize)
-			{
-				current_col++;
-			}
-		}
-		i++;
+		size_t col_padding = get_col_padding(files, array_len, nb_lines,
+			current_col * nb_lines, winsize, opt);
+		printed_chars += col_padding;
 	}
-	//ft_printf("\n{red}lstlen = %d\n{reset}", lstlen);
-	if (lstlen != 0)
+	if (printed_chars > winsize + 1)
 		return (1);
 	return (0);
 }
 
-int		print_dlist_col(t_dlist *lst, size_t len, unsigned short winsize,
-unsigned long long opt)
+int		print_dlist_col(t_file* files, size_t array_len, size_t len,
+	unsigned short winsize, unsigned long long opt)
 {
 	size_t	nb_lines;
 
-	//ft_printf("Len = %d\n", len);
 	nb_lines = (size_t)ceil((double)len / winsize);
-	while (preprint_n_lines(lst, nb_lines, winsize, opt))
+	while (preprint_n_lines(files, array_len, nb_lines, winsize, opt))
 	{
 		nb_lines++;
 	}
-	//ft_printf("nb lines = %d\n", nb_lines);
-	//ft_printf("winsize = %d\n", winsize);
-	print_n_lines(lst, nb_lines, winsize, opt);
+	print_n_lines(files, array_len, nb_lines, winsize, opt);
 	return (0);
 }

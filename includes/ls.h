@@ -26,6 +26,7 @@ typedef struct timespec	t_timespec;
 typedef struct			s_file
 {
 	char				*name;
+	size_t				namelen;
 	t_stat				stats;
 }						t_file;
 
@@ -50,17 +51,17 @@ int						compare_names_no_case(void *s1, void *s2);
 int						compare_times(void *s1, void *s2);
 int						compare_atimes(void *s1, void *s2);
 int						compare_ctimes(void *s1, void *s2);
-void					print_dlist(t_dlist *dlst, unsigned short winsize,
-	unsigned long long opt);
-void					print_dlist_reverse(t_dlist *dlst, unsigned short winsize,
-	unsigned long long opt);
+void					print_dlist(t_file* files, size_t array_len,
+	unsigned short winsize, unsigned long long opt);
+void					print_dlist_reverse(t_file* files, size_t array_len,
+	unsigned short winsize, unsigned long long opt);
 void					free_t_file(void *file, size_t size);
 int						analyze_directory(char *file_name, unsigned long long *opt);
 int						(*get_compare_func(unsigned long long opt))(void*, void*);
-int						print_dlist_col(t_dlist *lst, size_t len,
+int						print_dlist_col(t_file* files, size_t array_len, size_t len,
 	unsigned short winsize, unsigned long long opt);
 int						is_arg_an_option_line(char *av);
-t_ls_padding			get_padding(t_dlist *dlst, blksize_t *dir_size,
+t_ls_padding			get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 	unsigned long long opt);
 int						get_doublelen(double size);
 

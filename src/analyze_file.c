@@ -76,7 +76,42 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			ft_printf("\n");
 		if (!(*opt & OPT_NEWLINE))
 			*opt |= OPT_NEWLINE;
-		ft_printf("%s:\n", file_name);
+		special_chars = contains_special_chars(file_name);
+		if (special_chars == 1)
+		{
+			if (*opt & OPT_NCAPS)
+				ft_printf("%-s:\n", file_name);
+			else
+				ft_printf("'%-s':\n", file_name);
+		}
+		else if (special_chars == 2)
+		{
+			if (*opt & OPT_NCAPS)
+				ft_printf("%-s:\n", file_name);
+			else
+				ft_printf("\"%-s\":\n", file_name);
+		}
+		else if (special_chars == 3)
+		{
+			if (*opt & OPT_NCAPS)
+			{
+				char* replaced = NULL;
+				if (!(replaced = replace_char(file_name, '\n', "?")))
+					ft_perror("replace_char:");
+				ft_printf("%-s:\n", replaced);
+				ft_strdel(&replaced);
+			}
+			else
+			{
+				char* replaced = NULL;
+				if (!(replaced = replace_char(file_name, '\n', "'$'\\n''")))
+					ft_perror("replace_char:");
+				ft_printf("'%-s':\n", replaced);
+				ft_strdel(&replaced);
+			}
+		}
+		else
+			ft_printf("%s:\n", file_name);
 	}
 	while ((entry = readdir(dir)))
 	{
@@ -128,7 +163,11 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			return (ft_perror(""));
 		}
 		if (*opt & OPT_P && S_ISDIR(file.stats.st_mode))
+		{
+			filename_len++;
 			len++;
+		}
+		file.namelen = filename_len - 2;
 		file.name = path;
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
@@ -150,12 +189,16 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		winsize.ws_col = 80;
 	else
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &winsize);
-	if (*opt & OPT_CCAPS && len > winsize.ws_col)
-		print_dlist_col(dlst, len, winsize.ws_col, *opt);
+	t_file* files;
+	if (!(files = (t_file*)ft_dlist_to_array(dlst)))
+		return (-1);
+	if (*opt & OPT_CCAPS && dlst)
+		print_dlist_col(files, ft_dlstlen(dlst), len, winsize.ws_col, *opt);
 	else
-		print_dlist(dlst, winsize.ws_col, *opt);
+		print_dlist(files, ft_dlstlen(dlst), winsize.ws_col, *opt);
 	if (*opt & OPT_RCAPS)
 		analyze_list(dlst, *opt);
+	ft_memdel((void**)&files);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
 }

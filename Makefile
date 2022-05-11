@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/10 17:48:10 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/11 14:20:16 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ LDLIBS = $(LIBFT) -lm
 
 LDFLAGS = -L $(LIBFT_DIR)
 
-LIB_RAW = 
+LIB_RAW =
 
 SRC_RAW =	main.c ft_ls.c parsedir.c parse_option_line.c analyze_file.c \
 			print_file.c get_ls_time.c print_size.c sort_files.c compare.c \
@@ -57,10 +57,9 @@ OPTI_FLAGS = -O3
 CFLAGS =	-Wall -Wextra -Werror -Wpadded -Wconversion -I $(INCLUDES_DIR) \
 	  	-I $(LIBFT_DIR)/includes -I $(BMP_PARSER_DIR)/includes \
 		-I $(LIBMFT_DIR)/includes -I $(GLAD_DIR)/include \
-		-fsanitize=address -g3 \
-		#$(OPTI_FLAGS) \
-		
-	
+		$(OPTI_FLAGS) \
+		#-fsanitize=address -g3 \
+
 #
 # Setting right flags and files dependencies to link external libs
 # according to user's os
@@ -104,17 +103,14 @@ all: $(OPENGL)
 $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_DIR)
 
-$(LIBMFT):
-	@make --no-print-directory -C $(LIBMFT_DIR)
-
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	@printf $(YELLOW)"Compiling $<\n"$(RESET)
-	gcc -c $< -o $@ $(CFLAGS) 
+	gcc -c $< -o $@ $(CFLAGS)
 
-$(NAME): $(LIBFT) $(OBJ_DIR) $(OBJ) 
+$(NAME): $(LIBFT) $(OBJ_DIR) $(OBJ)
 	@printf $(CYAN)"[INFO] Linking ${BIN_DIR}/${NAME}\n"$(RESET)
 	gcc $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 	@printf ${GREEN}"[INFO] Compiled $(BIN_DIR)/$(NAME) with success!\n"
@@ -122,8 +118,6 @@ $(NAME): $(LIBFT) $(OBJ_DIR) $(OBJ)
 
 clean:
 	@make --no-print-directory clean -C $(LIBFT_DIR)
-	@make --no-print-directory clean -C $(LIBMFT_DIR)
-	@make --no-print-directory clean -C $(BMP_PARSER_DIR)
 	@printf ${CYAN}"[INFO] Removing objs\n"${RESET}
 	rm -rf $(OBJ_DIR)
 
