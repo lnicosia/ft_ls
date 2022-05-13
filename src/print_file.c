@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 19:21:07 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/13 11:08:22 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/xattr.h>
+#include <sys/acl.h>
 
 /*
 **	Print the type of the file as the first letter [-dbclps]
@@ -381,6 +382,11 @@ unsigned long long opt)
 		ft_printf("+");
 	else if (padding.xattr)
 		ft_printf(" ");
+	acl_t acl = acl_get_file(file, ACL_TYPE_ACCESS);
+	if (acl != (acl_t)NULL)
+	{
+		ft_printf("ACL:\n%s", acl_to_text(acl, NULL));
+	}
 	ft_printf(" ");
 	ft_printf("%*ld ", padding.links, file_stats.st_nlink);
 	if (!(passwd = getpwuid(file_stats.st_uid)))

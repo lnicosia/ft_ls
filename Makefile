@@ -29,7 +29,7 @@ ROOT = sudo
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMFT = $(LIBMFT_DIR)/libmft.a
 
-LDLIBS = $(LIBFT) -lm
+LDLIBS = $(LIBFT) -lm -lacl
 
 LDFLAGS = -L $(LIBFT_DIR)
 
