@@ -97,7 +97,7 @@ int				print_files(t_file* files, size_t len, unsigned long long *opt)
 			else if (nb_files > 0)
 				ft_printf("\n");
 		}
-		print_file(file.stats, file.name, padding, *opt);
+		print_file(file, padding, *opt);
 		nb_files++;
 	}
 	if (nb_files > 0)

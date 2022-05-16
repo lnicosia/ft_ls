@@ -18,7 +18,6 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/ioctl.h>
-#include <sys/xattr.h>
 
 int				get_human_readable_nblen(long int nb, long int divider)
 {
@@ -178,7 +177,7 @@ t_ls_padding	get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 			len = get_grouplen(&file);
 		if (len > padding.group)
 			padding.group = len;
-		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
+		if (file.has_extended || file.has_acl)
 			padding.xattr = 1;
 	}
 	if (char_device && padding.major_size + padding.minor_size + 2 > padding.size)
@@ -313,7 +312,7 @@ void			print_dlist(t_file* files, size_t array_len, unsigned short winsize,
 			else
 				ft_printf("\n");
 		}
-		len += print_file(file.stats, file.name, padding, opt);
+		len += print_file(file, padding, opt);
 	}
 	ft_printf("\n");
 }
@@ -369,7 +368,7 @@ void			print_dlist_reverse(t_file* files, size_t array_len, unsigned short winsi
 			else
 				ft_printf("\n");
 		}
-		len += print_file(file.stats, file.name, padding, opt);
+		len += print_file(file, padding, opt);
 	}
 	ft_printf("\n");
 }

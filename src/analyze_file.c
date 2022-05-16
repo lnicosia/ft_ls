@@ -17,6 +17,9 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <dirent.h>
+#include <sys/xattr.h>
+#include <sys/acl.h>
+#include <acl/libacl.h>
 
 /*
 **	Analyze the directories contained in our sorted list
@@ -125,6 +128,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			continue;
 		else if (!(*opt & OPT_A || *opt & OPT_ACAPS) && entry->d_name[0] == '.')
 			continue;
+		ft_bzero(&file, sizeof(file));
 		filename_len = ft_strlen(entry->d_name) + 2;
 		if (isatty(STDOUT_FILENO))
 		{
@@ -174,6 +178,38 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		}
 		file.namelen = filename_len - 2;
 		file.name = path;
+		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
+			file.has_extended = 1;
+		if (!(*opt & OPT_E))
+		{
+			acl_t	acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
+			if (acl != NULL)
+			{
+				acl_entry_t	entry;
+				if (acl_get_entry(acl, ACL_FIRST_ENTRY, &entry) == 1)
+				{
+					acl_tag_t tag;
+					//ft_printf("%s\n", file.name);
+					//ft_printf("%s", acl_to_text(acl, NULL));
+					while (acl_get_entry(acl, ACL_NEXT_ENTRY, &entry) == 1)
+					{
+						if (acl_get_tag_type(entry, &tag) == 0)
+						{
+							/*ft_printf("%-12s\n",	(tag == ACL_USER_OBJ) ?		"user_obj" :
+												(tag == ACL_USER) ? 		"user" :
+												(tag == ACL_GROUP_OBJ) ? 	"group_obj" :
+												(tag == ACL_GROUP) ? 		"group" :
+												(tag == ACL_MASK) ? 		"mask" :
+												(tag == ACL_OTHER) ? 		"other" :
+												"???");*/
+							if (tag == ACL_MASK)
+								file.has_acl = 1;
+						}
+					}
+				}
+				acl_free((void*)acl);
+			}
+		}
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);

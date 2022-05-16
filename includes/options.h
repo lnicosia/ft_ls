@@ -48,5 +48,6 @@
 # define OPT_M (1UL << 32)
 # define OPT_O (1UL << 33)
 # define OPT_SPECIAL_CHAR (1UL << 34)
+# define OPT_E (1UL << 35)
 
 #endif

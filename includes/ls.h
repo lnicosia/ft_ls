@@ -27,6 +27,8 @@ typedef struct			s_file
 {
 	char				*name;
 	size_t				namelen;
+	int					has_extended;
+	int					has_acl;
 	t_stat				stats;
 }						t_file;
 
@@ -37,10 +39,10 @@ int						parse_ls_options(int ac, char **av, unsigned long long *opt,
 int						parse_option_line(char *av, unsigned long long *opt);
 	t_dlist					*analyze_args(int ac, char **av, unsigned long long *opt);
 int						analyze_file(char *file, unsigned long long opt);
-int						print_file(t_stat file_stats, char *file,
-	t_ls_padding padding, unsigned long long opt);
-int						print_file_name(t_stat file_stats, char *file,
-	size_t padding, unsigned long long opt);
+int						print_file(t_file file, t_ls_padding padding,
+	unsigned long long opt);
+int						print_file_name(t_stat file_stats, char* file, size_t padding,
+	unsigned long long opt);
 void					get_ls_time(char *res, t_stat stats, unsigned long long opt);
 void					print_size(off_t size, int padding, unsigned long long opt);
 void					print_size_short(off_t size);

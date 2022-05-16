@@ -31,6 +31,7 @@ int    print_usage_stdin(void)
 	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
 	ft_printf("%4s%-25s%s", "-C", "", "list entries by column\n");
 	ft_printf("%4s%-25s%s", "-d", "--directory", "list directories themselves, not their contents\n");
+	ft_printf("%4s%-25s%s", "-e", "--extended", "with -l: if present, show extended or ACL attributes\n");
 	ft_printf("%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
 	ft_printf("%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
 	ft_printf("%4s%-25s%s", "-G", ", --color", "colorize the output\n");
@@ -195,6 +196,10 @@ int		check_opt(char av, unsigned long long *opt)
 	{
 		*opt |= OPT_P;
 	}
+	else if (av == 'e')
+	{
+		*opt |= OPT_E;
+	}
 	else
 	{
 		custom_error("ft_ls: invalid option -- '%c'\n", av);
@@ -274,6 +279,10 @@ int		parse_option_line(char *av, unsigned long long *opt)
 		else if (ft_strequ(av, "--recursive"))
 		{
 			*opt |= OPT_RCAPS;
+		}
+		else if (ft_strequ(av, "--extended"))
+		{
+			*opt |= OPT_E;
 		}
 		else if (!ft_strequ(av, "--"))
 		{

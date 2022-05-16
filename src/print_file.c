@@ -20,6 +20,7 @@
 #include <grp.h>
 #include <sys/xattr.h>
 #include <sys/acl.h>
+#include <acl/libacl.h>
 
 /*
 **	Print the type of the file as the first letter [-dbclps]
@@ -369,32 +370,27 @@ void	print_device_id(t_stat file_stats, t_ls_padding padding)
 **	Print the detailed '-l' format of a file
 */
 
-void	print_details(t_stat file_stats, char *file, t_ls_padding padding,
+void	print_details(t_file file, t_ls_padding padding,
 unsigned long long opt)
 {
 	t_passwd	*passwd;
 	t_group		*group;
 	char		time[30];
 
-	print_type(file_stats.st_mode);
-	print_permissions(file_stats.st_mode);
-	if (listxattr(file, NULL, 0) > 0 && S_ISCHR(file_stats.st_mode))
+	print_type(file.stats.st_mode);
+	print_permissions(file.stats.st_mode);
+	if (file.has_acl || file.has_extended)
 		ft_printf("+");
 	else if (padding.xattr)
 		ft_printf(" ");
-	acl_t acl = acl_get_file(file, ACL_TYPE_ACCESS);
-	if (acl != (acl_t)NULL)
-	{
-		ft_printf("ACL:\n%s", acl_to_text(acl, NULL));
-	}
 	ft_printf(" ");
-	ft_printf("%*ld ", padding.links, file_stats.st_nlink);
-	if (!(passwd = getpwuid(file_stats.st_uid)))
+	ft_printf("%*ld ", padding.links, file.stats.st_nlink);
+	if (!(passwd = getpwuid(file.stats.st_uid)))
 	{
 		ft_perror("Error: ");
 		return ;
 	}
-	if (!(group = getgrgid(file_stats.st_gid)))
+	if (!(group = getgrgid(file.stats.st_gid)))
 	{
 		ft_perror("Error: ");
 		return ;
@@ -402,44 +398,55 @@ unsigned long long opt)
 	if (!(opt & OPT_G))
 	{
 		if (opt & OPT_N)
-			ft_printf("%*d ", padding.user, file_stats.st_uid);
+			ft_printf("%*d ", padding.user, file.stats.st_uid);
 		else
 			ft_printf("%-*s ", padding.user, passwd->pw_name);
 	}
 	if (!(opt & OPT_O))
 	{
 		if (opt & OPT_N)
-			ft_printf("%*d ", padding.group, file_stats.st_gid);
+			ft_printf("%*d ", padding.group, file.stats.st_gid);
 		else
 			ft_printf("%-*s ", padding.group, group->gr_name);
 	}
-	if (S_ISCHR(file_stats.st_mode) || S_ISBLK(file_stats.st_mode))
-		print_device_id(file_stats, padding);
+	if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
+		print_device_id(file.stats, padding);
 	else
-		print_size(file_stats.st_size, padding.size, opt);
-	get_ls_time(time, file_stats, opt);
+		print_size(file.stats.st_size, padding.size, opt);
+	get_ls_time(time, file.stats, opt);
 	ft_printf("%s", time);
 	if (opt & OPT_TCAPS)
 	{
-		ft_printf(":%.2ld.%ld", file_stats.st_atim.tv_sec % 60,
-		file_stats.st_atim.tv_nsec);
+		ft_printf(":%.2ld.%ld", file.stats.st_atim.tv_sec % 60,
+		file.stats.st_atim.tv_nsec);
 	}
 	ft_printf(" ");
-	print_file_name(file_stats, file, 0, opt);
+	print_file_name(file.stats, file.name, 0, opt);
+	if (!(opt & OPT_E))
+		return ;
+	acl_t acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
+	if (acl != (acl_t)NULL)
+	{
+		char* str = acl_to_text(acl, NULL);
+		if (str)
+			ft_printf("\n%s", str);
+		acl_free((void*)str);
+		acl_free((void*)acl);
+	}
 }
 
 /*
 **	Print a file according to the options
 */
 
-int		print_file(t_stat file_stats, char *file, t_ls_padding padding,
+int		print_file(t_file file, t_ls_padding padding,
 unsigned long long opt)
 {
 	if (opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
-		print_details(file_stats, file, padding, opt);
+		print_details(file, padding, opt);
 	else
 	{
-		return (print_file_name(file_stats, file, 0, opt));
+		return (print_file_name(file.stats, file.name, 0, opt));
 	}
 	return (0);
 }
