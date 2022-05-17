@@ -53,6 +53,7 @@ void	print_type(mode_t mode)
 
 char	get_permission(char c, mode_t mode, unsigned int permission)
 {
+
 	if (mode & permission)
 		return (c);
 	return ('-');
@@ -64,12 +65,17 @@ char	get_permission(char c, mode_t mode, unsigned int permission)
 
 void	print_permissions(mode_t mode)
 {
-	ft_printf("%c%c%c%c%c%c%c%c", get_permission('r', mode, S_IRUSR),
+	ft_printf("%c%c%c%c%c", get_permission('r', mode, S_IRUSR),
 	get_permission('w', mode, S_IWUSR), get_permission('x', mode, S_IXUSR),
-	get_permission('r', mode, S_IRGRP), get_permission('w', mode, S_IWGRP),
-	get_permission('x', mode, S_IXGRP), get_permission('r', mode, S_IROTH),
-	get_permission('w', mode, S_IWOTH));
-	if (mode & S_ISVTX)
+	get_permission('r', mode, S_IRGRP), get_permission('w', mode, S_IWGRP));
+
+	if (mode & S_ISGID)
+		ft_printf("s");
+	else
+		ft_printf("%c", get_permission('x', mode, S_IXGRP));
+	ft_printf("%c%c",
+		get_permission('r', mode, S_IROTH), get_permission('w', mode, S_IWOTH));
+	if (mode & S_ISVTX && S_ISDIR(mode))
 		ft_printf("t");
 	else
 		ft_printf("%c", get_permission('x', mode, S_IXOTH));

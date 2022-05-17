@@ -180,9 +180,9 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		}
 		file.namelen = filename_len - 2;
 		file.name = path;
-#ifdef ACL_PRESENT
 		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
 			file.has_extended = 1;
+#ifdef ACL_PRESENT
 		if (!(*opt & OPT_E))
 		{
 			acl_t	acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
