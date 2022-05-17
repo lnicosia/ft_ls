@@ -19,8 +19,10 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/xattr.h>
-#include <sys/acl.h>
-#include <acl/libacl.h>
+#ifdef ACL_PRESENT
+# include <sys/acl.h>
+# include <acl/libacl.h>
+#endif
 
 /*
 **	Print the type of the file as the first letter [-dbclps]
@@ -422,6 +424,7 @@ unsigned long long opt)
 	}
 	ft_printf(" ");
 	print_file_name(file.stats, file.name, 0, opt);
+#ifdef ACL_PRESENT
 	if (!(opt & OPT_E))
 		return ;
 	acl_t acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
@@ -433,6 +436,7 @@ unsigned long long opt)
 		acl_free((void*)str);
 		acl_free((void*)acl);
 	}
+#endif
 }
 
 /*

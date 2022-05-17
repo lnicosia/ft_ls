@@ -16,6 +16,9 @@
 # include "sys/stat.h"
 # include "libft.h"
 # include "ls_padding.h"
+# if __has_include(<sys/acl.h>) && __has_include(<acl/libacl.h>)
+# define ACL_PRESENT
+# endif
 
 typedef struct stat		t_stat;
 typedef struct passwd	t_passwd;

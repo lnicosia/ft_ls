@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/11 14:20:16 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/17 17:19:06 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,15 @@ ROOT = sudo
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMFT = $(LIBMFT_DIR)/libmft.a
 
-LDLIBS = $(LIBFT) -lm -lacl
+ACL_TEST := $(shell ld -lacl; echo $$?)
+
+ifeq ($(ACL_TEST), 1)
+	ACL =
+else
+	ACL = -lacl
+endif
+
+LDLIBS = $(LIBFT) -lm $(ACL)
 
 LDFLAGS = -L $(LIBFT_DIR)
 

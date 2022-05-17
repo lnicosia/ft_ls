@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 19:17:41 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/17 16:08:31 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 #include <sys/ioctl.h>
 #include <dirent.h>
 #include <sys/xattr.h>
-#include <sys/acl.h>
-#include <acl/libacl.h>
+#ifdef ACL_PRESENT
+# include <sys/acl.h>
+# include <acl/libacl.h>
+#endif
 
 /*
 **	Analyze the directories contained in our sorted list
@@ -178,6 +180,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		}
 		file.namelen = filename_len - 2;
 		file.name = path;
+#ifdef ACL_PRESENT
 		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
 			file.has_extended = 1;
 		if (!(*opt & OPT_E))
@@ -210,6 +213,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 				acl_free((void*)acl);
 			}
 		}
+#endif
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
