@@ -175,6 +175,12 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			ft_strdel(&path);
 			return (ft_perror(""));
 		}
+		char buf[256];
+		if (S_ISLNK(file.stats.st_mode) && readlink(path, buf, 256) == -1)
+		{
+			custom_error("ft_ls: cannot read symbolic link '%s': ", path);
+			ft_perror("");
+		}
 		if (*opt & OPT_P && S_ISDIR(file.stats.st_mode))
 		{
 			filename_len++;

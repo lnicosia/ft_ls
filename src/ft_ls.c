@@ -175,6 +175,12 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 				continue;
 			}
 		}
+		char buf[256];
+		if (S_ISLNK(file.stats.st_mode) && readlink(av[i], buf, 256) == -1)
+		{
+			custom_error("ft_ls: cannot read symbolic link '%s': ", av[i]);
+			ft_perror("");
+		}
 		if (S_ISDIR(file.stats.st_mode))
 			nb_dir++;
 		else

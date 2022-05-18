@@ -94,18 +94,14 @@ void	print_permissions(mode_t mode)
 		ft_printf("%c", get_permission('x', mode, S_IXOTH));
 }
 
-/*
-**	Verifies if a link is valid
-*/
-
-int		is_link_valid(char *file)
+int		should_print_link(char *file)
 {
 	char	buf[256];
 	ssize_t	size;
-	t_stat	stats;
 	char	*last_slash;
 	char	*dir;
 	size_t	dirlen;
+	int		valid;
 
 	if (!(last_slash = ft_strrchr(file, '/')))
 	{
@@ -124,18 +120,67 @@ int		is_link_valid(char *file)
 			return (0);
 		}
 	}
-	//ft_printf("Dir = %s\n", dir);
 	dirlen = ft_strlen(dir);
+	valid = 0;
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
+		valid = 1;
 		buf[size] = '\0';
 		if (buf[0] != '/')
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
 		}
-		//ft_printf("Link %s towards %s\n", file, buf);
 		file = buf;
+	}
+	ft_strdel(&dir);
+	return (valid);
+}
+
+/*
+**	Verifies if a link is valid
+*/
+
+int		is_link_valid(char *file)
+{
+	char	buf[256];
+	ssize_t	size;
+	t_stat	stats;
+	char	*last_slash;
+	char	*dir;
+	size_t	dirlen;
+	int		valid;
+
+	if (!(last_slash = ft_strrchr(file, '/')))
+	{
+		if (!(dir = ft_strdup("./")))
+		{
+			ft_perror("ft_strdup");
+			return (0);
+		}
+	}
+	else
+	{
+		if (!(dir = ft_strsub(file, 0,
+				ft_strlen(file) - ft_strlen(last_slash) + 1)))
+		{
+			ft_perror("ft_strsub");
+			return (0);
+		}
+	}
+	dirlen = ft_strlen(dir);
+	valid = 0;
+	while ((size = readlink(file, buf, 256)) != -1)
+	{
+		valid = 1;
+		buf[size] = '\0';
+		if (buf[0] != '/')
+		{
+			ft_memmove(buf + dirlen, buf, (size_t)size);
+			ft_memmove(buf, dir, dirlen);
+		}
+		file = buf;
+		//ft_printf("File = %s\n", file);
 		if (stat(file, &stats))
 		{
 			//custom_error("stat %s: ", file);
@@ -145,7 +190,7 @@ int		is_link_valid(char *file)
 		}
 	}
 	ft_strdel(&dir);
-	return (1);
+	return (valid);
 }
 
 /*
@@ -367,7 +412,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		ft_printf("%*c", padding - ft_strlen(name), ' ');
 	}
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
-		&& S_ISLNK(file_stats.st_mode))
+		&& S_ISLNK(file_stats.st_mode) && should_print_link(file))
 	{
 		print_link(file, opt);
 		if (opt & OPT_GCAPS)
