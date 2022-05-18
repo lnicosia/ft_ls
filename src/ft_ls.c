@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:18:50 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/18 11:43:23 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,23 +150,34 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			i++;
 			continue;
 		}
-		if (stat(av[i], &file.stats))
+		if (*opt & OPT_L || *opt & OPT_G || *opt & OPT_N || *opt & OPT_O)
 		{
-			custom_error("ft_ls: cannot access '%s': ", av[i]);
-			ft_perror("");
-			if (ft_strchr(av[i], ' '))
-				(*opt) |= OPT_ERROR;
-			i++;
-			continue;
+			if (lstat(av[i], &file.stats))
+			{
+				custom_error("ft_ls: cannot access '%s': ", av[i]);
+				ft_perror("");
+				if (ft_strchr(av[i], ' '))
+					(*opt) |= OPT_ERROR;
+				i++;
+				continue;
+			}
+		}
+		else
+		{
+			if (stat(av[i], &file.stats))
+			{
+				custom_error("ft_ls: cannot access '%s': ", av[i]);
+				ft_perror("");
+				if (ft_strchr(av[i], ' '))
+					(*opt) |= OPT_ERROR;
+				i++;
+				continue;
+			}
 		}
 		if (S_ISDIR(file.stats.st_mode))
 			nb_dir++;
 		else
 		{
-			if (S_ISLNK(file.stats.st_mode))
-			{
-				ft_printf("Link\n");
-			}
 			nb_files++;
 		}
 		len += ft_strlen(av[i]) + 2;
