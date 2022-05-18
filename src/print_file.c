@@ -408,13 +408,11 @@ unsigned long long opt)
 	ft_printf("%*ld ", padding.links, file.stats.st_nlink);
 	if (!(passwd = getpwuid(file.stats.st_uid)))
 	{
-		ft_perror("Error: ");
-		return ;
+		opt |= OPT_N;
 	}
 	if (!(group = getgrgid(file.stats.st_gid)))
 	{
-		ft_perror("Error: ");
-		return ;
+		opt |= OPT_N;
 	}
 	if (!(opt & OPT_G))
 	{

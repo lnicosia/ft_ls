@@ -99,8 +99,8 @@ int				get_userlen(t_file *file)
 
 	if (!(passwd = getpwuid(file->stats.st_uid)))
 	{
-		ft_perror("Error: ");
-		return (0);
+		return (get_nblen(file->stats.st_uid));
+
 	}
 	return ((int)ft_strlen(passwd->pw_name));
 }
@@ -111,8 +111,7 @@ int				get_grouplen(t_file *file)
 
 	if (!(group = getgrgid(file->stats.st_gid)))
 	{
-		ft_perror("Error: ");
-		return (0);
+		return (get_nblen(file->stats.st_gid));
 	}
 	return ((int)ft_strlen(group->gr_name));
 }

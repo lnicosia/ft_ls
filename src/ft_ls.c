@@ -150,6 +150,7 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			i++;
 			continue;
 		}
+		ft_bzero(&file, sizeof(file));
 		if (*opt & OPT_L || *opt & OPT_G || *opt & OPT_N || *opt & OPT_O)
 		{
 			if (lstat(av[i], &file.stats))
