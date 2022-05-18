@@ -183,9 +183,11 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		file.namelen = filename_len - 2;
 		file.name = path;
 		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
+		{
 			file.has_extended = 1;
+		}
 #ifdef ACL_PRESENT
-		if (!(*opt & OPT_E))
+		if (!(*opt & OPT_E) && !S_ISLNK(file.stats.st_mode))
 		{
 			acl_t	acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
 			if (acl != NULL)
@@ -208,7 +210,9 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 												(tag == ACL_OTHER) ? 		"other" :
 												"???");*/
 							if (tag == ACL_MASK)
+							{
 								file.has_acl = 1;
+							}
 						}
 					}
 				}
