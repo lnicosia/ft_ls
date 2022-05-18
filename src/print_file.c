@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/18 11:14:26 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:34:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ int		should_print_link(char *file)
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
+			buf[(size_t)size + dirlen] = '\0';
 		}
 		file = buf;
 	}
@@ -178,6 +179,7 @@ int		is_link_valid(char *file)
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
+			buf[(size_t)size + dirlen] = '\0';
 		}
 		file = buf;
 		//ft_printf("File = %s\n", file);
@@ -286,6 +288,7 @@ void	print_link(char *file, unsigned long long opt)
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
+			buf[(size_t)size + dirlen] = '\0';
 		}
 		//ft_printf("Link %s towards %s\n", file, buf);
 		file = buf;
