@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 11:06:42 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:36:38 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:46:12 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,7 +310,7 @@ int		parse_option_line(char *av, unsigned long long *opt)
 
 int				is_arg_an_option_line(char *av)
 {
-	return (ft_strlen(av) >= 1 && av[0] == '-');
+	return (ft_strlen(av) > 1 && av[0] == '-');
 }
 
 /*
