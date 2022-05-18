@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/17 17:19:06 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/18 18:16:49 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ LIB_RAW =
 
 SRC_RAW =	main.c ft_ls.c parsedir.c parse_option_line.c analyze_file.c \
 			print_file.c get_ls_time.c print_size.c sort_files.c compare.c \
-			print_dlist_col.c print_dlist.c
+			print_dlist_col.c print_dlist.c set_color.c link.c
 
 HEADERS =	ls.h directory.h options.h ls_padding.h
 
