@@ -18,8 +18,11 @@
 #include <sys/ioctl.h>
 #include <dirent.h>
 #include <sys/xattr.h>
+#include <sys/acl.h>
 #ifdef ACL_PRESENT
 # include <sys/acl.h>
+#endif
+#ifdef LIBACL_PRESENT
 # include <acl/libacl.h>
 #endif
 
@@ -190,10 +193,11 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		file.name = path;
 		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
 		{
+			ft_printf("%s is extended\n", file.name);
 			file.has_extended = 1;
 		}
 #ifdef ACL_PRESENT
-		if (!(*opt & OPT_E) && !S_ISLNK(file.stats.st_mode))
+		if (!S_ISLNK(file.stats.st_mode))
 		{
 			acl_t	acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
 			if (acl != NULL)
@@ -202,8 +206,8 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 				if (acl_get_entry(acl, ACL_FIRST_ENTRY, &entry) == 1)
 				{
 					acl_tag_t tag;
-					//ft_printf("%s\n", file.name);
-					//ft_printf("%s", acl_to_text(acl, NULL));
+					ft_printf("%s\n", file.name);
+					ft_printf("%s", acl_to_text(acl, NULL));
 					while (acl_get_entry(acl, ACL_NEXT_ENTRY, &entry) == 1)
 					{
 						if (acl_get_tag_type(entry, &tag) == 0)
@@ -225,6 +229,9 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 				acl_free((void*)acl);
 			}
 		}
+#else
+		if (*opt & OPT_E)
+			check_acl_with_popen(&file);
 #endif
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{

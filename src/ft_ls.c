@@ -15,6 +15,14 @@
 #include "options.h"
 #include "ls_padding.h"
 #include <sys/ioctl.h>
+#include <stdio.h>
+#include <sys/xattr.h>
+#ifdef ACL_PRESENT
+# include <sys/acl.h>
+#endif
+#ifdef LIBACL_PRESENT
+# include <acl/libacl.h>
+#endif
 
 /*
 **	Frees the content of a t_file
@@ -126,6 +134,35 @@ int				print_directories(t_file* files, size_t len, unsigned long long *opt)
 	return (0);
 }
 
+void		check_acl_with_popen(t_file* file)
+{
+	FILE*	cmd;
+	char*	cmd_str;
+	size_t	cmd_len;
+
+	cmd_len = ft_strlen("getfacl -s 2>/dev/null ");
+	if (!(cmd_str = ft_strnew(cmd_len + ft_strlen(file->name) + 3)))
+		return ;
+	ft_strcpy(cmd_str, "getfacl -s 2>/dev/null ");
+	ft_snprintf(cmd_str + cmd_len, ft_strlen(file->name) + 3 , "\"%s\"", file->name);
+	//ft_printf("Launching cmd %s\n", cmd_str);
+	cmd = popen(cmd_str, "r");
+	if (cmd == NULL)
+	{
+		perror("popen:");
+		ft_strdel(&cmd_str);
+		return ;
+	}
+	int c = fgetc(cmd);
+	if (c != EOF)
+	{
+		ft_printf("Has acl\n");
+		file->has_acl = 1;
+	}
+	ft_strdel(&cmd_str);
+	pclose(cmd);
+}
+
 t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 {
 	int			i;
@@ -194,6 +231,49 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			ft_perror("strdup");
 			return (NULL);
 		}
+		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
+		{
+			ft_printf("extended\n");
+			file.has_extended = 1;
+		}
+#ifdef ACL_PRESENT
+		if (!S_ISLNK(file.stats.st_mode))
+		{
+			acl_t	acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
+			if (acl != NULL)
+			{
+				acl_entry_t	entry;
+				if (acl_get_entry(acl, ACL_FIRST_ENTRY, &entry) == 1)
+				{
+					acl_tag_t tag;
+					ft_printf("%s\n", file.name);
+					ft_printf("%s", acl_to_text(acl, NULL));
+					while (acl_get_entry(acl, ACL_NEXT_ENTRY, &entry) == 1)
+					{
+						if (acl_get_tag_type(entry, &tag) == 0)
+						{
+							/*ft_printf("%-12s\n",	(tag == ACL_USER_OBJ) ?		"user_obj" :
+												(tag == ACL_USER) ? 		"user" :
+												(tag == ACL_GROUP_OBJ) ? 	"group_obj" :
+												(tag == ACL_GROUP) ? 		"group" :
+												(tag == ACL_MASK) ? 		"mask" :
+												(tag == ACL_OTHER) ? 		"other" :
+												"???");*/
+							if (tag == ACL_MASK)
+							{
+								ft_printf("Has acl2\n");
+								file.has_acl = 1;
+							}
+						}
+					}
+				}
+				acl_free((void*)acl);
+			}
+		}
+#else
+		if (*opt & OPT_E)
+			check_acl_with_popen(&file);
+#endif
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
 		{
 			ft_strdel(&file.name);

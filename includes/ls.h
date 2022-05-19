@@ -16,9 +16,12 @@
 # include "sys/stat.h"
 # include "libft.h"
 # include "ls_padding.h"
-# if __has_include(<sys/acl.h>) && __has_include(<acl/libacl.h>)
+# if __has_include(<sys/acl.h>)
 # define ACL_PRESENT
-# endif
+#endif
+#if __has_include(<acl/libacl.h>)
+# define LIBACL_PRESENT
+#endif
 
 typedef struct stat		t_stat;
 typedef struct passwd	t_passwd;
@@ -73,5 +76,6 @@ void					set_color(char *file, mode_t mode, t_stat stats);
 int						should_print_link(char *file);
 int						is_link_valid(char *file);
 void					print_link(char *file, unsigned long long opt);
+void					check_acl_with_popen(t_file* file);
 
 #endif
