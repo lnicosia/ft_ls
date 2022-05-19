@@ -69,7 +69,12 @@ void	print_permissions(mode_t mode)
 	get_permission('w', mode, S_IWUSR));
 
 	if (mode & S_ISUID)
-		ft_printf("S");
+	{
+		if (mode & S_IXUSR)
+			ft_printf("s");
+		else
+			ft_printf("S");
+	}
 	else
 		ft_printf("%c", get_permission('x', mode, S_IXUSR));
 
@@ -77,7 +82,12 @@ void	print_permissions(mode_t mode)
 		get_permission('r', mode, S_IRGRP), get_permission('w', mode, S_IWGRP));
 
 	if (mode & S_ISGID)
-		ft_printf("S");
+	{
+		if (mode & S_IXGRP)
+			ft_printf("s");
+		else
+			ft_printf("S");
+	}
 	else
 		ft_printf("%c", get_permission('x', mode, S_IXGRP));
 
