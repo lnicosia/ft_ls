@@ -12,6 +12,7 @@
 
 #include "options.h"
 #include "libft.h"
+#include "ls_colors.h"
 
 int    print_usage_stdin(void)
 {
@@ -24,15 +25,17 @@ int    print_usage_stdin(void)
 	ft_printf("%4s%-25s%s", "-a", ", --all", "do not ignore entries starting with .\n");
 	ft_printf("%4s%-25s%s", "-A", ", --almost-all", "do no list implied . and ..\n");
 	ft_printf("%4s%-25s%s", "", "  --author", "with -l, print the author of each file\n");
-	ft_printf("%4s%-25s%s", "-b", ", --bold", "with -G: print the names in bold\n");
 	ft_printf("%4s%-25s%s", "-c", "", "with -lt: sort by, and show, ctime (time of last\n");
 	ft_printf("%4s%-25s%s", "", "", "  modification of file status information);\n");
 	ft_printf("%4s%-25s%s", "", "", "  with -l: show ctime and sort by name;\n");
 	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
 	ft_printf("%4s%-25s%s", "-C", "", "list entries by column\n");
 	ft_printf("%4s%-25s%s", "-d", "--directory", "list directories themselves, not their contents\n");
+	ft_printf("%4s%-25s%s", "", "--dircolors", "show both file type and extension colors of the current env and exit\n");
 	ft_printf("%4s%-25s%s", "-e", "--extended", "with -l: if present, show extended or ACL attributes\n");
+	ft_printf("%4s%-25s%s", "", "--extension-colors", "show extension colors of the current env and exit\n");
 	ft_printf("%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
+	ft_printf("%4s%-25s%s", "", "--filecolors", "show file type colors of the current env and exit\n");
 	ft_printf("%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
 	ft_printf("%4s%-25s%s", "-G", ", --color", "colorize the output\n");
 	ft_printf("%4s%-25s%s", "-h", ", --human-readable", "with -l, print sizes like 1K 234M 2G etc.\n");
@@ -148,10 +151,6 @@ int		check_opt(char av, unsigned long long *opt)
 	{
 		*opt |= OPT_TCAPS;
 	}
-	else if (av == 'b')
-	{
-		*opt |= OPT_B;
-	}
 	else if (av == '1')
 	{
 		*opt &= ~OPT_M;
@@ -223,6 +222,30 @@ int		parse_option_line(char *av, unsigned long long *opt)
 			ft_printf("\nWritten by Lucas Nicosia\n");
 			return (-2);
 		}
+		else if (ft_strequ(av, "--dircolors"))
+		{
+			t_term_color			dir_colors[MAX_DIR_COLORS];
+			t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
+			retrieve_ls_colors(dir_colors, extension_colors);
+			print_ls_colors(dir_colors, extension_colors);
+			return (-1);
+		}
+		else if (ft_strequ(av, "--extension-colors"))
+		{
+			t_term_color			dir_colors[MAX_DIR_COLORS];
+			t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
+			retrieve_ls_colors(dir_colors, extension_colors);
+			print_ls_extension_colors(extension_colors);
+			return (-1);
+		}
+		else if (ft_strequ(av, "--filecolors"))
+		{
+			t_term_color			dir_colors[MAX_DIR_COLORS];
+			t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
+			retrieve_ls_colors(dir_colors, extension_colors);
+			print_ls_dir_colors(dir_colors);
+			return (-1);
+		}
 		else if (ft_strequ(av, "--all"))
 		{
 			*opt &= ~OPT_ACAPS;
@@ -236,10 +259,6 @@ int		parse_option_line(char *av, unsigned long long *opt)
 		else if (ft_strequ(av, "--author"))
 		{
 			*opt |= OPT_AUTHOR;
-		}
-		else if (ft_strequ(av, "--bold"))
-		{
-			*opt |= OPT_B;
 		}
 		else if (ft_strequ(av, "--color"))
 		{

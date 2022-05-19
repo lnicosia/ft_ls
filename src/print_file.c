@@ -69,18 +69,18 @@ void	print_permissions(mode_t mode)
 	get_permission('w', mode, S_IWUSR));
 
 	if (mode & S_ISUID)
-		ft_printf("s");
+		ft_printf("S");
 	else
 		ft_printf("%c", get_permission('x', mode, S_IXUSR));
-	
+
 	ft_printf("%c%c",
 		get_permission('r', mode, S_IRGRP), get_permission('w', mode, S_IWGRP));
 
 	if (mode & S_ISGID)
-		ft_printf("s");
+		ft_printf("S");
 	else
 		ft_printf("%c", get_permission('x', mode, S_IXGRP));
-		
+
 	ft_printf("%c%c",
 		get_permission('r', mode, S_IROTH), get_permission('w', mode, S_IWOTH));
 	if (mode & S_ISVTX && S_ISDIR(mode))
@@ -107,7 +107,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 
 	len = 0;
 	if (opt & OPT_GCAPS)
-		set_color(file, file_stats.st_mode, opt);
+		set_color(file, file_stats.st_mode, file_stats);
 	if (opt & OPT_ERROR)
 		len += ft_printf(" ");
 	if (opt & OPT_PATH || !(name = ft_strrchr(file, '/')))
@@ -163,7 +163,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 				opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O))
 			len += ft_printf("{reset} ");
 		if (opt & OPT_GCAPS)
-			set_color(file, file_stats.st_mode, opt);
+			set_color(file, file_stats.st_mode, file_stats);
 		len += ft_printf("%-s", name);
 	}
 	if (opt & OPT_GCAPS)

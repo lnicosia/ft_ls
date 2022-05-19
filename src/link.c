@@ -129,8 +129,6 @@ void	print_link(char *file, unsigned long long opt)
 	ft_printf(" -> ");
 	ft_bzero(buf, 256);
 	ft_bzero(link, 256);
-	if (opt & OPT_B)
-		ft_printf("{bold}");
 	if ((size = readlink(file, link, 256)) == -1)
 	{
 		if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
@@ -179,7 +177,7 @@ void	print_link(char *file, unsigned long long opt)
 			ft_printf("{red}");
 	}
 	if (opt & OPT_GCAPS && isatty(STDOUT_FILENO))
-		set_color(buf, stats.st_mode, opt);
+		set_color(buf, stats.st_mode, stats);
 	ft_printf("%s", link);
 	ft_strdel(&dir);
 }

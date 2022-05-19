@@ -69,7 +69,7 @@ int						is_arg_an_option_line(char *av);
 t_ls_padding			get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 	unsigned long long opt);
 int						get_doublelen(double size);
-void					set_color(char *file, mode_t mode, unsigned long long opt);
+void					set_color(char *file, mode_t mode, t_stat stats);
 int						should_print_link(char *file);
 int						is_link_valid(char *file);
 void					print_link(char *file, unsigned long long opt);

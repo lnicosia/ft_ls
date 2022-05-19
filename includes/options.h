@@ -31,7 +31,6 @@
 # define OPT_UCAPS (1UL << 15)
 # define OPT_TCAPS (1UL << 16)
 # define OPT_ERROR (1UL << 17)
-# define OPT_B (1UL << 18)
 # define OPT_PATH (1UL << 19)
 # define OPT_TOTAL (1UL << 20)
 # define OPT_NEWLINE (1UL << 21)
