@@ -193,7 +193,6 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		file.name = path;
 		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
 		{
-			ft_printf("%s is extended\n", file.name);
 			file.has_extended = 1;
 		}
 #ifdef ACL_PRESENT

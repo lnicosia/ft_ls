@@ -156,7 +156,6 @@ void		check_acl_with_popen(t_file* file)
 	int c = fgetc(cmd);
 	if (c != EOF)
 	{
-		ft_printf("Has acl\n");
 		file->has_acl = 1;
 	}
 	ft_strdel(&cmd_str);
@@ -233,7 +232,6 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 		}
 		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
 		{
-			ft_printf("extended\n");
 			file.has_extended = 1;
 		}
 #ifdef ACL_PRESENT
@@ -261,7 +259,6 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 												"???");*/
 							if (tag == ACL_MASK)
 							{
-								ft_printf("Has acl2\n");
 								file.has_acl = 1;
 							}
 						}
