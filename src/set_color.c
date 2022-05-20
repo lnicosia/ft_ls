@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 18:18:46 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/19 11:33:12 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/20 11:03:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	print_ls_colors(t_term_color dir_colors[MAX_DIR_COLORS],
 void	set_term_color(char* str, t_term_color* term_color)
 {
 	size_t	i;
-	int color;
+	int		color;
 
 	if (!str)
 		return;
@@ -88,7 +88,7 @@ void	set_term_color(char* str, t_term_color* term_color)
 		color = ft_atoi(str + i);
 		if (color <= 8)
 		{
-			term_color->attribute[2] = (char)color + '0';
+			term_color->attribute[2] = (char)(color + '0');
 			term_color->attribute[3] = 'm';
 			term_color->attribute[4] = '\0';
 		}
@@ -96,8 +96,8 @@ void	set_term_color(char* str, t_term_color* term_color)
 		{
 			ft_bzero(term_color->foreground, COLOR_STRINGS_LEN);
 			ft_strcpy(term_color->foreground, "\033[");
-			term_color->foreground[2] = (char)(color / 10) + '0';
-			term_color->foreground[3] = (char)(color % 10) + '0';
+			term_color->foreground[2] = (char)(color / 10 + '0');
+			term_color->foreground[3] = (char)(color % 10 + '0');
 			term_color->foreground[4] = 'm';
 			term_color->foreground[5] = '\0';
 		}
@@ -105,8 +105,8 @@ void	set_term_color(char* str, t_term_color* term_color)
 		{
 			ft_bzero(term_color->background, COLOR_STRINGS_LEN);
 			ft_strcpy(term_color->background, "\033[");
-			term_color->background[2] = (char)(color / 10) + '0';
-			term_color->background[3] = (char)(color % 10) + '0';
+			term_color->background[2] = (char)(color / 10 + '0');
+			term_color->background[3] = (char)(color % 10 + '0');
 			term_color->background[4] = 'm';
 			term_color->background[5] = '\0';
 		}
