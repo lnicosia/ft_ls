@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/18 18:40:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:36:41 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int						get_doublelen(double size);
 void					set_color(char *file, mode_t mode, t_stat stats);
 int						should_print_link(char *file);
 int						is_link_valid(char *file);
+char*					get_link(char *file);
 void					print_link(char *file, unsigned long long opt);
 void					check_acl_with_popen(t_file* file);
 

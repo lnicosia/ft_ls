@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 14:26:37 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 17:11:45 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/20 11:08:41 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@
 # define OPT_O (1UL << 33)
 # define OPT_SPECIAL_CHAR (1UL << 34)
 # define OPT_E (1UL << 35)
+# define OPT_SMALL_ERROR (1UL << 36)
+# define OPT_FATAL_ERROR (1UL << 37)
 
 #endif

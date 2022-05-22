@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 18:18:46 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/20 11:03:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:46:03 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,7 @@ void	set_color(char *file, mode_t mode, t_stat stats)
 		retrieve_ls_colors(dir_colors, extension_colors);
 		first_call = 0;
 	}
+	ft_printf("\nChecking file %s\n", file);
 	if (S_ISREG(mode))
 	{
 		for (size_t i = 0; i < MAX_EXTENSION_COLORS; i++)
@@ -238,8 +239,11 @@ void	set_color(char *file, mode_t mode, t_stat stats)
 		ft_printf("%s%s%s", dir_colors[DIR].attribute,
 		dir_colors[DIR].foreground, dir_colors[DIR].background);
 	if (S_ISLNK(mode))
+	{
+		ft_printf("File is link\n");
 		ft_printf("%s%s%s", dir_colors[LINK].attribute,
 		dir_colors[LINK].foreground, dir_colors[LINK].background);
+	}
 	if (S_ISREG(mode) && stats.st_nlink > 1)
 		ft_printf("%s%s%s", dir_colors[MULTIHARADLINK].attribute,
 		dir_colors[MULTIHARADLINK].foreground, dir_colors[MULTIHARADLINK].background);
@@ -255,12 +259,18 @@ void	set_color(char *file, mode_t mode, t_stat stats)
 	if (S_ISCHR(mode))
 		ft_printf("%s%s%s", dir_colors[CHR].attribute,
 		dir_colors[CHR].foreground, dir_colors[CHR].background);
-	if (S_ISLNK(mode) && !should_print_link(file))
+	if (S_ISLNK(mode) && !is_link_valid(file))
+	{
+		ft_printf("No print link %s\n", file);
 		ft_printf("%s%s%s", dir_colors[ORPHAN].attribute,
 		dir_colors[ORPHAN].foreground, dir_colors[ORPHAN].background);
-	if (S_ISLNK(mode) && !is_link_valid(file))
+	}
+	if (S_ISLNK(mode) && !should_print_link(file))
+	{
+		ft_printf("Invalid link %s\n", file);
 		ft_printf("%s%s%s", dir_colors[MISSING].attribute,
 		dir_colors[MISSING].foreground, dir_colors[MISSING].background);
+	}
 	if (S_ISREG(mode) && mode & S_ISGID)
 		ft_printf("%s%s%s", dir_colors[SETGID].attribute,
 		dir_colors[SETGID].foreground, dir_colors[SETGID].background);

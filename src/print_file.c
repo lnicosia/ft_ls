@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/18 18:16:03 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:48:54 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,9 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 		&& S_ISLNK(file_stats.st_mode) && should_print_link(file))
 	{
+		//ft_printf("{reset} -> ");
+		//if (opt & OPT_GCAPS)
+		//	set_color(file, file_stats.st_mode, file_stats);
 		print_link(file, opt);
 		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");

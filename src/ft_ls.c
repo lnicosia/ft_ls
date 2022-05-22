@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/18 18:40:04 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:47:55 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,35 +187,36 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			continue;
 		}
 		ft_bzero(&file, sizeof(file));
-		if (*opt & OPT_L || *opt & OPT_G || *opt & OPT_N || *opt & OPT_O)
+		if (lstat(av[i], &file.stats))
 		{
-			if (lstat(av[i], &file.stats))
-			{
-				custom_error("ft_ls: cannot access '%s': ", av[i]);
-				ft_perror("");
-				if (ft_strchr(av[i], ' '))
-					(*opt) |= OPT_ERROR;
-				i++;
-				continue;
-			}
-		}
-		else
-		{
-			if (stat(av[i], &file.stats))
-			{
-				custom_error("ft_ls: cannot access '%s': ", av[i]);
-				ft_perror("");
-				if (ft_strchr(av[i], ' '))
-					(*opt) |= OPT_ERROR;
-				i++;
-				continue;
-			}
-		}
-		char buf[256];
-		if (S_ISLNK(file.stats.st_mode) && readlink(av[i], buf, 256) == -1)
-		{
-			custom_error("ft_ls: cannot read symbolic link '%s': ", av[i]);
+			custom_error("ft_ls: cannot access '%s': ", av[i]);
 			ft_perror("");
+			*opt |= OPT_FATAL_ERROR;
+			if (ft_strchr(av[i], ' '))
+				(*opt) |= OPT_ERROR;
+			i++;
+			continue;
+		}
+		//char buf[256];
+		if (S_ISLNK(file.stats.st_mode)
+			&& !((*opt & OPT_L || *opt & OPT_G || *opt & OPT_N || *opt & OPT_O)))
+		{
+			char* link_end = get_link(av[i]);
+			if (link_end != NULL)
+			{
+				if (lstat(link_end, &file.stats))
+				{
+					custom_error("ft_ls: cannot access '%s': ", av[i]);
+					ft_perror("");
+					*opt |= OPT_FATAL_ERROR;
+					if (ft_strchr(av[i], ' '))
+						(*opt) |= OPT_ERROR;
+					i++;
+					ft_strdel(&link_end);
+					continue;
+				}
+				ft_strdel(&link_end);
+			}
 		}
 		if (S_ISDIR(file.stats.st_mode))
 			nb_dir++;
@@ -320,5 +321,9 @@ int				ft_ls(int ac, char **av)
 		print_directories(files, lstlen, &opt);
 	ft_memdel((void**)&files);
 	ft_dlstdelfront(&dlst, free_t_file);
+	if (opt & OPT_FATAL_ERROR)
+		return (2);
+	if (opt & OPT_SMALL_ERROR)
+		return (1);
 	return (0);
 }
