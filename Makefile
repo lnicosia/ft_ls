@@ -29,7 +29,7 @@ ROOT = sudo
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMFT = $(LIBMFT_DIR)/libmft.a
 
-ACL_TEST := $(shell ld -lacl; echo $$?)
+ACL_TEST := $(shell ld -lacl 2>/dev/null; echo $$?)
 
 ifeq ($(ACL_TEST), 1)
 	ACL =
@@ -101,7 +101,7 @@ RESET :="\e[0m"
 # Rules
 #
 
-all: $(OPENGL)
+all:
 	@printf $(CYAN)"[INFO] Building libft..\n"$(RESET)
 	@make --no-print-directory -C $(LIBFT_DIR)
 	@printf $(CYAN)"[INFO] Building ft_ls..\n"$(RESET)
