@@ -14,7 +14,7 @@ NAME = ft_ls
 
 MAKEFILE = Makefile
 
-LIB_DIR = lib
+LIB_DIR = .
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = .
