@@ -205,8 +205,8 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 				if (acl_get_entry(acl, ACL_FIRST_ENTRY, &entry) == 1)
 				{
 					acl_tag_t tag;
-					ft_printf("%s\n", file.name);
-					ft_printf("%s", acl_to_text(acl, NULL));
+					//ft_printf("%s\n", file.name);
+					//ft_printf("%s", acl_to_text(acl, NULL));
 					while (acl_get_entry(acl, ACL_NEXT_ENTRY, &entry) == 1)
 					{
 						if (acl_get_tag_type(entry, &tag) == 0)
