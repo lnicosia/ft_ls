@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/18 11:31:22 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 15:03:35 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	if (!(dir = opendir(file_name)))
 	{
 		custom_error("ft_ls: cannot open directory '%s': ", file_name);
+		*opt |= OPT_SMALL_ERROR;
+		if (*opt & OPT_SMALL_ERROR)
+			ft_printf("Small error set\n");
 		return (ft_perror(""));
 	}
 	if (*opt & OPT_RCAPS || *opt & OPT_NEWLINE || *opt & OPT_MULTIPLE_DIRS)
@@ -174,6 +177,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		if (lstat(path, &file.stats))
 		{
 			custom_error("ft_ls: cannot access '%s': ", path);
+			*opt |= OPT_SMALL_ERROR;
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
 			return (ft_perror(""));
@@ -182,6 +186,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		if (S_ISLNK(file.stats.st_mode) && readlink(path, buf, 256) == -1)
 		{
 			custom_error("ft_ls: cannot read symbolic link '%s': ", path);
+			*opt |= OPT_SMALL_ERROR;
 			ft_perror("");
 		}
 		if (*opt & OPT_P && S_ISDIR(file.stats.st_mode))

@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 18:18:46 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 10:16:41 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 14:32:39 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,7 @@ void	set_color(char *file, mode_t mode, t_stat stats, int orphan)
 		retrieve_ls_colors(dir_colors, extension_colors);
 		first_call = 0;
 	}
+	//ft_printf("Setting color for %s\n", file);
 	if (S_ISREG(mode))
 	{
 		for (size_t i = 0; i < MAX_EXTENSION_COLORS; i++)
@@ -258,7 +259,7 @@ void	set_color(char *file, mode_t mode, t_stat stats, int orphan)
 	if (orphan || (S_ISLNK(mode) && !is_link_valid(file)))
 		ft_printf("%s%s%s", dir_colors[ORPHAN].attribute,
 		dir_colors[ORPHAN].foreground, dir_colors[ORPHAN].background);
-	if (S_ISLNK(mode) && !should_print_link(file))
+	else if (S_ISLNK(mode) && !should_print_link(file))
 		ft_printf("%s%s%s", dir_colors[MISSING].attribute,
 		dir_colors[MISSING].foreground, dir_colors[MISSING].background);
 	if (S_ISREG(mode) && mode & S_ISGID)

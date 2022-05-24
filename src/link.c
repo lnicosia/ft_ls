@@ -6,12 +6,13 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 18:16:27 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 09:59:36 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 15:10:00 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ls.h"
 #include "options.h"
+#include <sys/param.h>
 
 int		should_print_link(char *file)
 {
@@ -21,6 +22,7 @@ int		should_print_link(char *file)
 	char	*dir;
 	size_t	dirlen;
 	int		valid;
+	t_stat	stats;
 
 	if (!(last_slash = ft_strrchr(file, '/')))
 	{
@@ -41,6 +43,10 @@ int		should_print_link(char *file)
 	}
 	dirlen = ft_strlen(dir);
 	valid = 0;
+	if (stat(file, &stats))
+	{
+		return (0);
+	}
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
 		valid = 1;
@@ -90,6 +96,10 @@ int		is_link_valid(char *file)
 	}
 	dirlen = ft_strlen(dir);
 	valid = 0;
+	if (stat(file, &stats))
+	{
+		return (0);
+	}
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
 		valid = 1;
@@ -144,6 +154,14 @@ char*	get_link(char *file)
 	}
 	dirlen = ft_strlen(dir);
 	valid = 0;
+	if (stat(file, &stats))
+	{
+		custom_error("ft_ls: cannot access '%s': ", file);
+		ft_perror("");
+		return (0);
+	}
+	else
+		ft_printf("Link ok\n");
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
 		valid = 1;
