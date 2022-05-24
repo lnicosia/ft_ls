@@ -153,6 +153,7 @@ char*	get_link(char *file)
 		}
 	}
 	dirlen = ft_strlen(dir);
+	ft_printf("Dir = '%s'\n", dir);
 	valid = 0;
 	if (stat(file, &stats))
 	{
@@ -160,12 +161,11 @@ char*	get_link(char *file)
 		ft_perror("");
 		return (0);
 	}
-	else
-		ft_printf("Link ok\n");
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
 		valid = 1;
 		buf[size] = '\0';
+		ft_printf("Read buf = '%s'\n", buf);
 		if (buf[0] != '/')
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
@@ -173,6 +173,7 @@ char*	get_link(char *file)
 			buf[(size_t)size + dirlen] = '\0';
 		}
 		file = buf;
+		ft_printf("Next file = '%s'\n", file);
 		if (stat(file, &stats))
 		{
 			ft_strdel(&dir);
