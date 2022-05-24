@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 15:09:16 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 15:36:57 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,7 @@ int				print_directories(t_file* files, size_t len, unsigned long long *opt)
 		if (!S_ISDIR(files[i].stats.st_mode))
 			continue;
 		analyze_directory(files[i].name, opt);
-		if (*opt & OPT_SMALL_ERROR)
-		ft_printf("CC\n");
 	}
-	if (*opt & OPT_SMALL_ERROR)
-		ft_printf("CC\n");
 	return (0);
 }
 
@@ -333,10 +329,6 @@ int				ft_ls(int ac, char **av)
 	if (opt & OPT_FATAL_ERROR)
 		return (2);
 	if (opt & OPT_SMALL_ERROR)
-	{
-		ft_printf("Returning small error\n");
 		return (1);
-	}
-	ft_printf("Returining no error\n");
 	return (0);
 }

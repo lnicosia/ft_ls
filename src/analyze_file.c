@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 15:03:35 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 15:37:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 **	Analyze the directories contained in our sorted list
 */
 
-void	analyze_list(t_dlist *lst, unsigned long long opt)
+void	analyze_list(t_dlist *lst, unsigned long long *opt)
 {
 	t_file	*file;
 
@@ -45,7 +45,7 @@ void	analyze_list(t_dlist *lst, unsigned long long opt)
 			lst = lst->next;
 			continue;
 		}
-		analyze_directory(file->name, &opt);
+		analyze_directory(file->name, opt);
 		lst = lst->next;
 	}
 }
@@ -77,8 +77,6 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	{
 		custom_error("ft_ls: cannot open directory '%s': ", file_name);
 		*opt |= OPT_SMALL_ERROR;
-		if (*opt & OPT_SMALL_ERROR)
-			ft_printf("Small error set\n");
 		return (ft_perror(""));
 	}
 	if (*opt & OPT_RCAPS || *opt & OPT_NEWLINE || *opt & OPT_MULTIPLE_DIRS)
@@ -270,7 +268,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	else
 		print_dlist(files, ft_dlstlen(dlst), winsize.ws_col, *opt);
 	if (*opt & OPT_RCAPS)
-		analyze_list(dlst, *opt);
+		analyze_list(dlst, opt);
 	ft_memdel((void**)&files);
 	ft_dlstdelfront(&dlst, free_t_file);
 	return (0);
