@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 18:16:27 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/20 16:47:13 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 09:59:36 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,15 +179,13 @@ void	print_link(char *file, unsigned long long opt)
 	char	*last_slash;
 	char	*dir;
 	size_t	dirlen;
-	t_stat stats;
+	t_stat	stats;
 
 	ft_printf(" -> ");
 	ft_bzero(buf, 256);
 	ft_bzero(link, 256);
 	if ((size = readlink(file, link, 256)) == -1)
 	{
-		//if (opt & OPT_GCAPS)
-		//	ft_printf("{red}");
 	}
 	else
 		link[size] = 0;
@@ -221,20 +219,17 @@ void	print_link(char *file, unsigned long long opt)
 		file = buf;
 		if (stat(file, &stats))
 		{
-			//if (opt & OPT_GCAPS)
-			//	ft_printf("{red}");
 			break;
 		}
 	}
-	if (stat(buf, &stats))
+	//	If this lstat fails it is an orphan link
+	if (lstat(buf, &stats))
 	{
-		custom_error("%s error:\n", buf);
-		ft_perror("");
-		//if (opt & OPT_GCAPS)
-		//	ft_printf("{red}");
+		if (opt & OPT_GCAPS)
+			set_color(buf, stats.st_mode, stats, 1);
 	}
-	if (opt & OPT_GCAPS)
-		set_color(buf, stats.st_mode, stats);
+	else if (opt & OPT_GCAPS)
+		set_color(buf, stats.st_mode, stats, 0);
 	ft_printf("%s", link);
 	ft_strdel(&dir);
 }

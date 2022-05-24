@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:18 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/20 15:36:41 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 09:57:55 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int						is_arg_an_option_line(char *av);
 t_ls_padding			get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 	unsigned long long opt);
 int						get_doublelen(double size);
-void					set_color(char *file, mode_t mode, t_stat stats);
+void					set_color(char *file, mode_t mode, t_stat stats, int orphan);
 int						should_print_link(char *file);
 int						is_link_valid(char *file);
 char*					get_link(char *file);

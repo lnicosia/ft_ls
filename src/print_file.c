@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/20 15:48:54 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/24 09:59:18 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 
 	len = 0;
 	if (opt & OPT_GCAPS)
-		set_color(file, file_stats.st_mode, file_stats);
+		set_color(file, file_stats.st_mode, file_stats, 0);
 	if (opt & OPT_ERROR)
 		len += ft_printf(" ");
 	if (opt & OPT_PATH || !(name = ft_strrchr(file, '/')))
@@ -173,7 +173,7 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 				opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O))
 			len += ft_printf("{reset} ");
 		if (opt & OPT_GCAPS)
-			set_color(file, file_stats.st_mode, file_stats);
+			set_color(file, file_stats.st_mode, file_stats, 0);
 		len += ft_printf("%-s", name);
 	}
 	if (opt & OPT_GCAPS)
@@ -207,9 +207,6 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
 		&& S_ISLNK(file_stats.st_mode) && should_print_link(file))
 	{
-		//ft_printf("{reset} -> ");
-		//if (opt & OPT_GCAPS)
-		//	set_color(file, file_stats.st_mode, file_stats);
 		print_link(file, opt);
 		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");
