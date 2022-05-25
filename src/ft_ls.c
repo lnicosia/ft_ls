@@ -309,7 +309,7 @@ int				ft_ls(int ac, char **av)
 	dlst = NULL;
 	real_args = ac - 1;
 	if (parse_ls_options(ac, av, &opt, &real_args))
-		return (-1);
+		return (2);
 	if (real_args == 0)
 	{
 		analyze_directory(".", &opt);
@@ -319,7 +319,7 @@ int				ft_ls(int ac, char **av)
 		dlst = analyze_args(ac, av, &opt);
 	}
 	if (!(files = (t_file*)ft_dlist_to_array(dlst)))
-		return (-1);
+		return (2);
 	lstlen = ft_dlstlen(dlst);
 	print_files(files, lstlen, &opt);
 	if (!(opt & OPT_D))
