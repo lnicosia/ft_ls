@@ -204,8 +204,9 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 			padding--;
 		ft_printf("%*c", padding - ft_strlen(name), ' ');
 	}
+	char buf[256];
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
-		&& S_ISLNK(file_stats.st_mode))
+		&& S_ISLNK(file_stats.st_mode) && readlink(file, buf, 256) != -1)
 	{
 		print_link(file, opt);
 		if (opt & OPT_GCAPS)
