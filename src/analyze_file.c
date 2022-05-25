@@ -39,9 +39,10 @@ void	analyze_list(t_dlist *lst, unsigned long long *opt)
 	while (lst)
 	{
 		file = (t_file*)lst->content;
-		if (!S_ISDIR(file->stats.st_mode)
-		|| file->name[ft_strlen(file->name) - 1] == '.')
+		if (!S_ISDIR(file->stats.st_mode))
+			//|| file->name[ft_strlen(file->name) - 1] == '.')
 		{
+			//ft_printf("Finally the ignore for '%s'\n", file->name);
 			lst = lst->next;
 			continue;
 		}
