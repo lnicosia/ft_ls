@@ -14,15 +14,10 @@
 #include "options.h"
 #include <sys/param.h>
 
-int		should_print_link(char *file)
+char*	get_dir(char* file)
 {
-	char	buf[256];
-	ssize_t	size;
-	char	*last_slash;
-	char	*dir;
-	size_t	dirlen;
-	int		valid;
-	t_stat	stats;
+	char*	last_slash;
+	char*	dir;
 
 	if (!(last_slash = ft_strrchr(file, '/')))
 	{
@@ -41,6 +36,21 @@ int		should_print_link(char *file)
 			return (0);
 		}
 	}
+	return dir;
+}
+
+int		should_print_link(char *file)
+{
+	char	buf[256];
+	ssize_t	size;
+	char	*dir;
+	size_t	dirlen;
+	int		valid;
+	t_stat	stats;
+
+	dir = get_dir(file);
+	if (dir == NULL)
+		return (0);
 	dirlen = ft_strlen(dir);
 	valid = 0;
 	if (stat(file, &stats))
@@ -55,7 +65,7 @@ int		should_print_link(char *file)
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
-			buf[(size_t)size + dirlen] = '\0';
+			ft_bzero(buf + size + dirlen, 256 - (size_t)size - dirlen);
 		}
 		file = buf;
 	}
@@ -72,28 +82,13 @@ int		is_link_valid(char *file)
 	char	buf[256];
 	ssize_t	size;
 	t_stat	stats;
-	char	*last_slash;
 	char	*dir;
 	size_t	dirlen;
 	int		valid;
 
-	if (!(last_slash = ft_strrchr(file, '/')))
-	{
-		if (!(dir = ft_strdup("./")))
-		{
-			ft_perror("ft_strdup");
-			return (0);
-		}
-	}
-	else
-	{
-		if (!(dir = ft_strsub(file, 0,
-				ft_strlen(file) - ft_strlen(last_slash) + 1)))
-		{
-			ft_perror("ft_strsub");
-			return (0);
-		}
-	}
+	dir = get_dir(file);
+	if (dir == NULL)
+		return (0);
 	dirlen = ft_strlen(dir);
 	valid = 0;
 	if (stat(file, &stats))
@@ -108,9 +103,13 @@ int		is_link_valid(char *file)
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
-			buf[(size_t)size + dirlen] = '\0';
+			ft_bzero(buf + size + dirlen, 256 - (size_t)size - dirlen);
 		}
 		file = buf;
+		ft_strdel(&dir);
+		if (!(dir = get_dir(file)))
+			return (0);
+		dirlen = ft_strlen(dir);
 		if (stat(file, &stats))
 		{
 			ft_strdel(&dir);
@@ -130,30 +129,14 @@ char*	get_link(char *file)
 	char	buf[256];
 	ssize_t	size;
 	t_stat	stats;
-	char	*last_slash;
 	char	*dir;
 	size_t	dirlen;
 	int		valid;
 
-	if (!(last_slash = ft_strrchr(file, '/')))
-	{
-		if (!(dir = ft_strdup("./")))
-		{
-			ft_perror("ft_strdup");
-			return (0);
-		}
-	}
-	else
-	{
-		if (!(dir = ft_strsub(file, 0,
-				ft_strlen(file) - ft_strlen(last_slash) + 1)))
-		{
-			ft_perror("ft_strsub");
-			return (0);
-		}
-	}
+	dir = get_dir(file);
+	if (dir == NULL)
+		return (0);
 	dirlen = ft_strlen(dir);
-	ft_printf("Dir = '%s'\n", dir);
 	valid = 0;
 	if (stat(file, &stats))
 	{
@@ -165,15 +148,17 @@ char*	get_link(char *file)
 	{
 		valid = 1;
 		buf[size] = '\0';
-		ft_printf("Read buf = '%s'\n", buf);
 		if (buf[0] != '/')
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
-			buf[(size_t)size + dirlen] = '\0';
+			ft_bzero(buf + size + dirlen, 256 - (size_t)size - dirlen);
 		}
 		file = buf;
-		ft_printf("Next file = '%s'\n", file);
+		ft_strdel(&dir);
+		if (!(dir = get_dir(file)))
+			return (0);
+		dirlen = ft_strlen(dir);
 		if (stat(file, &stats))
 		{
 			ft_strdel(&dir);
@@ -195,7 +180,6 @@ void	print_link(char *file, unsigned long long opt)
 	char	buf[256];
 	char	link[256];
 	ssize_t	size;
-	char	*last_slash;
 	char	*dir;
 	size_t	dirlen;
 	t_stat	stats;
@@ -208,23 +192,9 @@ void	print_link(char *file, unsigned long long opt)
 	}
 	else
 		link[size] = 0;
-	if (!(last_slash = ft_strrchr(file, '/')))
-	{
-		if (!(dir = ft_strdup("./")))
-		{
-			ft_perror("ft_strdup");
-			return ;
-		}
-	}
-	else
-	{
-		if (!(dir = ft_strsub(file, 0,
-				ft_strlen(file) - ft_strlen(last_slash) + 1)))
-		{
-			ft_perror("ft_strsub");
-			return ;
-		}
-	}
+	dir = get_dir(file);
+	if (dir == NULL)
+		return ;
 	dirlen = ft_strlen(dir);
 	while ((size = readlink(file, buf, 256)) != -1)
 	{
@@ -233,9 +203,13 @@ void	print_link(char *file, unsigned long long opt)
 		{
 			ft_memmove(buf + dirlen, buf, (size_t)size);
 			ft_memmove(buf, dir, dirlen);
-			buf[(size_t)size + dirlen] = '\0';
+			ft_bzero(buf + size + dirlen, 256 - (size_t)size - dirlen);
 		}
 		file = buf;
+		ft_strdel(&dir);
+		if (!(dir = get_dir(file)))
+			return ;
+		dirlen = ft_strlen(dir);
 		if (stat(file, &stats))
 		{
 			break;
