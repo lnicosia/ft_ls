@@ -116,7 +116,7 @@ void	get_ls_time(char *buf, t_stat stats, unsigned long long opt)
 	current_time = time(NULL);
 	get_month(&buf, &time_str);
 	get_day(&buf, &time_str);
-	if (current_time - used_time >= 15778458)
+	if (current_time - used_time >= 15778458 || current_time < used_time)
 	{
 		get_year(&buf, &time_str);
 	}
