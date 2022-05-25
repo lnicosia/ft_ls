@@ -59,7 +59,7 @@ void	print_ls_extension_colors(t_extension_color extension_colors[MAX_EXTENSION_
 {
 	for (size_t i = 0; i < MAX_DIR_COLORS; i++)
 	{
-		ft_printf("Extension = '%s%s%s%s{reset}'\n",
+		ft_printf("Extension '%s%s%s%s{reset}'\n",
 		extension_colors[i].term_color.attribute,
 		extension_colors[i].term_color.foreground,
 		extension_colors[i].term_color.background,

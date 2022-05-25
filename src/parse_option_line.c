@@ -49,7 +49,6 @@ int    print_usage_stdin(void)
 	ft_printf("%4s%-25s%s", "", "", "append / indicator to directories\n");
 	ft_printf("%4s%-25s%s", "-r", ", --reverse", "reverse order while sorting\n");
 	ft_printf("%4s%-25s%s", "-R", ", --recursive", "list subdirectories recursively\n");
-	ft_printf("%4s%-25s%s", "-S", "", "sort by file size, largest first\n");
 	ft_printf("%4s%-25s%s", "-t", "", "sort by modification time, newest first\n");
 	ft_printf("%4s%-25s%s", "-T", "", "with -l, print the full timestamp\n");
 	ft_printf("%4s%-25s%s", "-u", "", "with -lt: sort by, and show, access time;\n");
