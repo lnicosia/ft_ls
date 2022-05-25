@@ -215,14 +215,17 @@ void	print_link(char *file, unsigned long long opt)
 			break;
 		}
 	}
+	t_file tfile;
+	ft_bzero(&tfile, sizeof(tfile));
+	tfile.name = buf;
 	//	If this lstat fails it is an orphan link
 	if (lstat(buf, &stats))
 	{
 		if (opt & OPT_GCAPS)
-			set_color(buf, stats.st_mode, stats, 1);
+			set_color(&tfile, stats.st_mode, stats, 1);
 	}
 	else if (opt & OPT_GCAPS)
-		set_color(buf, stats.st_mode, stats, 0);
+		set_color(&tfile, stats.st_mode, stats, 0);
 	ft_printf("%s", link);
 	ft_strdel(&dir);
 }

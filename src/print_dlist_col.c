@@ -86,12 +86,12 @@ int		print_n_lines(t_file* files, size_t array_len, size_t nb_lines,
 			{
 				if (current_col == nb_col - 1 || next_index >= array_len)
 				{
-					print_file_name(files[index].stats, files[index].name,
+					print_file_name(files[index].stats, &files[index],
 						0, opt);
 					ft_printf("\n");
 				}
 				else
-					print_file_name(files[index].stats, files[index].name,
+					print_file_name(files[index].stats, &files[index],
 						col_padding, opt);
 			}
 		}

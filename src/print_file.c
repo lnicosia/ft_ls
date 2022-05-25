@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 16:49:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 14:34:15 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:31:46 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ls.h"
 #include "options.h"
 #include "ls_padding.h"
+#include <dirent.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
 #include <pwd.h>
@@ -28,22 +29,44 @@
 **	Print the type of the file as the first letter [-dbclps]
 */
 
-void	print_type(mode_t mode)
+void	print_type(t_file file, mode_t mode)
 {
-	if (S_ISDIR(mode))
-		ft_printf("d");
-	else if (S_ISLNK(mode))
-		ft_printf("l");
-	else if (S_ISCHR(mode))
-		ft_printf("c");
-	else if (S_ISBLK(mode))
-		ft_printf("b");
-	else if (S_ISFIFO(mode))
-		ft_printf("p");
-	else if (S_ISSOCK(mode))
-		ft_printf("s");
+	if (file.no_perm_but_print)
+	{
+		if (DT_BLK == file.d_type)
+			ft_printf("b");
+		else if (DT_CHR == file.d_type)
+			ft_printf("c");
+		else if (DT_DIR == file.d_type)
+			ft_printf("d");
+		else if (DT_FIFO == file.d_type)
+			ft_printf("p");
+		else if (DT_LNK == file.d_type)
+			ft_printf("l");
+		else if (DT_REG == file.d_type)
+			ft_printf("-");
+		else if (DT_SOCK == file.d_type)
+			ft_printf("s");
+		else
+			ft_printf("?");
+	}
 	else
-		ft_printf("-");
+	{
+		if (S_ISDIR(mode))
+			ft_printf("d");
+		else if (S_ISLNK(mode))
+			ft_printf("l");
+		else if (S_ISCHR(mode))
+			ft_printf("c");
+		else if (S_ISBLK(mode))
+			ft_printf("b");
+		else if (S_ISFIFO(mode))
+			ft_printf("p");
+		else if (S_ISSOCK(mode))
+			ft_printf("s");
+		else
+			ft_printf("-");
+	}
 }
 
 /*
@@ -63,8 +86,13 @@ char	get_permission(char c, mode_t mode, unsigned int permission)
 **	Print permissions of a file under the 'drwxrwxrwx' format
 */
 
-void	print_permissions(mode_t mode)
+void	print_permissions(t_file file, mode_t mode)
 {
+	if (file.no_perm_but_print)
+	{
+		ft_printf("?????????");
+		return ;
+	}
 	ft_printf("%c%c", get_permission('r', mode, S_IRUSR),
 	get_permission('w', mode, S_IWUSR));
 
@@ -109,7 +137,7 @@ void	print_permissions(mode_t mode)
 **	Cuts the path after the last '/'
 */
 
-int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned long long opt)
+int		print_file_name(t_stat file_stats, t_file *file, size_t padding, unsigned long long opt)
 {
 	char	*name;
 	int		len;
@@ -120,8 +148,8 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 		set_color(file, file_stats.st_mode, file_stats, 0);
 	if (opt & OPT_ERROR)
 		len += ft_printf(" ");
-	if (opt & OPT_PATH || !(name = ft_strrchr(file, '/')))
-		name = file;
+	if (opt & OPT_PATH || !(name = ft_strrchr(file->name, '/')))
+		name = file->name;
 	else
 		name++;
 	special_chars = contains_special_chars(name);
@@ -206,9 +234,9 @@ int		print_file_name(t_stat file_stats, char *file, size_t padding, unsigned lon
 	}
 	char buf[256];
 	if ((opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
-		&& S_ISLNK(file_stats.st_mode) && readlink(file, buf, 256) != -1)
+		&& S_ISLNK(file_stats.st_mode) && readlink(file->name, buf, 256) != -1)
 	{
-		print_link(file, opt);
+		print_link(file->name, opt);
 		if (opt & OPT_GCAPS)
 			ft_printf("{reset}");
 	}
@@ -237,14 +265,17 @@ unsigned long long opt)
 	t_group		*group;
 	char		time[30];
 
-	print_type(file.stats.st_mode);
-	print_permissions(file.stats.st_mode);
+	print_type(file, file.stats.st_mode);
+	print_permissions(file, file.stats.st_mode);
 	if (file.has_acl || file.has_extended)
 		ft_printf("+");
 	else if (padding.xattr)
 		ft_printf(" ");
 	ft_printf(" ");
-	ft_printf("%*ld ", padding.links, file.stats.st_nlink);
+	if (file.no_perm_but_print)
+		ft_printf("? ");
+	else
+		ft_printf("%*ld ", padding.links, file.stats.st_nlink);
 	if (!(passwd = getpwuid(file.stats.st_uid)))
 	{
 		opt |= OPT_N;
@@ -256,30 +287,55 @@ unsigned long long opt)
 	if (!(opt & OPT_G))
 	{
 		if (opt & OPT_N)
-			ft_printf("%*d ", padding.user, file.stats.st_uid);
+		{
+			if (file.no_perm_but_print)
+				ft_printf("? ");
+			else
+				ft_printf("%*d ", padding.user, file.stats.st_uid);
+		}
 		else
-			ft_printf("%-*s ", padding.user, passwd->pw_name);
+		{
+			if (file.no_perm_but_print)
+				ft_printf("? ");
+			else
+				ft_printf("%-*s ", padding.user, passwd->pw_name);
+		}
 	}
 	if (!(opt & OPT_O))
 	{
 		if (opt & OPT_N)
-			ft_printf("%*d ", padding.group, file.stats.st_gid);
+		{
+			if (file.no_perm_but_print)
+				ft_printf("? ");
+			else
+				ft_printf("%*d ", padding.group, file.stats.st_gid);
+		}
 		else
-			ft_printf("%-*s ", padding.group, group->gr_name);
+		{
+			if (file.no_perm_but_print)
+				ft_printf("? ");
+			else
+				ft_printf("%-*s ", padding.group, group->gr_name);
+		}
 	}
-	if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
+	if (file.no_perm_but_print)
+		ft_printf("? ");
+	else if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
 		print_device_id(file.stats, padding);
 	else
 		print_size(file.stats.st_size, padding.size, opt);
 	get_ls_time(time, file.stats, opt);
-	ft_printf("%s", time);
+	if (file.no_perm_but_print)
+		ft_printf("%*s", ft_strlen(time), "?");
+	else
+		ft_printf("%s", time);
 	if (opt & OPT_TCAPS)
 	{
 		ft_printf(":%.2ld.%ld", file.stats.st_atim.tv_sec % 60,
 		file.stats.st_atim.tv_nsec);
 	}
 	ft_printf(" ");
-	print_file_name(file.stats, file.name, 0, opt);
+	print_file_name(file.stats, &file, 0, opt);
 #ifdef ACL_PRESENT
 	if (!(opt & OPT_E))
 		return ;
@@ -306,7 +362,7 @@ unsigned long long opt)
 		print_details(file, padding, opt);
 	else
 	{
-		return (print_file_name(file.stats, file.name, 0, opt));
+		return (print_file_name(file.stats, &file, 0, opt));
 	}
 	return (0);
 }

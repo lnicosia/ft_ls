@@ -13,13 +13,14 @@
 #include "ls.h"
 #include "options.h"
 #include "ls_colors.h"
+#include "dirent.h"
 
 void	print_ls_dir_colors(t_term_color dir_colors[MAX_DIR_COLORS])
 {
 	ft_printf("%s%s%sRESET{reset}\n", dir_colors[RESET].attribute,
 	dir_colors[RESET].foreground, dir_colors[RESET].background);
-	ft_printf("%s%s%sDIR{reset}\n", dir_colors[DIR].attribute,
-	dir_colors[DIR].foreground, dir_colors[DIR].background);
+	ft_printf("%s%s%sDIR{reset}\n", dir_colors[DIR_COLOR].attribute,
+	dir_colors[DIR_COLOR].foreground, dir_colors[DIR_COLOR].background);
 	ft_printf("%s%s%sLINK{reset}\n", dir_colors[LINK].attribute,
 	dir_colors[LINK].foreground, dir_colors[LINK].background);
 	ft_printf("%s%s%sMULTIHARADLINK{reset}\n", dir_colors[MULTIHARADLINK].attribute,
@@ -155,7 +156,7 @@ void	retrieve_ls_colors(t_term_color dir_colors[MAX_DIR_COLORS],
 		else if (ft_strnequ(colors[i], "rs", 2))
 			set_term_color(colors[i] + 3, &dir_colors[RESET]);
 		else if (ft_strnequ(colors[i], "di", 2))
-			set_term_color(colors[i] + 3, &dir_colors[DIR]);
+			set_term_color(colors[i] + 3, &dir_colors[DIR_COLOR]);
 		else if (ft_strnequ(colors[i], "ln", 2))
 			set_term_color(colors[i] + 3, &dir_colors[LINK]);
 		else if (ft_strnequ(colors[i], "mh", 2))
@@ -211,7 +212,7 @@ char*	get_extension(char* file)
 **	Sets the right color according to the type of a file
 */
 
-void	set_color(char *file, mode_t mode, t_stat stats, int orphan)
+void	set_color(t_file *file, mode_t mode, t_stat stats, int orphan)
 {
 	static t_term_color			dir_colors[MAX_DIR_COLORS];
 	static t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
@@ -227,7 +228,7 @@ void	set_color(char *file, mode_t mode, t_stat stats, int orphan)
 	{
 		for (size_t i = 0; i < MAX_EXTENSION_COLORS; i++)
 		{
-			if (ft_strequ(get_extension(file), extension_colors[i].extension))
+			if (ft_strequ(get_extension(file->name), extension_colors[i].extension))
 				ft_printf("%s%s%s",
 				extension_colors[i].term_color.attribute,
 				extension_colors[i].term_color.foreground,
@@ -235,31 +236,31 @@ void	set_color(char *file, mode_t mode, t_stat stats, int orphan)
 		}
 	}
 
-	if (S_ISDIR(mode))
-		ft_printf("%s%s%s", dir_colors[DIR].attribute,
-		dir_colors[DIR].foreground, dir_colors[DIR].background);
-	if (S_ISLNK(mode))
+	if (S_ISDIR(mode) || (file->no_perm_but_print && file->d_type == DT_DIR))
+		ft_printf("%s%s%s", dir_colors[DIR_COLOR].attribute,
+		dir_colors[DIR_COLOR].foreground, dir_colors[DIR_COLOR].background);
+	if (S_ISLNK(mode) || (file->no_perm_but_print && file->d_type == DT_LNK))
 		ft_printf("%s%s%s", dir_colors[LINK].attribute,
 		dir_colors[LINK].foreground, dir_colors[LINK].background);
 	if (S_ISREG(mode) && stats.st_nlink > 1)
 		ft_printf("%s%s%s", dir_colors[MULTIHARADLINK].attribute,
 		dir_colors[MULTIHARADLINK].foreground, dir_colors[MULTIHARADLINK].background);
-	if (S_ISFIFO(mode))
+	if (S_ISFIFO(mode) || (file->no_perm_but_print && file->d_type == DT_FIFO))
 		ft_printf("%s%s%s", dir_colors[FIFO].attribute,
 		dir_colors[FIFO].foreground, dir_colors[FIFO].background);
-	if (S_ISSOCK(mode))
+	if (S_ISSOCK(mode) || (file->no_perm_but_print && file->d_type == DT_SOCK))
 		ft_printf("%s%s%s", dir_colors[SOCK].attribute,
 		dir_colors[SOCK].foreground, dir_colors[SOCK].background);
-	if (S_ISBLK(mode))
+	if (S_ISBLK(mode) || (file->no_perm_but_print && file->d_type == DT_BLK))
 		ft_printf("%s%s%s", dir_colors[BLK].attribute,
 		dir_colors[BLK].foreground, dir_colors[BLK].background);
-	if (S_ISCHR(mode))
+	if (S_ISCHR(mode) || (file->no_perm_but_print && file->d_type == DT_CHR))
 		ft_printf("%s%s%s", dir_colors[CHR].attribute,
 		dir_colors[CHR].foreground, dir_colors[CHR].background);
-	if (orphan || (S_ISLNK(mode) && !is_link_valid(file)))
+	if (orphan || (S_ISLNK(mode) && !is_link_valid(file->name)))
 		ft_printf("%s%s%s", dir_colors[ORPHAN].attribute,
 		dir_colors[ORPHAN].foreground, dir_colors[ORPHAN].background);
-	else if (S_ISLNK(mode) && !should_print_link(file))
+	else if (S_ISLNK(mode) && !should_print_link(file->name))
 		ft_printf("%s%s%s", dir_colors[MISSING].attribute,
 		dir_colors[MISSING].foreground, dir_colors[MISSING].background);
 	if (S_ISREG(mode) && mode & S_ISGID)

@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/19 09:53:00 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/25 12:04:15 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -109,6 +109,7 @@ all:
 
 
 $(LIBFT):
+	@git submodule update --init
 	@make --no-print-directory -C $(LIBFT_DIR)
 
 $(OBJ_DIR):

@@ -42,7 +42,6 @@ void	analyze_list(t_dlist *lst, unsigned long long *opt)
 		if (!S_ISDIR(file->stats.st_mode))
 			//|| file->name[ft_strlen(file->name) - 1] == '.')
 		{
-			//ft_printf("Finally the ignore for '%s'\n", file->name);
 			lst = lst->next;
 			continue;
 		}
@@ -177,9 +176,24 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		{
 			custom_error("ft_ls: cannot access '%s': ", path);
 			*opt |= OPT_SMALL_ERROR;
+#ifdef _DIRENT_HAVE_D_TYPE
+			if (DT_UNKNOWN & entry->d_type)
+			{
+				ft_dlstdelfront(&dlst, free_t_file);
+				ft_strdel(&path);
+				return (ft_perror(""));
+			}
+			else
+			{
+				file.no_perm_but_print = 1;
+				file.d_type = entry->d_type;
+				ft_perror("");
+			}
+#else
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
 			return (ft_perror(""));
+#endif
 		}
 		char buf[256];
 		if (S_ISLNK(file.stats.st_mode) && readlink(path, buf, 256) == -1)

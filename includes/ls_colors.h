@@ -34,7 +34,7 @@ typedef struct		s_extension_color
 enum
 {
 	RESET,
-	DIR,
+	DIR_COLOR,
 	LINK,
 	MULTIHARADLINK,
 	FIFO,

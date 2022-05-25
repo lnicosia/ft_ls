@@ -31,11 +31,14 @@ typedef struct timespec	t_timespec;
 
 typedef struct			s_file
 {
+	t_stat				stats;
 	char				*name;
 	size_t				namelen;
 	int					has_extended;
 	int					has_acl;
-	t_stat				stats;
+	int					no_perm_but_print;
+	unsigned char		d_type;
+	char				padding[3];
 }						t_file;
 
 
@@ -47,7 +50,7 @@ int						parse_option_line(char *av, unsigned long long *opt);
 int						analyze_file(char *file, unsigned long long opt);
 int						print_file(t_file file, t_ls_padding padding,
 	unsigned long long opt);
-int						print_file_name(t_stat file_stats, char* file, size_t padding,
+int						print_file_name(t_stat file_stats, t_file* file, size_t padding,
 	unsigned long long opt);
 void					get_ls_time(char *res, t_stat stats, unsigned long long opt);
 void					print_size(off_t size, int padding, unsigned long long opt);
@@ -72,7 +75,7 @@ int						is_arg_an_option_line(char *av);
 t_ls_padding			get_padding(t_file* files, size_t array_len, blksize_t *dir_size,
 	unsigned long long opt);
 int						get_doublelen(double size);
-void					set_color(char *file, mode_t mode, t_stat stats, int orphan);
+void					set_color(t_file *file, mode_t mode, t_stat stats, int orphan);
 int						should_print_link(char *file);
 int						is_link_valid(char *file);
 char*					get_link(char *file);
