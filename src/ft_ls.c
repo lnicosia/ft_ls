@@ -13,6 +13,8 @@
 #include "libft.h"
 #include "ls.h"
 #include "options.h"
+#include "directory.h"
+#include <dirent.h>
 #include "ls_padding.h"
 #include <sys/ioctl.h>
 #include <stdio.h>
@@ -224,7 +226,13 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			}
 		}
 		if (S_ISDIR(file.stats.st_mode))
+		{
+			if (!opendir(av[i]))
+			{
+				*opt |= OPT_FATAL_ERROR;
+			}
 			nb_dir++;
+		}
 		else
 		{
 			nb_files++;
