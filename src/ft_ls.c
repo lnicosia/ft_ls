@@ -220,17 +220,20 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			}
 			else
 			{
-				*opt |= OPT_FATAL_ERROR;
 				i++;
 				continue;
 			}
 		}
 		if (S_ISDIR(file.stats.st_mode))
 		{
-			if (!opendir(av[i]))
+			DIR* dir;
+			if (!(dir = opendir(av[i])))
 			{
+				custom_error("Could not open dir\n");
 				*opt |= OPT_FATAL_ERROR;
 			}
+			else
+				closedir(dir);
 			nb_dir++;
 		}
 		else
@@ -312,22 +315,29 @@ int				ft_ls(int ac, char **av)
 	t_dlist	*dlst;
 	t_file*	files;
 	size_t	lstlen;
+	int		had_args;
 
 	opt = OPT_SORT;
 	dlst = NULL;
 	real_args = ac - 1;
+	had_args = 0;
 	if (parse_ls_options(ac, av, &opt, &real_args))
 		return (2);
 	if (real_args == 0)
 	{
 		analyze_directory(".", &opt);
+		had_args = 1;
 	}
 	else
 	{
 		dlst = analyze_args(ac, av, &opt);
 	}
 	if (!(files = (t_file*)ft_dlist_to_array(dlst)))
-		return (2);
+	{
+		if (!had_args)
+			return (2);
+		return (0);
+	}
 	lstlen = ft_dlstlen(dlst);
 	print_files(files, lstlen, &opt);
 	if (!(opt & OPT_D))

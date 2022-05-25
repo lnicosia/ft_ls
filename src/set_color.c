@@ -113,7 +113,8 @@ void	set_term_color(char* str, t_term_color* term_color)
 		}
 		while (str[i] && str[i] != ';')
 			i++;
-		i++;
+		if (str[i] && str[i] == ';')
+			i++;
 	}
 }
 

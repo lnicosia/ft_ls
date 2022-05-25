@@ -39,8 +39,9 @@ void	analyze_list(t_dlist *lst, unsigned long long *opt)
 	while (lst)
 	{
 		file = (t_file*)lst->content;
-		if (!S_ISDIR(file->stats.st_mode))
-			//|| file->name[ft_strlen(file->name) - 1] == '.')
+		if (!S_ISDIR(file->stats.st_mode)
+			|| ft_strequ(file->name + ft_strlen(file->name) - 2, "/.")
+			|| ft_strequ(file->name + ft_strlen(file->name) - 3, "/.."))
 		{
 			lst = lst->next;
 			continue;
@@ -164,12 +165,14 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		if (!(path = ft_strjoin(file_name, "/")))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
+			closedir(dir);
 			return (ft_perror("ft_strjoin"));
 		}
 		if (!(path = ft_strjoin_free(path, entry->d_name)))
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
+			closedir(dir);
 			return (ft_perror("ft_strjoin_free"));
 		}
 		if (lstat(path, &file.stats))
@@ -181,6 +184,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			{
 				ft_dlstdelfront(&dlst, free_t_file);
 				ft_strdel(&path);
+				closedir(dir);
 				return (ft_perror(""));
 			}
 			else
@@ -192,6 +196,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 #else
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
+			closedir(dir);
 			return (ft_perror(""));
 #endif
 		}
@@ -254,6 +259,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		{
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_strdel(&path);
+			closedir(dir);
 			return (ft_perror(""));
 		}
 		if (*opt & OPT_R && *opt & OPT_SORT)

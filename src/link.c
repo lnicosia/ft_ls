@@ -55,6 +55,7 @@ int		should_print_link(char *file)
 	valid = 0;
 	if (stat(file, &stats))
 	{
+		ft_strdel(&dir);
 		return (0);
 	}
 	while ((size = readlink(file, buf, 256)) != -1)
@@ -93,6 +94,7 @@ int		is_link_valid(char *file)
 	valid = 0;
 	if (stat(file, &stats))
 	{
+		ft_strdel(&dir);
 		return (0);
 	}
 	while ((size = readlink(file, buf, 256)) != -1)
@@ -141,6 +143,7 @@ char*	get_link(char *file)
 	if (stat(file, &stats))
 	{
 		custom_error("ft_ls: cannot access '%s': ", file);
+		ft_strdel(&dir);
 		ft_perror("");
 		return (0);
 	}
