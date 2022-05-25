@@ -121,7 +121,7 @@ void	print_permissions(t_file file, mode_t mode)
 
 	ft_printf("%c%c",
 		get_permission('r', mode, S_IROTH), get_permission('w', mode, S_IWOTH));
-	if (mode & S_ISVTX && S_ISDIR(mode))
+	if (mode & S_ISVTX)// && S_ISDIR(mode))
 	{
 		if (!(mode & S_IXOTH))
 			ft_printf("T");
@@ -264,7 +264,11 @@ unsigned long long opt)
 	t_passwd	*passwd;
 	t_group		*group;
 	char		time[30];
+	int			print_name;
+	int			print_group;
 
+	print_name = 1;
+	print_group = 1;
 	print_type(file, file.stats.st_mode);
 	print_permissions(file, file.stats.st_mode);
 	if (file.has_acl || file.has_extended)
@@ -278,15 +282,17 @@ unsigned long long opt)
 		ft_printf("%*ld ", padding.links, file.stats.st_nlink);
 	if (!(passwd = getpwuid(file.stats.st_uid)))
 	{
-		opt |= OPT_N;
+	//	opt |= OPT_N;
+		print_name = 0;
 	}
 	if (!(group = getgrgid(file.stats.st_gid)))
 	{
-		opt |= OPT_N;
+	//	opt |= OPT_N;
+		print_group = 0;
 	}
 	if (!(opt & OPT_G))
 	{
-		if (opt & OPT_N)
+		if (opt & OPT_N || print_name == 0)
 		{
 			if (file.no_perm_but_print)
 				ft_printf("? ");
@@ -303,7 +309,7 @@ unsigned long long opt)
 	}
 	if (!(opt & OPT_O))
 	{
-		if (opt & OPT_N)
+		if (opt & OPT_N || print_group == 0)
 		{
 			if (file.no_perm_but_print)
 				ft_printf("? ");
