@@ -59,7 +59,7 @@ int    print_usage_stdin(void)
 	ft_printf("%4s%-25s%s", "-1", "", "list one file per line\n");
 	ft_printf("      --help     display this help and exit\n");
 	ft_printf("      --version  ouput version information and exit\n");
-	return (-2);
+	return (1);
 }
 
 int		check_opt(char av, unsigned long long *opt)
@@ -220,7 +220,7 @@ int		parse_option_line(char *av, unsigned long long *opt)
 			ft_printf("This program is free software; you may redistribute it\n");
 			ft_printf("This program has absolutely no warranty ;)\n");
 			ft_printf("\nWritten by Lucas Nicosia\n");
-			return (-2);
+			return (1);
 		}
 		else if (ft_strequ(av, "--dircolors"))
 		{
@@ -228,7 +228,7 @@ int		parse_option_line(char *av, unsigned long long *opt)
 			t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
 			retrieve_ls_colors(dir_colors, extension_colors);
 			print_ls_colors(dir_colors, extension_colors);
-			return (-1);
+			return (1);
 		}
 		else if (ft_strequ(av, "--extension-colors"))
 		{
@@ -236,7 +236,7 @@ int		parse_option_line(char *av, unsigned long long *opt)
 			t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
 			retrieve_ls_colors(dir_colors, extension_colors);
 			print_ls_extension_colors(extension_colors);
-			return (-1);
+			return (1);
 		}
 		else if (ft_strequ(av, "--filecolors"))
 		{
@@ -244,7 +244,7 @@ int		parse_option_line(char *av, unsigned long long *opt)
 			t_extension_color	extension_colors[MAX_EXTENSION_COLORS];
 			retrieve_ls_colors(dir_colors, extension_colors);
 			print_ls_dir_colors(dir_colors);
-			return (-1);
+			return (1);
 		}
 		else if (ft_strequ(av, "--all"))
 		{
@@ -349,8 +349,9 @@ int		parse_ls_options(int ac, char **av, unsigned long long *opt, int *real_args
 	{
 		if (is_arg_an_option_line(av[i]))
 		{
-			if (parse_option_line(av[i], opt))
-				return (-1);
+			int ret;
+			if ((ret = parse_option_line(av[i], opt)) != 0)
+				return (ret);
 			(*real_args)--;
 		}
 		i++;

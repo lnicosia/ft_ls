@@ -312,8 +312,11 @@ int				ft_ls(int ac, char **av)
 	dlst = NULL;
 	real_args = ac - 1;
 	had_args = 0;
-	if (parse_ls_options(ac, av, &opt, &real_args))
+	int ret = parse_ls_options(ac, av, &opt, &real_args);
+	if (ret == -1)
 		return (2);
+	else if (ret == 1)
+		return (0);
 	if (real_args == 0)
 	{
 		analyze_directory(".", &opt);
