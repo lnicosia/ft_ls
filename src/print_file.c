@@ -343,7 +343,7 @@ unsigned long long opt)
 	ft_printf(" ");
 	print_file_name(file.stats, &file, 0, opt);
 #ifdef ACL_PRESENT
-	if (!(opt & OPT_E))
+	if (!(opt & OPT_E) || file.has_acl == 0)
 		return ;
 	acl_t acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
 	if (acl != (acl_t)NULL)
