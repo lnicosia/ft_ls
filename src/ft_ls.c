@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 10:22:57 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 15:36:57 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/27 15:47:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,10 +246,6 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			ft_dlstdelfront(&dlst, free_t_file);
 			ft_perror("strdup");
 			return (NULL);
-		}
-		if ((llistxattr(file.name, NULL, 0)) > 0)
-		{
-			//file.has_extended = 1;
 		}
 #ifdef ACL_PRESENT
 		if (!S_ISLNK(file.stats.st_mode))

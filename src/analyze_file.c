@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 15:11:07 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/24 15:37:08 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/27 15:47:14 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,10 +214,6 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		}
 		file.namelen = filename_len - 2;
 		file.name = path;
-		if (llistxattr(file.name, NULL, 0) > 0)
-		{
-			//file.has_extended = 1;
-		}
 #ifdef ACL_PRESENT
 		if (!S_ISLNK(file.stats.st_mode))
 		{
