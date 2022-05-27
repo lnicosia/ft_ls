@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/29 18:47:26 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/05/10 15:10:39 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/05/27 15:55:43 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,6 +334,7 @@ void			print_dlist_reverse(t_file* files, size_t array_len, unsigned short winsi
 			ft_printf("total 0\n");
 		return ;
 	}
+	len = 0;
 	dir_size = 0;
 	ft_bzero(&padding, sizeof(padding));
 	if (opt & OPT_L || opt & OPT_G || opt & OPT_N || opt & OPT_O)
