@@ -1,7 +1,7 @@
 #include "libft.h"
 #include <stdarg.h>
 
-#define LSPRINTF_BUFFER_SIZE 16384
+#define LSPRINTF_BUFFER_SIZE 65536
 
 int			ft_lsprintf(int flush, const char *restrict format, ...)
 {
