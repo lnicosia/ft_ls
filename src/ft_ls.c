@@ -249,7 +249,7 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 		}
 		if ((llistxattr(file.name, NULL, 0)) > 0)
 		{
-			file.has_extended = 1;
+			//file.has_extended = 1;
 		}
 #ifdef ACL_PRESENT
 		if (!S_ISLNK(file.stats.st_mode))

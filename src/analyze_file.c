@@ -216,7 +216,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 		file.name = path;
 		if (llistxattr(file.name, NULL, 0) > 0)
 		{
-			file.has_extended = 1;
+			//file.has_extended = 1;
 		}
 #ifdef ACL_PRESENT
 		if (!S_ISLNK(file.stats.st_mode))
