@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/27 15:43:50 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/27 18:44:20 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ endif
 
 LDLIBS = $(LIBFT) $(ACL)
 
-LDFLAGS = -L $(LIBFT_DIR)
+LDFLAGS = -L $(LIBFT_DIR) -lm
 
 LIB_RAW =
 
