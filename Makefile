@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/25 12:04:15 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/27 15:43:50 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ ROOT = sudo
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMFT = $(LIBMFT_DIR)/libmft.a
 
-ACL_TEST := $(shell ld -lacl 2>/dev/null; echo $$?)
+ACL_TEST := $(shell ld -lacl 2>/dev/null; echo $$?; rm a.out)
 
 ifeq ($(ACL_TEST), 1)
 	ACL =
