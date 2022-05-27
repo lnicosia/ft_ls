@@ -88,7 +88,7 @@ int		print_n_lines(t_file* files, size_t array_len, size_t nb_lines,
 				{
 					print_file_name(files[index].stats, &files[index],
 						0, opt);
-					ft_printf("\n");
+					ft_lsprintf(0, "\n");
 				}
 				else
 					print_file_name(files[index].stats, &files[index],

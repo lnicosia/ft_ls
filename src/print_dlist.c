@@ -26,20 +26,20 @@ int				get_human_readable_nblen(long int nb, long int divider)
 	int rest = 0;
 	double dnb = (double)nb;
 	double ddivider = (double)divider;
-	//ft_printf("Nb = %d\n", nb);
+	//ft_lsprintf(0, "Nb = %d\n", nb);
 	while (dnb > ddivider)
 	{
 		dnb /= ddivider;
 		rest++;
 	}
 	len = 0;
-	//ft_printf("Nb after divide = %f\n", dnb);
+	//ft_lsprintf(0, "Nb after divide = %f\n", dnb);
 	if (dnb < 10)
 		dnb = ft_centiceil(dnb);
 	else
 		dnb = ft_ceil(dnb);
 	nb = (long int)dnb;
-	//ft_printf("Nb after rounding = %f\n", dnb);
+	//ft_lsprintf(0, "Nb after rounding = %f\n", dnb);
 	while (nb > 0)
 	{
 		nb /= 10;
@@ -57,9 +57,9 @@ int				get_human_readable_nblen(long int nb, long int divider)
 	if (ft_ceil(dnb) >= divider)
 	{
 		len = 3;
-		//ft_printf("Ceil overflows\n");
+		//ft_lsprintf(0, "Ceil overflows\n");
 	}
-	//ft_printf("Len = %d\n", len);
+	//ft_lsprintf(0, "Len = %d\n", len);
 	return (len);
 }
 
@@ -202,7 +202,7 @@ void		print_total(long int long_size, unsigned long long opt)
 		double final_size = 0.0;
 		if (size < divider)
 		{
-			ft_printf("total %ld\n", (long int)size);
+			ft_lsprintf(0, "total %ld\n", (long int)size);
 			return ;
 		}
 		else if (ft_ceil(size / divider) < divider)
@@ -251,16 +251,16 @@ void		print_total(long int long_size, unsigned long long opt)
 		int len = get_doublelen(final_size);
 		if (len == 1 && letter != ' ')
 		{
-			ft_printf("total %.1f%c\n", ft_centiceil(final_size), letter);
+			ft_lsprintf(0, "total %.1f%c\n", ft_centiceil(final_size), letter);
 		}
 		else
 		{
 			final_size = ft_ceil(final_size);
-			ft_printf("total %ld%c\n", (long int)(final_size), letter);
+			ft_lsprintf(0, "total %ld%c\n", (long int)(final_size), letter);
 		}
 	}
 	else
-		ft_printf("total %ld\n", (long int)(size / 1024.0 + 0.5));
+		ft_lsprintf(0, "total %ld\n", (long int)(size / 1024.0 + 0.5));
 }
 
 /*
@@ -299,21 +299,21 @@ void			print_dlist(t_file* files, size_t array_len, unsigned short winsize,
 				else
 					name++;
 				if (len + 2 + (int)ft_strlen(name) < winsize)
-					len += ft_printf(", ");
+					len += ft_lsprintf(0, ", ");
 				else
 				{
-					ft_printf(",\n");
+					ft_lsprintf(0, ",\n");
 					len = 0;
 				}
 			}
 			else if (opt & OPT_CCAPS)
-				ft_printf("  ");
+				ft_lsprintf(0, "  ");
 			else
-				ft_printf("\n");
+				ft_lsprintf(0, "\n");
 		}
 		len += print_file(file, padding, opt);
 	}
-	ft_printf("\n");
+	ft_lsprintf(0, "\n");
 }
 
 /*
@@ -331,7 +331,7 @@ void			print_dlist_reverse(t_file* files, size_t array_len, unsigned short winsi
 	if (!files)
 	{
 		if (opt & OPT_TOTAL)
-			ft_printf("total 0\n");
+			ft_lsprintf(0, "total 0\n");
 		return ;
 	}
 	len = 0;
@@ -356,19 +356,19 @@ void			print_dlist_reverse(t_file* files, size_t array_len, unsigned short winsi
 				else
 					name++;
 				if (len + 2 + (int)ft_strlen(name) < winsize)
-					len += ft_printf(", ");
+					len += ft_lsprintf(0, ", ");
 				else
 				{
-					ft_printf(",\n");
+					ft_lsprintf(0, ",\n");
 					len = 0;
 				}
 			}
 			else if (opt & OPT_CCAPS)
-				ft_printf("  ");
+				ft_lsprintf(0, "  ");
 			else
-				ft_printf("\n");
+				ft_lsprintf(0, "\n");
 		}
 		len += print_file(file, padding, opt);
 	}
-	ft_printf("\n");
+	ft_lsprintf(0, "\n");
 }

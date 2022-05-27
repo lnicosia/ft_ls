@@ -43,6 +43,7 @@ typedef struct			s_file
 
 
 int						ft_ls(int ac, char **av);
+int						ft_lsprintf(int flush, const char *restrict format, ...);
 int						parse_ls_options(int ac, char **av, unsigned long long *opt,
 	int *real_args);
 int						parse_option_line(char *av, unsigned long long *opt);

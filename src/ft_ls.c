@@ -101,17 +101,17 @@ int				print_files(t_file* files, size_t len, unsigned long long *opt)
 		if (i != 0)
 		{
 			if (*opt & OPT_M)
-				ft_printf(", ");
+				ft_lsprintf(0, ", ");
 			else if (*opt & OPT_CCAPS)
-				ft_printf("  ");
+				ft_lsprintf(0, "  ");
 			else if (nb_files > 0)
-				ft_printf("\n");
+				ft_lsprintf(0, "\n");
 		}
 		print_file(file, padding, *opt);
 		nb_files++;
 	}
 	if (nb_files > 0)
-		ft_printf("\n");
+		ft_lsprintf(0, "\n");
 	if (nb_files > 0 && *opt & OPT_MULTIPLE_DIRS)
 		*opt |= OPT_NEWLINE;
 	*opt &= ~OPT_ERROR;
@@ -310,9 +310,15 @@ int				ft_ls(int ac, char **av)
 	had_args = 0;
 	int ret = parse_ls_options(ac, av, &opt, &real_args);
 	if (ret == -1)
+	{
+		ft_lsprintf(1, "");
 		return (2);
+	}
 	else if (ret == 1)
+	{
+		ft_lsprintf(1, "");
 		return (0);
+	}
 	if (real_args == 0)
 	{
 		analyze_directory(".", &opt);
@@ -324,6 +330,7 @@ int				ft_ls(int ac, char **av)
 	}
 	if (!(files = (t_file*)ft_dlist_to_array(dlst)))
 	{
+		ft_lsprintf(1, "");
 		if (!had_args)
 			return (2);
 		return (0);
@@ -334,6 +341,7 @@ int				ft_ls(int ac, char **av)
 		print_directories(files, lstlen, &opt);
 	ft_memdel((void**)&files);
 	ft_dlstdelfront(&dlst, free_t_file);
+	ft_lsprintf(1, "");
 	if (opt & OPT_FATAL_ERROR)
 		return (2);
 	if (opt & OPT_SMALL_ERROR)

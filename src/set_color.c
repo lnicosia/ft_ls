@@ -17,41 +17,41 @@
 
 void	print_ls_dir_colors(t_term_color dir_colors[MAX_DIR_COLORS])
 {
-	ft_printf("%s%s%sRESET{reset}\n", dir_colors[RESET].attribute,
+	ft_lsprintf(0, "%s%s%sRESET{reset}\n", dir_colors[RESET].attribute,
 	dir_colors[RESET].foreground, dir_colors[RESET].background);
-	ft_printf("%s%s%sDIR{reset}\n", dir_colors[DIR_COLOR].attribute,
+	ft_lsprintf(0, "%s%s%sDIR{reset}\n", dir_colors[DIR_COLOR].attribute,
 	dir_colors[DIR_COLOR].foreground, dir_colors[DIR_COLOR].background);
-	ft_printf("%s%s%sLINK{reset}\n", dir_colors[LINK].attribute,
+	ft_lsprintf(0, "%s%s%sLINK{reset}\n", dir_colors[LINK].attribute,
 	dir_colors[LINK].foreground, dir_colors[LINK].background);
-	ft_printf("%s%s%sMULTIHARADLINK{reset}\n", dir_colors[MULTIHARADLINK].attribute,
+	ft_lsprintf(0, "%s%s%sMULTIHARADLINK{reset}\n", dir_colors[MULTIHARADLINK].attribute,
 	dir_colors[MULTIHARADLINK].foreground, dir_colors[MULTIHARADLINK].background);
-	ft_printf("%s%s%sFIFO{reset}\n", dir_colors[FIFO].attribute,
+	ft_lsprintf(0, "%s%s%sFIFO{reset}\n", dir_colors[FIFO].attribute,
 	dir_colors[FIFO].foreground, dir_colors[FIFO].background);
-	ft_printf("%s%s%sSOCK{reset}\n", dir_colors[SOCK].attribute,
+	ft_lsprintf(0, "%s%s%sSOCK{reset}\n", dir_colors[SOCK].attribute,
 	dir_colors[SOCK].foreground, dir_colors[SOCK].background);
-	ft_printf("%s%s%sDOOR{reset}\n", dir_colors[DOOR].attribute,
+	ft_lsprintf(0, "%s%s%sDOOR{reset}\n", dir_colors[DOOR].attribute,
 	dir_colors[DOOR].foreground, dir_colors[DOOR].background);
-	ft_printf("%s%s%sBLK{reset}\n", dir_colors[BLK].attribute,
+	ft_lsprintf(0, "%s%s%sBLK{reset}\n", dir_colors[BLK].attribute,
 	dir_colors[BLK].foreground, dir_colors[BLK].background);
-	ft_printf("%s%s%sCHR{reset}\n", dir_colors[CHR].attribute,
+	ft_lsprintf(0, "%s%s%sCHR{reset}\n", dir_colors[CHR].attribute,
 	dir_colors[CHR].foreground, dir_colors[CHR].background);
-	ft_printf("%s%s%sORPHAN{reset}\n", dir_colors[ORPHAN].attribute,
+	ft_lsprintf(0, "%s%s%sORPHAN{reset}\n", dir_colors[ORPHAN].attribute,
 	dir_colors[ORPHAN].foreground, dir_colors[ORPHAN].background);
-	ft_printf("%s%s%sMISSING{reset}\n", dir_colors[MISSING].attribute,
+	ft_lsprintf(0, "%s%s%sMISSING{reset}\n", dir_colors[MISSING].attribute,
 	dir_colors[MISSING].foreground, dir_colors[MISSING].background);
-	ft_printf("%s%s%sSETUID{reset}\n", dir_colors[SETUID].attribute,
+	ft_lsprintf(0, "%s%s%sSETUID{reset}\n", dir_colors[SETUID].attribute,
 	dir_colors[SETUID].foreground, dir_colors[SETUID].background);
-	ft_printf("%s%s%sSETGID{reset}\n", dir_colors[SETGID].attribute,
+	ft_lsprintf(0, "%s%s%sSETGID{reset}\n", dir_colors[SETGID].attribute,
 	dir_colors[SETGID].foreground, dir_colors[SETGID].background);
-	ft_printf("%s%s%sCAPABILITY{reset}\n", dir_colors[CAPABILITY].attribute,
+	ft_lsprintf(0, "%s%s%sCAPABILITY{reset}\n", dir_colors[CAPABILITY].attribute,
 	dir_colors[CAPABILITY].foreground, dir_colors[CAPABILITY].background);
-	ft_printf("%s%s%sSTICK_OTHER_WRITABLE{reset}\n", dir_colors[STICK_OTHER_WRITABLE].attribute,
+	ft_lsprintf(0, "%s%s%sSTICK_OTHER_WRITABLE{reset}\n", dir_colors[STICK_OTHER_WRITABLE].attribute,
 	dir_colors[STICK_OTHER_WRITABLE].foreground, dir_colors[STICK_OTHER_WRITABLE].background);
-	ft_printf("%s%s%sOTHER_WRITABLE{reset}\n", dir_colors[OTHER_WRITABLE].attribute,
+	ft_lsprintf(0, "%s%s%sOTHER_WRITABLE{reset}\n", dir_colors[OTHER_WRITABLE].attribute,
 	dir_colors[OTHER_WRITABLE].foreground, dir_colors[OTHER_WRITABLE].background);
-	ft_printf("%s%s%sSTICKY{reset}\n", dir_colors[STICKY].attribute,
+	ft_lsprintf(0, "%s%s%sSTICKY{reset}\n", dir_colors[STICKY].attribute,
 	dir_colors[STICKY].foreground, dir_colors[STICKY].background);
-	ft_printf("%s%s%sEXEC{reset}\n", dir_colors[EXEC].attribute,
+	ft_lsprintf(0, "%s%s%sEXEC{reset}\n", dir_colors[EXEC].attribute,
 	dir_colors[EXEC].foreground, dir_colors[EXEC].background);
 }
 
@@ -59,7 +59,7 @@ void	print_ls_extension_colors(t_extension_color extension_colors[MAX_EXTENSION_
 {
 	for (size_t i = 0; i < MAX_DIR_COLORS; i++)
 	{
-		ft_printf("Extension '%s%s%s%s{reset}'\n",
+		ft_lsprintf(0, "Extension '%s%s%s%s{reset}'\n",
 		extension_colors[i].term_color.attribute,
 		extension_colors[i].term_color.foreground,
 		extension_colors[i].term_color.background,
@@ -224,13 +224,13 @@ void	set_color(t_file *file, mode_t mode, t_stat stats, int orphan)
 		retrieve_ls_colors(dir_colors, extension_colors);
 		first_call = 0;
 	}
-	//ft_printf("Setting color for %s\n", file);
+	//ft_lsprintf(0, "Setting color for %s\n", file);
 	if (S_ISREG(mode))
 	{
 		for (size_t i = 0; i < MAX_EXTENSION_COLORS; i++)
 		{
 			if (ft_strequ(get_extension(file->name), extension_colors[i].extension))
-				ft_printf("%s%s%s",
+				ft_lsprintf(0, "%s%s%s",
 				extension_colors[i].term_color.attribute,
 				extension_colors[i].term_color.foreground,
 				extension_colors[i].term_color.background);
@@ -238,49 +238,49 @@ void	set_color(t_file *file, mode_t mode, t_stat stats, int orphan)
 	}
 
 	if (S_ISDIR(mode) || (file->no_perm_but_print && file->d_type == DT_DIR))
-		ft_printf("%s%s%s", dir_colors[DIR_COLOR].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[DIR_COLOR].attribute,
 		dir_colors[DIR_COLOR].foreground, dir_colors[DIR_COLOR].background);
 	if (S_ISLNK(mode) || (file->no_perm_but_print && file->d_type == DT_LNK))
-		ft_printf("%s%s%s", dir_colors[LINK].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[LINK].attribute,
 		dir_colors[LINK].foreground, dir_colors[LINK].background);
 	if (S_ISREG(mode) && stats.st_nlink > 1)
-		ft_printf("%s%s%s", dir_colors[MULTIHARADLINK].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[MULTIHARADLINK].attribute,
 		dir_colors[MULTIHARADLINK].foreground, dir_colors[MULTIHARADLINK].background);
 	if (S_ISFIFO(mode) || (file->no_perm_but_print && file->d_type == DT_FIFO))
-		ft_printf("%s%s%s", dir_colors[FIFO].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[FIFO].attribute,
 		dir_colors[FIFO].foreground, dir_colors[FIFO].background);
 	if (S_ISSOCK(mode) || (file->no_perm_but_print && file->d_type == DT_SOCK))
-		ft_printf("%s%s%s", dir_colors[SOCK].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[SOCK].attribute,
 		dir_colors[SOCK].foreground, dir_colors[SOCK].background);
 	if (S_ISBLK(mode) || (file->no_perm_but_print && file->d_type == DT_BLK))
-		ft_printf("%s%s%s", dir_colors[BLK].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[BLK].attribute,
 		dir_colors[BLK].foreground, dir_colors[BLK].background);
 	if (S_ISCHR(mode) || (file->no_perm_but_print && file->d_type == DT_CHR))
-		ft_printf("%s%s%s", dir_colors[CHR].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[CHR].attribute,
 		dir_colors[CHR].foreground, dir_colors[CHR].background);
 	if (orphan || (S_ISLNK(mode) && !is_link_valid(file->name)))
-		ft_printf("%s%s%s", dir_colors[ORPHAN].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[ORPHAN].attribute,
 		dir_colors[ORPHAN].foreground, dir_colors[ORPHAN].background);
 	else if (S_ISLNK(mode) && !should_print_link(file->name))
-		ft_printf("%s%s%s", dir_colors[MISSING].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[MISSING].attribute,
 		dir_colors[MISSING].foreground, dir_colors[MISSING].background);
 	if (S_ISREG(mode) && mode & S_ISGID)
-		ft_printf("%s%s%s", dir_colors[SETGID].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[SETGID].attribute,
 		dir_colors[SETGID].foreground, dir_colors[SETGID].background);
 	if (S_ISREG(mode) && mode & S_ISUID)
-		ft_printf("%s%s%s", dir_colors[SETUID].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[SETUID].attribute,
 		dir_colors[SETUID].foreground, dir_colors[SETUID].background);
 	if (S_ISDIR(mode) && mode & S_IWOTH && mode & S_ISVTX)
-		ft_printf("%s%s%s", dir_colors[STICK_OTHER_WRITABLE].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[STICK_OTHER_WRITABLE].attribute,
 		dir_colors[STICK_OTHER_WRITABLE].foreground, dir_colors[STICK_OTHER_WRITABLE].background);
 	if (S_ISDIR(mode) && mode & S_IWOTH && !(mode & S_ISVTX))
-		ft_printf("%s%s%s", dir_colors[OTHER_WRITABLE].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[OTHER_WRITABLE].attribute,
 		dir_colors[OTHER_WRITABLE].foreground, dir_colors[OTHER_WRITABLE].background);
 	if (S_ISDIR(mode) && !(mode & S_IWOTH) && mode & S_ISVTX)
-		ft_printf("%s%s%s", dir_colors[STICKY].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[STICKY].attribute,
 		dir_colors[STICKY].foreground, dir_colors[STICKY].background);
 	if (S_ISREG(mode) && mode & S_IXUSR && mode & S_IXGRP && mode & S_IXOTH)
-		ft_printf("%s%s%s", dir_colors[EXEC].attribute,
+		ft_lsprintf(0, "%s%s%s", dir_colors[EXEC].attribute,
 		dir_colors[EXEC].foreground, dir_colors[EXEC].background);
 
 }

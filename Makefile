@@ -43,9 +43,9 @@ LDFLAGS = -L $(LIBFT_DIR)
 
 LIB_RAW =
 
-SRC_RAW =	main.c ft_ls.c parsedir.c parse_option_line.c analyze_file.c \
+SRC_RAW =	main.c ft_ls.c parse_option_line.c analyze_file.c \
 			print_file.c get_ls_time.c print_size.c sort_files.c compare.c \
-			print_dlist_col.c print_dlist.c set_color.c link.c
+			print_dlist_col.c print_dlist.c set_color.c link.c ft_lsprintf.c \
 
 HEADERS =	ls.h directory.h options.h ls_padding.h ls_colors.h
 

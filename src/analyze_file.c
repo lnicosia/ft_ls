@@ -83,7 +83,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	if (*opt & OPT_RCAPS || *opt & OPT_NEWLINE || *opt & OPT_MULTIPLE_DIRS)
 	{
 		if (*opt & OPT_NEWLINE)
-			ft_printf("\n");
+			ft_lsprintf(0, "\n");
 		if (!(*opt & OPT_NEWLINE) && dir)
 			*opt |= OPT_NEWLINE;
 		special_chars = contains_special_chars(file_name);
@@ -92,16 +92,16 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 			if (special_chars == 1)
 			{
 				if (*opt & OPT_NCAPS)
-					ft_printf("%-s:\n", file_name);
+					ft_lsprintf(0, "%-s:\n", file_name);
 				else
-					ft_printf("'%-s':\n", file_name);
+					ft_lsprintf(0, "'%-s':\n", file_name);
 			}
 			else if (special_chars == 2)
 			{
 				if (*opt & OPT_NCAPS)
-					ft_printf("%-s:\n", file_name);
+					ft_lsprintf(0, "%-s:\n", file_name);
 				else
-					ft_printf("\"%-s\":\n", file_name);
+					ft_lsprintf(0, "\"%-s\":\n", file_name);
 			}
 			else if (special_chars == 3)
 			{
@@ -110,7 +110,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 					char* replaced = NULL;
 					if (!(replaced = replace_char(file_name, '\n', "?")))
 						ft_perror("replace_char:");
-					ft_printf("%-s:\n", replaced);
+					ft_lsprintf(0, "%-s:\n", replaced);
 					ft_strdel(&replaced);
 				}
 				else
@@ -118,15 +118,15 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 					char* replaced = NULL;
 					if (!(replaced = replace_char(file_name, '\n', "'$'\\n''")))
 						ft_perror("replace_char:");
-					ft_printf("'%-s':\n", replaced);
+					ft_lsprintf(0, "'%-s':\n", replaced);
 					ft_strdel(&replaced);
 				}
 			}
 			else
-				ft_printf("%s:\n", file_name);
+				ft_lsprintf(0, "%s:\n", file_name);
 		}
 		else
-			ft_printf("%s:\n", file_name);
+			ft_lsprintf(0, "%s:\n", file_name);
 	}
 	if (file_name[ft_strlen(file_name) - 1] == '/')
 		file_name[ft_strlen(file_name) - 1] = '\0';
@@ -262,7 +262,7 @@ int		analyze_directory(char *file_name, unsigned long long *opt)
 	if (!dlst)
 	{
 		if (*opt & OPT_TOTAL)
-			ft_printf("total 0\n");
+			ft_lsprintf(0, "total 0\n");
 	}
 	if (!isatty(STDOUT_FILENO))
 		winsize.ws_col = 80;

@@ -13,52 +13,53 @@
 #include "options.h"
 #include "libft.h"
 #include "ls_colors.h"
+#include "ls.h"
 
 int    print_usage_stdin(void)
 {
-	ft_printf("Usage: ft_ls [OPTION]... [FILE]...\n");
-	ft_printf("List information about the FILEs (the current directory by default).\n");
-	ft_printf("Sort entries alphabetically if none of -cftuvSUX nor --sort is specified\n");
-	ft_printf("\n");
+	ft_lsprintf(0, "Usage: ft_ls [OPTION]... [FILE]...\n");
+	ft_lsprintf(0, "List information about the FILEs (the current directory by default).\n");
+	ft_lsprintf(0, "Sort entries alphabetically if none of -cftuvSUX nor --sort is specified\n");
+	ft_lsprintf(0, "\n");
 	//
-	ft_printf("Mandatory arguments to long options are mandatory for short options too.\n");
-	ft_printf("%4s%-25s%s", "", "  --acl", "with -l: if present, show ACL attributes\n");
-	ft_printf("%4s%-25s%s", "-a", ", --all", "do not ignore entries starting with .\n");
-	ft_printf("%4s%-25s%s", "-A", ", --almost-all", "do no list implied . and ..\n");
-	ft_printf("%4s%-25s%s", "", "  --author", "with -l, print the author of each file\n");
-	ft_printf("%4s%-25s%s", "-c", "", "with -lt: sort by, and show, ctime (time of last\n");
-	ft_printf("%4s%-25s%s", "", "", "  modification of file status information);\n");
-	ft_printf("%4s%-25s%s", "", "", "  with -l: show ctime and sort by name;\n");
-	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
-	ft_printf("%4s%-25s%s", "-C", "", "list entries by column\n");
-	ft_printf("%4s%-25s%s", "-d", ", --directory", "list directories themselves, not their contents\n");
-	ft_printf("%4s%-25s%s", "", "  --dircolors", "show both file type and extension colors of the current env and exit\n");
-	ft_printf("%4s%-25s%s", "-e", ", --extended", "with -l: if present, show extended attributes\n");
-	ft_printf("%4s%-25s%s", "", ", --extension-colors", "show extension colors of the current env and exit\n");
-	ft_printf("%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
-	ft_printf("%4s%-25s%s", "", ", --filecolors", "show file type colors of the current env and exit\n");
-	ft_printf("%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
-	ft_printf("%4s%-25s%s", "-G", ", --color", "colorize the output\n");
-	ft_printf("%4s%-25s%s", "-h", ", --human-readable", "with -l, print sizes like 1K 234M 2G etc.\n");
-	ft_printf("%4s%-25s%s", "", "  --si", "likewise, but use powers of 1000 not 1024\n");
-	ft_printf("%4s%-25s%s", "-l", "", "use a long listing format\n");
-	ft_printf("%4s%-25s%s", "-m", "", "fill width with a comma separated list of entries\n");
-	ft_printf("%4s%-25s%s", "-n", ", --numeric-uid-gid", "like -l, but list numeric user and group IDs\n");
-	ft_printf("%4s%-25s%s", "-N", ", --literal", "print entry names without quoting\n");
-	ft_printf("%4s%-25s%s", "-o", "", "like -l, but do not list group information\n");
-	ft_printf("%4s%-25s%s", "-p", ", --indicator-style=slash", "\n");
-	ft_printf("%4s%-25s%s", "", "", "append / indicator to directories\n");
-	ft_printf("%4s%-25s%s", "-r", ", --reverse", "reverse order while sorting\n");
-	ft_printf("%4s%-25s%s", "-R", ", --recursive", "list subdirectories recursively\n");
-	ft_printf("%4s%-25s%s", "-t", "", "sort by modification time, newest first\n");
-	ft_printf("%4s%-25s%s", "-T", "", "with -l, print the full timestamp\n");
-	ft_printf("%4s%-25s%s", "-u", "", "with -lt: sort by, and show, access time;\n");
-	ft_printf("%4s%-25s%s", "", "", "  with -l: show access time and sort by name;\n");
-	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by access time, newest first\n");
-	ft_printf("%4s%-25s%s", "-U", "", "do not sort; list entries in directory order\n");
-	ft_printf("%4s%-25s%s", "-1", "", "list one file per line\n");
-	ft_printf("      --help     display this help and exit\n");
-	ft_printf("      --version  ouput version information and exit\n");
+	ft_lsprintf(0, "Mandatory arguments to long options are mandatory for short options too.\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "  --acl", "with -l: if present, show ACL attributes\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-a", ", --all", "do not ignore entries starting with .\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-A", ", --almost-all", "do no list implied . and ..\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "  --author", "with -l, print the author of each file\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-c", "", "with -lt: sort by, and show, ctime (time of last\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "", "  modification of file status information);\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "", "  with -l: show ctime and sort by name;\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-C", "", "list entries by column\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-d", ", --directory", "list directories themselves, not their contents\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "  --dircolors", "show both file type and extension colors of the current env and exit\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-e", ", --extended", "with -l: if present, show extended attributes\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", ", --extension-colors", "show extension colors of the current env and exit\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", ", --filecolors", "show file type colors of the current env and exit\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-G", ", --color", "colorize the output\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-h", ", --human-readable", "with -l, print sizes like 1K 234M 2G etc.\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "  --si", "likewise, but use powers of 1000 not 1024\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-l", "", "use a long listing format\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-m", "", "fill width with a comma separated list of entries\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-n", ", --numeric-uid-gid", "like -l, but list numeric user and group IDs\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-N", ", --literal", "print entry names without quoting\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-o", "", "like -l, but do not list group information\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-p", ", --indicator-style=slash", "\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "", "append / indicator to directories\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-r", ", --reverse", "reverse order while sorting\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-R", ", --recursive", "list subdirectories recursively\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-t", "", "sort by modification time, newest first\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-T", "", "with -l, print the full timestamp\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-u", "", "with -lt: sort by, and show, access time;\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "", "  with -l: show access time and sort by name;\n");
+	ft_lsprintf(0, "%4s%-25s%s", "", "", "  otherwise: sort by access time, newest first\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-U", "", "do not sort; list entries in directory order\n");
+	ft_lsprintf(0, "%4s%-25s%s", "-1", "", "list one file per line\n");
+	ft_lsprintf(0, "      --help     display this help and exit\n");
+	ft_lsprintf(0, "      --version  ouput version information and exit\n");
 	return (1);
 }
 
@@ -216,10 +217,10 @@ int		parse_option_line(char *av, unsigned long long *opt)
 			return (print_usage_stdin());
 		else if (ft_strequ(av, "--version"))
 		{
-			ft_printf("ft_ls version 1.0\n");
-			ft_printf("This program is free software; you may redistribute it\n");
-			ft_printf("This program has absolutely no warranty ;)\n");
-			ft_printf("\nWritten by Lucas Nicosia\n");
+			ft_lsprintf(0, "ft_ls version 1.0\n");
+			ft_lsprintf(0, "This program is free software; you may redistribute it\n");
+			ft_lsprintf(0, "This program has absolutely no warranty ;)\n");
+			ft_lsprintf(0, "\nWritten by Lucas Nicosia\n");
 			return (1);
 		}
 		else if (ft_strequ(av, "--dircolors"))
