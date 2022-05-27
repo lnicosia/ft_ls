@@ -343,18 +343,50 @@ unsigned long long opt)
 	ft_printf(" ");
 	print_file_name(file.stats, &file, 0, opt);
 #ifdef ACL_PRESENT
-	if (!(opt & OPT_E) || file.has_acl == 0)
-		return ;
-	acl_t acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
-	if (acl != (acl_t)NULL)
+	if (file.has_acl == 1 && opt & OPT_ACL)
 	{
-		char* str = acl_to_text(acl, NULL);
-		if (str)
-			ft_printf("\n%s", str);
-		acl_free((void*)str);
-		acl_free((void*)acl);
+		acl_t acl = acl_get_file(file.name, ACL_TYPE_ACCESS);
+		if (acl != (acl_t)NULL)
+		{
+			char* str = acl_to_text(acl, NULL);
+			if (str)
+				ft_printf("\n%s", str);
+			acl_free((void*)str);
+			acl_free((void*)acl);
+		}
 	}
 #endif
+	if (opt & OPT_E)
+	{
+		ssize_t	size;
+		char	buff[256];
+		char	value_buf[256];
+		if ((size = listxattr(file.name, buff, 256)) > 0)
+		{
+			ft_printf("\n");
+			ssize_t i = 0;
+			ssize_t str_start = 0;
+			while (i < size)
+			{
+				if (buff[i] == 0)
+				{
+					ft_printf("%s", buff + str_start);
+					ssize_t size2;
+					if ((size2 = getxattr(file.name, buff + str_start,
+						value_buf, 256)) != -1)
+					{
+						ft_printf(" = ");
+						for (ssize_t j = 0; j < size2; j++)
+							ft_printf("%c", value_buf[j]);
+					}
+					if (i != size - 1)
+						ft_printf("\n");
+					str_start = i + 1;
+				}
+				i++;
+			}
+		}
+	}
 }
 
 /*

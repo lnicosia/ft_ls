@@ -22,6 +22,7 @@ int    print_usage_stdin(void)
 	ft_printf("\n");
 	//
 	ft_printf("Mandatory arguments to long options are mandatory for short options too.\n");
+	ft_printf("%4s%-25s%s", "", "  --acl", "with -l: if present, show ACL attributes\n");
 	ft_printf("%4s%-25s%s", "-a", ", --all", "do not ignore entries starting with .\n");
 	ft_printf("%4s%-25s%s", "-A", ", --almost-all", "do no list implied . and ..\n");
 	ft_printf("%4s%-25s%s", "", "  --author", "with -l, print the author of each file\n");
@@ -30,12 +31,12 @@ int    print_usage_stdin(void)
 	ft_printf("%4s%-25s%s", "", "", "  with -l: show ctime and sort by name;\n");
 	ft_printf("%4s%-25s%s", "", "", "  otherwise: sort by ctime, newest first\n");
 	ft_printf("%4s%-25s%s", "-C", "", "list entries by column\n");
-	ft_printf("%4s%-25s%s", "-d", "--directory", "list directories themselves, not their contents\n");
-	ft_printf("%4s%-25s%s", "", "--dircolors", "show both file type and extension colors of the current env and exit\n");
-	ft_printf("%4s%-25s%s", "-e", "--extended", "with -l: if present, show extended or ACL attributes\n");
-	ft_printf("%4s%-25s%s", "", "--extension-colors", "show extension colors of the current env and exit\n");
+	ft_printf("%4s%-25s%s", "-d", ", --directory", "list directories themselves, not their contents\n");
+	ft_printf("%4s%-25s%s", "", "  --dircolors", "show both file type and extension colors of the current env and exit\n");
+	ft_printf("%4s%-25s%s", "-e", ", --extended", "with -l: if present, show extended attributes\n");
+	ft_printf("%4s%-25s%s", "", ", --extension-colors", "show extension colors of the current env and exit\n");
 	ft_printf("%4s%-25s%s", "-f", "", "do not sort, enable -aU, disable -ls --color\n");
-	ft_printf("%4s%-25s%s", "", "--filecolors", "show file type colors of the current env and exit\n");
+	ft_printf("%4s%-25s%s", "", ", --filecolors", "show file type colors of the current env and exit\n");
 	ft_printf("%4s%-25s%s", "-g", "", "like -l, but do not list owner\n");
 	ft_printf("%4s%-25s%s", "-G", ", --color", "colorize the output\n");
 	ft_printf("%4s%-25s%s", "-h", ", --human-readable", "with -l, print sizes like 1K 234M 2G etc.\n");
@@ -301,6 +302,10 @@ int		parse_option_line(char *av, unsigned long long *opt)
 		else if (ft_strequ(av, "--extended"))
 		{
 			*opt |= OPT_E;
+		}
+		else if (ft_strequ(av, "--acl"))
+		{
+			*opt |= OPT_ACL;
 		}
 		else if (!ft_strequ(av, "--"))
 		{

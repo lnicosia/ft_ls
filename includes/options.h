@@ -50,5 +50,6 @@
 # define OPT_E (1UL << 35)
 # define OPT_SMALL_ERROR (1UL << 36)
 # define OPT_FATAL_ERROR (1UL << 37)
+# define OPT_ACL (1UL << 38)
 
 #endif

@@ -37,7 +37,7 @@ else
 	ACL = -lacl
 endif
 
-LDLIBS = $(LIBFT) -lm $(ACL)
+LDLIBS = $(LIBFT) $(ACL)
 
 LDFLAGS = -L $(LIBFT_DIR)
 

@@ -247,7 +247,7 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			ft_perror("strdup");
 			return (NULL);
 		}
-		if (listxattr(file.name, NULL, 0) > 0 && S_ISCHR(file.stats.st_mode))
+		if ((llistxattr(file.name, NULL, 0)) > 0)
 		{
 			file.has_extended = 1;
 		}
@@ -261,19 +261,10 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 				if (acl_get_entry(acl, ACL_FIRST_ENTRY, &entry) == 1)
 				{
 					acl_tag_t tag;
-					//ft_printf("%s\n", file.name);
-					//ft_printf("%s", acl_to_text(acl, NULL));
 					while (acl_get_entry(acl, ACL_NEXT_ENTRY, &entry) == 1)
 					{
 						if (acl_get_tag_type(entry, &tag) == 0)
 						{
-							/*ft_printf("%-12s\n",	(tag == ACL_USER_OBJ) ?		"user_obj" :
-												(tag == ACL_USER) ? 		"user" :
-												(tag == ACL_GROUP_OBJ) ? 	"group_obj" :
-												(tag == ACL_GROUP) ? 		"group" :
-												(tag == ACL_MASK) ? 		"mask" :
-												(tag == ACL_OTHER) ? 		"other" :
-												"???");*/
 							if (tag == ACL_MASK)
 							{
 								file.has_acl = 1;
@@ -285,7 +276,7 @@ t_dlist		*analyze_args(int ac, char **av, unsigned long long *opt)
 			}
 		}
 #else
-		if (*opt & OPT_E)
+		if (*opt & OPT_ACL)
 			check_acl_with_popen(&file);
 #endif
 		if (!(new = ft_dlstnew(&file, sizeof(file))))
