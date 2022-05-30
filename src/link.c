@@ -187,7 +187,7 @@ void	print_link(char *file, unsigned long long opt)
 	size_t	dirlen;
 	t_stat	stats;
 
-	ft_lsprintf(0, " -> ");
+	ft_bprintf(0, " -> ");
 	ft_bzero(buf, 256);
 	ft_bzero(link, 256);
 	if ((size = readlink(file, link, 256)) == -1)
@@ -229,6 +229,6 @@ void	print_link(char *file, unsigned long long opt)
 	}
 	else if (opt & OPT_GCAPS)
 		set_color(&tfile, stats.st_mode, stats, 0);
-	ft_lsprintf(0, "%s", link);
+	ft_bprintf(0, "%s", link);
 	ft_strdel(&dir);
 }

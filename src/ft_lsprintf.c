@@ -3,7 +3,7 @@
 
 #define LSPRINTF_BUFFER_SIZE 65536
 
-int			ft_lsprintf(int flush, const char *restrict format, ...)
+int			ft_bprintf(int flush, const char *restrict format, ...)
 {
 	static char		buffer[LSPRINTF_BUFFER_SIZE] = {0};
 	static size_t	index = 0;
